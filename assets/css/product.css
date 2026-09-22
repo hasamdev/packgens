@@ -1,0 +1,964 @@
+/* =========================================================================
+   Packgens — single product.
+   ========================================================================= */
+
+.pg-product__top {
+	/* Clears the absolutely positioned header, which paints its own band here. */
+	padding-top: calc(var(--pg-header-h) + clamp(1.5rem, 1rem + 2vw, 2.5rem));
+}
+
+.pg-product__layout {
+	display: grid;
+	gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+	margin-top: var(--pg-space-lg);
+}
+
+@media (min-width: 992px) {
+	.pg-product__layout {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		align-items: start;
+	}
+}
+
+/* -------------------------------------------------------------------------
+   Gallery
+   ------------------------------------------------------------------------- */
+
+.pg-gallery {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pg-space-sm);
+}
+
+.pg-gallery__stage {
+	position: relative;
+	aspect-ratio: 1 / 1;
+	border-radius: var(--pg-radius-md);
+	overflow: hidden;
+	background: var(--pg-gray-100);
+}
+
+.pg-gallery__stage img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.pg-gallery__nav {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 2;
+}
+
+.pg-gallery__nav--prev { left: var(--pg-space-sm); }
+.pg-gallery__nav--next { right: var(--pg-space-sm); }
+
+.pg-gallery__zoom {
+	position: absolute;
+	top: var(--pg-space-sm);
+	right: var(--pg-space-sm);
+	z-index: 2;
+}
+
+.pg-gallery__thumbs {
+	grid-auto-columns: minmax(4.5rem, 1fr);
+	gap: var(--pg-space-xs);
+}
+
+.pg-gallery__thumb {
+	position: relative;
+	display: block;
+	aspect-ratio: 1 / 1;
+	border-radius: var(--pg-radius-xs);
+	border: 2px solid transparent;
+	overflow: hidden;
+	background: var(--pg-gray-100);
+	transition: border-color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-gallery__thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.pg-gallery__thumb.is-active,
+.pg-gallery__thumb:hover {
+	border-color: var(--pg-blue);
+}
+
+/* Lightbox created by product.js. */
+.pg-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: var(--pg-z-modal);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--pg-space-lg);
+	background: rgba(1, 32, 47, 0.9);
+}
+
+.pg-lightbox img {
+	max-width: min(100%, 60rem);
+	max-height: 90vh;
+	width: auto;
+	border-radius: var(--pg-radius-md);
+	object-fit: contain;
+}
+
+.pg-lightbox__close {
+	position: absolute;
+	top: var(--pg-space-lg);
+	right: var(--pg-space-lg);
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: var(--pg-radius-circle);
+	background: rgba(255, 255, 255, 0.15);
+	color: var(--pg-white);
+	font-size: 1.75rem;
+	line-height: 1;
+}
+
+.pg-lightbox__close:hover {
+	background: var(--pg-white);
+	color: var(--pg-navy);
+}
+
+/* -------------------------------------------------------------------------
+   Summary
+   ------------------------------------------------------------------------- */
+
+.pg-product__summary {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pg-space-md);
+}
+
+.pg-product__meta-top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	margin: 0;
+	font-size: var(--pg-text-xs);
+	color: var(--pg-blue-vivid);
+}
+
+.pg-product__meta-top .pg-product__subtitle::before {
+	content: "\00b7";
+	margin-right: var(--pg-space-xs);
+	color: var(--pg-gray-400);
+}
+
+.pg-product__title {
+	margin: 0;
+	font-size: clamp(1.75rem, 1.2rem + 2.4vw, 2.625rem);
+}
+
+.pg-product__excerpt {
+	color: var(--pg-color-muted);
+	font-size: var(--pg-text-sm);
+	line-height: var(--pg-leading-normal);
+}
+
+.pg-product__excerpt p {
+	margin: 0 0 var(--pg-space-xs);
+}
+
+.pg-product__rating {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	font-size: var(--pg-text-xs);
+	color: var(--pg-color-muted);
+}
+
+/* Buy box ---------------------------------------------------------------- */
+
+.pg-buybox {
+	padding: var(--pg-space-lg);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-gray-100);
+}
+
+.pg-buybox__price {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-sm);
+}
+
+.pg-buybox__amount {
+	font-family: var(--pg-font-display);
+	font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.25rem);
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-blue-vivid);
+	line-height: 1.1;
+}
+
+.pg-buybox__amount .pg-price__unit {
+	font-size: 0.55em;
+	font-weight: var(--pg-weight-medium);
+}
+
+.pg-buybox__amount del {
+	color: var(--pg-gray-500);
+	font-size: 0.6em;
+	margin-right: var(--pg-space-xs);
+}
+
+.pg-buybox__saving {
+	padding: 0.375rem 0.875rem;
+	border-radius: var(--pg-radius-pill);
+	background: rgba(30, 186, 136, 0.16);
+	color: #0f7a58;
+	font-size: var(--pg-text-2xs);
+	font-weight: var(--pg-weight-semibold);
+}
+
+.pg-buybox__note {
+	margin: var(--pg-space-sm) 0 0;
+	font-size: var(--pg-text-2xs);
+	color: var(--pg-color-muted);
+}
+
+.pg-tiers {
+	margin-top: var(--pg-space-md);
+}
+
+.pg-tiers__label {
+	display: block;
+	margin-bottom: var(--pg-space-xs);
+	font-size: var(--pg-text-xs);
+	color: var(--pg-color-heading);
+}
+
+.pg-tiers__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(4.5rem, 1fr));
+	gap: var(--pg-space-xs);
+}
+
+.pg-tier {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.125rem;
+	padding: var(--pg-space-xs) var(--pg-space-2xs);
+	border: 1px solid var(--pg-color-border);
+	border-radius: var(--pg-radius-sm);
+	background: var(--pg-white);
+	transition: background-color var(--pg-duration) var(--pg-ease), border-color var(--pg-duration) var(--pg-ease), color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-tier__qty {
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-color-heading);
+}
+
+.pg-tier__price {
+	font-size: var(--pg-text-2xs);
+	color: var(--pg-color-muted);
+}
+
+.pg-tier:hover {
+	border-color: var(--pg-blue);
+}
+
+.pg-tier.is-active {
+	background: var(--pg-blue);
+	border-color: var(--pg-blue);
+}
+
+.pg-tier.is-active .pg-tier__qty,
+.pg-tier.is-active .pg-tier__price {
+	color: var(--pg-white);
+}
+
+/* Actions ---------------------------------------------------------------- */
+
+.pg-product__actions {
+	display: grid;
+	gap: var(--pg-space-sm);
+}
+
+@media (min-width: 520px) {
+	.pg-product__actions {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		align-items: start;
+	}
+}
+
+.pg-product__actions .pg-btn {
+	width: 100%;
+}
+
+/* WooCommerce's add-to-cart form, restyled in place. */
+.pg-product__actions form.cart {
+	display: flex;
+	gap: var(--pg-space-xs);
+	margin: 0;
+}
+
+/* The field and its two steppers read as one pill, so the outline lives on the
+   wrapper and the input itself is borderless. */
+.pg-product__actions form.cart .quantity {
+	display: inline-flex;
+	align-items: center;
+	flex: 0 0 auto;
+	max-width: none;
+	padding: 0.25rem;
+	border: 1px solid var(--pg-color-border);
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-white);
+}
+
+.pg-product__actions form.cart .quantity input,
+.pg-product__actions form.cart input.qty {
+	width: 4rem;
+	min-width: 0;
+	min-height: 2.5rem;
+	padding-inline: 0.25rem;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	text-align: center;
+	-moz-appearance: textfield;
+}
+
+/* The spinner would sit beside buttons that already do its job. */
+.pg-product__actions form.cart input.qty::-webkit-outer-spin-button,
+.pg-product__actions form.cart input.qty::-webkit-inner-spin-button {
+	appearance: none;
+	margin: 0;
+}
+
+.pg-qty-step {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	flex-shrink: 0;
+	padding: 0;
+	border: 0;
+	border-radius: var(--pg-radius-circle);
+	background: var(--pg-gray-150);
+	color: var(--pg-color-heading);
+	cursor: pointer;
+	transition: background-color var(--pg-duration) var(--pg-ease),
+		color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-qty-step:hover {
+	background: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+.pg-qty-step svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+.pg-product__actions form.cart button[type="submit"],
+.pg-product__actions .single_add_to_cart_button {
+	flex: 1 1 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--pg-space-xs);
+	min-height: 3rem;
+	padding: 0.75rem 1.75rem;
+	border: 0;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-medium);
+	cursor: pointer;
+	transition: background-color var(--pg-duration) var(--pg-ease);
+}
+
+/* WooCommerce's own stylesheet colours `.button.alt` on hover at a specificity
+   this has to clear, hence the longer selector. */
+.woocommerce .pg-product__actions button.single_add_to_cart_button.alt:hover,
+.woocommerce .pg-product__actions button.single_add_to_cart_button.alt:focus-visible,
+.pg-product__actions .single_add_to_cart_button:hover,
+.pg-product__actions .single_add_to_cart_button:focus-visible {
+	background: var(--pg-black);
+	color: var(--pg-white);
+}
+
+/* WooCommerce owns this button's markup, so the basket mark is a masked
+   pseudo-element: painted in currentColor, it follows the label on hover. */
+.pg-product__actions .single_add_to_cart_button::before {
+	content: "";
+	width: 1.25rem;
+	height: 1.25rem;
+	flex-shrink: 0;
+	background-color: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M4.04977 2.75H18.75L16.75 9.75H5.12671M17.75 13.75H5.75L3.75 0.75H0.75M6.75 17.75C6.75 18.3023 6.30228 18.75 5.75 18.75C5.19772 18.75 4.75 18.3023 4.75 17.75C4.75 17.1977 5.19772 16.75 5.75 16.75C6.30228 16.75 6.75 17.1977 6.75 17.75ZM17.75 17.75C17.75 18.3023 17.3023 18.75 16.75 18.75C16.1977 18.75 15.75 18.3023 15.75 17.75C15.75 17.1977 16.1977 16.75 16.75 16.75C17.3023 16.75 17.75 17.1977 17.75 17.75Z' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M4.04977 2.75H18.75L16.75 9.75H5.12671M17.75 13.75H5.75L3.75 0.75H0.75M6.75 17.75C6.75 18.3023 6.30228 18.75 5.75 18.75C5.19772 18.75 4.75 18.3023 4.75 17.75C4.75 17.1977 5.19772 16.75 5.75 16.75C6.30228 16.75 6.75 17.1977 6.75 17.75ZM17.75 17.75C17.75 18.3023 17.3023 18.75 16.75 18.75C16.1977 18.75 15.75 18.3023 15.75 17.75C15.75 17.1977 16.1977 16.75 16.75 16.75C17.3023 16.75 17.75 17.1977 17.75 17.75Z' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.pg-secure-strip {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-sm);
+	padding: var(--pg-space-sm) var(--pg-space-md);
+	border: 1px solid var(--pg-color-border);
+	border-radius: var(--pg-radius-md);
+}
+
+.pg-secure-strip__label {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-2xs);
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-color-heading);
+}
+
+.pg-secure-strip__label svg {
+	width: 1rem;
+	height: 1rem;
+	color: var(--pg-green-dark);
+}
+
+.pg-secure-strip .pg-logo-row img {
+	height: 20px;
+}
+
+/* -------------------------------------------------------------------------
+   Tabs and specification table
+   ------------------------------------------------------------------------- */
+
+.pg-product-tabs .pg-tabs__panel {
+	padding: 20px;
+}
+
+/* The specification table is the panel here, and it carries its own cell
+   padding, so it keeps the narrow inset that lets it fill the card. */
+.pg-product-tabs .pg-tabs__panel:has(.pg-spec-table) {
+	padding: 20px 8px 8px;
+}
+
+/* Tab content is wrapped in `.pg-prose`, whose `h3` rule outranks the
+   accordion's own `margin: 0` and pushes each question down. */
+.pg-product-tabs .pg-prose .pg-accordion__heading {
+	margin-top: 0;
+}
+
+.pg-spec-table {
+	width: 100%;
+	min-width: 30rem;
+	border-collapse: collapse;
+}
+
+.pg-spec-table th,
+.pg-spec-table td {
+	padding: var(--pg-space-lg) clamp(1rem, 0.8rem + 1vw, 1.5rem);
+	font-size: var(--pg-text-sm);
+	border-top: 1px solid var(--pg-color-border);
+}
+
+/* The labels sit in a tinted column of their own rather than the whole row
+   being striped, which is how the design separates the two halves. */
+.pg-spec-table th {
+	width: 22%;
+	text-align: left;
+	font-weight: var(--pg-weight-regular);
+	color: var(--pg-color-text);
+	background: var(--pg-gray-100);
+}
+
+.pg-spec-table td {
+	text-align: right;
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-color-heading);
+}
+
+/* -------------------------------------------------------------------------
+   Reviews block
+   ------------------------------------------------------------------------- */
+
+.pg-product #reviews .comment-form-rating .stars a {
+	color: var(--pg-amber);
+}
+
+
+/* -------------------------------------------------------------------------
+   Single product, reworked to the design
+   ------------------------------------------------------------------------- */
+
+.pg-product__layout {
+	display: grid;
+	gap: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+	align-items: start;
+}
+
+@media (min-width: 992px) {
+	.pg-product__layout {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	}
+}
+
+.pg-product__media-col {
+	display: grid;
+	gap: var(--pg-space-lg);
+	align-content: start;
+}
+
+.pg-product__summary {
+	display: grid;
+	gap: var(--pg-space-md);
+	align-content: start;
+}
+
+.pg-product__title {
+	margin: 0;
+	font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.125rem);
+	line-height: 1.2;
+}
+
+/* Rating strip: wording, stars, count and the platform lockup on one line. */
+.pg-product__rating {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	margin: 0;
+	font-size: var(--pg-text-sm);
+	color: var(--pg-color-muted);
+}
+
+.pg-product__rating-label {
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-color-heading);
+}
+
+.pg-product__rating-score {
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-color-heading);
+	text-decoration: underline;
+}
+
+.pg-product__rating-platform {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-color-heading);
+}
+
+.pg-product__rating-platform svg {
+	width: 1rem;
+	height: 1rem;
+	color: var(--pg-green-dark);
+}
+
+/* Offer strip: a tinted band with the code copied by the button on its right. */
+.pg-product__offer {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	padding: var(--pg-space-sm) var(--pg-space-md);
+	border: 1px solid rgba(30, 186, 136, 0.35);
+	/* The summary column runs on one radius for its strips and fields. */
+	border-radius: var(--pg-radius-xs);
+	background: rgba(30, 186, 136, 0.08);
+}
+
+.pg-product__offer-mark svg {
+	width: 1.25rem;
+	height: 1.25rem;
+	color: var(--pg-green);
+}
+
+.pg-product__offer-copy {
+	display: grid;
+	gap: 0.125rem;
+	margin-right: auto;
+}
+
+.pg-product__offer-title {
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-color-heading);
+}
+
+.pg-product__offer-note {
+	font-size: var(--pg-text-xs);
+	color: var(--pg-color-muted);
+}
+
+.pg-product__offer-copy-btn {
+	display: inline-flex;
+	padding: 0.25rem;
+	border: 0;
+	background: none;
+	color: var(--pg-color-muted);
+	cursor: pointer;
+}
+
+.pg-product__offer-copy-btn:hover {
+	color: var(--pg-color-heading);
+}
+
+.pg-product__offer-copy-btn svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.pg-product__excerpt {
+	margin: 0;
+	color: var(--pg-color-muted);
+	font-size: var(--pg-text-sm);
+}
+
+.pg-product__excerpt p {
+	margin: 0;
+}
+
+.pg-product__price {
+	display: flex;
+	align-items: baseline;
+	gap: var(--pg-space-xs);
+	margin: 0;
+	font-size: var(--pg-text-sm);
+	color: var(--pg-color-muted);
+}
+
+.pg-product__price-amount {
+	font-family: var(--pg-font-display);
+	font-size: var(--pg-text-h5);
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-color-heading);
+}
+
+/* The price and the quantity share the top row, the two actions the one below.
+   WooCommerce keeps the quantity inside its own form alongside the button, so
+   both the wrapper and the form step out of the layout with `display: contents`
+   and the four parts are placed on this grid directly. The form still submits:
+   the fields are only re-laid-out, not re-parented. */
+.pg-product__buy {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: var(--pg-space-sm) var(--pg-space-md);
+	align-items: center;
+}
+
+.pg-product__buy .pg-product__actions,
+.pg-product__buy form.cart {
+	display: contents;
+}
+
+.pg-product__buy .pg-product__price {
+	grid-column: 1;
+	grid-row: 1;
+}
+
+.pg-product__buy .quantity {
+	grid-column: 2;
+	grid-row: 1;
+	justify-self: start;
+}
+
+.pg-product__buy .single_add_to_cart_button {
+	grid-column: 1;
+	grid-row: 2;
+}
+
+.pg-product__buy .pg-product__delivery {
+	grid-column: 2;
+	grid-row: 2;
+}
+
+.pg-product__actions .pg-btn,
+.pg-product__actions .button {
+	width: 100%;
+	justify-content: center;
+}
+
+/* Not a control: it states the delivery window beside the basket button, so it
+   is outlined rather than filled. */
+.pg-product__delivery {
+	cursor: default;
+	font-weight: var(--pg-weight-medium);
+	border: 1px dashed #0027d0;
+	border-radius: 100px;
+	color: #0027d0;
+	background: none;
+}
+
+/* Quote panel: a white card whose heading sits on a black bar across the top.
+   The bar is the card's own background showing through above the form, so the
+   form keeps its padding and nothing has to be positioned. */
+.pg-product__quote {
+	margin-top: var(--pg-space-xs);
+	border-radius: 30px;
+	background: var(--pg-black);
+	/* No overflow clipping: the card's own shadow has to spread past the black
+	   bar behind it, and the radius already rounds that background. */
+}
+
+.pg-product__quote .pg-form--panel {
+	display: grid;
+	gap: var(--pg-space-md);
+	margin-top: 3.5rem;
+	padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+	/* The top corners curve up over the black bar, the shape the contact form
+	   uses; the foot keeps the 21px radius. */
+	border-radius: 30px 30px 21px 21px;
+	background: var(--pg-white);
+	box-shadow: 0 0 63.5px rgba(20, 19, 19, 0.18);
+}
+
+.pg-product__quote .pg-form__title {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	padding: 0.75rem;
+	text-align: center;
+	font-size: var(--pg-text-h5);
+	color: var(--pg-white);
+}
+
+/* The heading is lifted out of the form's flow into the black bar above it. */
+.pg-product__quote {
+	position: relative;
+}
+
+.pg-product__quote .pg-field__label {
+	color: var(--pg-color-heading);
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+}
+
+.pg-product__quote :is(.pg-input, .pg-select, select) {
+	min-height: 3.25rem;
+	border-radius: var(--pg-radius-pill);
+	border-color: #d9dbe0;
+}
+
+/* A pill would crop a multi-line field, so the box keeps a rounded rectangle. */
+.pg-product__quote .pg-textarea {
+	min-height: 7rem;
+	border-radius: var(--pg-radius-md);
+	border-color: #d9dbe0;
+}
+
+.pg-product__quote .pg-file {
+	min-height: 3.25rem;
+	border-color: #c9ccd3;
+	border-radius: var(--pg-radius-pill);
+	background: none;
+	color: var(--pg-color-heading);
+}
+
+.pg-product__quote .pg-btn[type="submit"] {
+	--pg-btn-bg: var(--pg-blue-vivid);
+	--pg-btn-bg-hover: var(--pg-blue);
+	min-height: 3.25rem;
+	border-radius: var(--pg-radius-pill);
+}
+
+/* The design ends the card at the buttons. */
+.pg-product__quote .pg-form__consent {
+	display: none;
+}
+
+/* Both blocks under the gallery share one tinted ground. */
+.pg-product-support {
+	display: grid;
+	gap: var(--pg-space-md);
+	padding: var(--pg-space-md);
+	border-radius: 30px;
+	background: #fafafa;
+}
+
+/* Help card under the gallery: copy on the left, the two ways to reach us
+   stacked on the right behind their own coloured marks. It lifts off the page
+   on a shadow rather than being drawn with a border. */
+.pg-product-help {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-md);
+	padding: var(--pg-space-lg) var(--pg-space-xl);
+	border: 1px solid #e3e3e3;
+	border-radius: 30px;
+	background: var(--pg-white);
+}
+
+.pg-product-help__photo img {
+	width: 3rem;
+	height: 3rem;
+	border-radius: var(--pg-radius-circle);
+	object-fit: cover;
+}
+
+.pg-product-help__copy {
+	display: grid;
+	gap: 0.125rem;
+	margin-right: auto;
+}
+
+.pg-product-help__title {
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-color-heading);
+}
+
+.pg-product-help__text {
+	font-size: var(--pg-text-sm);
+	color: var(--pg-color-muted);
+}
+
+.pg-product-help__actions {
+	display: grid;
+	gap: var(--pg-space-sm);
+}
+
+.pg-product-help__action {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	color: var(--pg-color-heading);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-medium);
+}
+
+.pg-product-help__action:hover {
+	color: var(--pg-blue-vivid);
+}
+
+.pg-product-help__mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	flex-shrink: 0;
+	border-radius: var(--pg-radius-circle);
+	color: var(--pg-white);
+}
+
+.pg-product-help__action--chat .pg-product-help__mark {
+	background: var(--pg-green);
+}
+
+.pg-product-help__action--call .pg-product-help__mark {
+	background: var(--pg-blue-vivid);
+}
+
+.pg-product-help__mark svg {
+	width: 1.25rem;
+	height: 1.25rem;
+}
+
+/* The feature list runs across two cards rather than one boxed column. The
+   cards nearly touch, so the tinted ground reads as a hairline between them. */
+.pg-product-features {
+	display: grid;
+	gap: 2px;
+}
+
+@media (min-width: 576px) {
+	.pg-product-features {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.pg-product-features__card {
+	display: grid;
+	gap: var(--pg-space-lg);
+	align-content: start;
+	margin: 0;
+	padding: var(--pg-space-sm);
+	border-radius: 30px;
+	background: var(--pg-white);
+	list-style: none;
+}
+
+.pg-product-features__card li {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-md);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-color-heading);
+}
+
+.pg-product-features__card svg {
+	width: 1.75rem;
+	height: 1.75rem;
+	flex-shrink: 0;
+	color: var(--pg-color-heading);
+}
+
+/* The detail tabs sit on a raised card, as the design draws them. */
+.pg-product-tabs {
+	padding: 8px 0 0;
+	border-radius: 20px;
+	background: var(--pg-white);
+	box-shadow: 0 0 63.5px rgba(20, 19, 19, 0.18);
+	overflow: hidden;
+}
+
+/* The strip spreads its tabs across the card's width. Once they no longer fit,
+   there is no free space left to spread and the list simply scrolls, so nothing
+   has to change at a breakpoint. */
+.pg-product-tabs .pg-tabs__list {
+	margin-inline: 8px;
+	justify-content: space-between;
+}
+
+/* Labels hold one line and the tab keeps its own padding, so a cramped strip
+   scrolls rather than crushing its items. */
+.pg-product-tabs .pg-tabs__tab {
+	flex: 0 0 auto;
+	white-space: nowrap;
+}
+
+/* Brief confirmation after the code is copied. */
+.pg-product__offer-copy-btn.is-copied {
+	color: var(--pg-green);
+}
+
+/* Every section on this page carries 60px of its own vertical padding. The
+   first one adds that to the fixed header's height, which is clearing the
+   chrome rather than spacing a neighbour. */
+.single-product .pg-product > .pg-section {
+	padding-block: 60px;
+}
+
+/* The plain header paints its own band here, so the space below it belongs to
+   the header rather than to the section that follows. */
+.single-product.pg-has-plain-header .pg-header {
+	padding-bottom: 20px;
+}
+
+.single-product .pg-product > .pg-section:first-child {
+	padding-top: calc(var(--pg-header-h) + 16px);
+}
+
+.single-product .pg-product__layout {
+	margin-top: 12px;
+}
+
+/* These two sit directly under the block above them, so the section before
+   each already carries the space they need. */
+.single-product .pg-product > .pg-section--products,
+.single-product .pg-product > .pg-product__tabs {
+	padding-top: 0;
+}

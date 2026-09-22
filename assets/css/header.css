@@ -1,0 +1,1057 @@
+/* =========================================================================
+   Packgens — site header.
+   Figma: 40px announcement bar, then a 1320px white card floating over the
+   hero. Utility row 69px, nav row 90px, both pill-rounded and overlapping to
+   read as a single card.
+   ========================================================================= */
+
+:root {
+	--pg-header-band-h: 167px;
+	/* Raised only where the trust strip actually renders, below. */
+	--pg-header-strip-h: 0px;
+	--pg-header-h: calc(var(--pg-header-band-h) + var(--pg-header-strip-h));
+	--pg-topbar-h: 40px;
+}
+
+@media (max-width: 991.98px) {
+	:root {
+		--pg-header-band-h: 118px;
+	}
+}
+
+/* The header floats above the page hero, which supplies the blue backdrop. */
+.pg-header {
+	position: absolute;
+	inset-inline: 0;
+	top: 0;
+	z-index: var(--pg-z-header);
+	padding-bottom: var(--pg-space-xs);
+}
+
+/* Templates without a coloured hero paint the band themselves. */
+.pg-has-plain-header .pg-header {
+	background: var(--pg-blue);
+}
+
+/* ---- Trust strip under the header -------------------------------------
+   Hero-less pages have no strip across a hero's bottom edge, so the band
+   carries one itself. It is part of the band, which means every clearance
+   built on --pg-header-h has to grow by its height -- hence the token, set
+   only when the strip is really in the markup. */
+
+.pg-has-plain-header:has(.pg-header__strip) {
+	--pg-header-strip-h: 3.25rem;
+}
+
+.pg-header__strip {
+	display: flex;
+	align-items: center;
+	margin: 0;
+	padding: var(--pg-space-md) 0 var(--pg-space-xs) 0;
+	list-style: none;
+}
+
+/* Equal cells with the content centred in each, so the dividers fall on the
+   quarter points and the row reads as evenly spread rather than pushed out to
+   the container edges. */
+.pg-header__strip-item {
+	flex: 1 1 0;
+	display: flex;
+	justify-content: center;
+	padding-inline: var(--pg-space-sm);
+	border-right: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.pg-header__strip-item:last-child {
+	border-right: 0;
+}
+
+.pg-header__strip-link {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	color: var(--pg-white);
+}
+
+.pg-header__strip .pg-usp__icon {
+	width: 2rem;
+	height: 2rem;
+	/* A step lighter than the band, so the disc reads against it. */
+	background: #0834f1;
+}
+
+.pg-header__strip .pg-usp__icon svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+.pg-header__strip .pg-usp__title {
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-white);
+	white-space: nowrap;
+}
+
+a.pg-header__strip-link:hover .pg-usp__title,
+a.pg-header__strip-link:focus-visible .pg-usp__title {
+	text-decoration: underline;
+}
+
+/* Four labels stop fitting well before the drawer breakpoint, and a wrapped
+   strip would make the band a different height on every page. */
+@media (max-width: 991.98px) {
+	.pg-header__strip {
+		display: none;
+	}
+
+	.pg-has-plain-header:has(.pg-header__strip) {
+		--pg-header-strip-h: 0px;
+	}
+}
+
+/* The stuck header is the compact one: topbar and strip both drop away. */
+.pg-header.is-stuck .pg-header__strip {
+	display: none;
+}
+
+.pg-header.is-stuck {
+	position: fixed;
+	background: var(--pg-blue);
+	box-shadow: var(--pg-shadow-header);
+	animation: pg-header-drop 260ms var(--pg-ease);
+}
+
+.pg-header.is-stuck .pg-topbar {
+	display: none;
+}
+
+@keyframes pg-header-drop {
+	from { transform: translateY(-100%); }
+	to { transform: translateY(0); }
+}
+
+/* -------------------------------------------------------------------------
+   Announcement bar
+   ------------------------------------------------------------------------- */
+
+.pg-topbar {
+	color: var(--pg-white);
+	font-size: var(--pg-text-xs);
+	line-height: 1.5;
+}
+
+.pg-topbar__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-sm);
+	min-height: var(--pg-topbar-h);
+	padding-block: var(--pg-space-xs);
+	/* The design insets the strip a little from the 1320px column. */
+	padding-inline: calc(var(--pg-gutter) + clamp(0rem, 2vw, 2.5rem));
+}
+
+.pg-topbar__message {
+	font-weight: var(--pg-weight-semibold);
+	margin: 0;
+}
+
+.pg-topbar__chat {
+	margin: 0;
+}
+
+.pg-topbar__chat a {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	color: var(--pg-white);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-semibold);
+}
+
+.pg-topbar__chat svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+@media (max-width: 991.98px) {
+	.pg-topbar__chat {
+		display: none;
+	}
+
+	.pg-topbar__inner {
+		justify-content: center;
+		min-height: 34px;
+	}
+
+	.pg-topbar__message {
+		font-size: var(--pg-text-2xs);
+		text-align: center;
+	}
+}
+
+/* -------------------------------------------------------------------------
+   Header card
+   ------------------------------------------------------------------------- */
+
+.pg-header__card {
+	position: relative;
+	background: var(--pg-white);
+	border-radius: 25px;
+	border-top-left-radius: 44px;
+	border-top-right-radius: 44px;
+}
+
+/* The utility row is its own floating pill, lifted off the card below it. */
+.pg-header__utility {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-md);
+	min-height: 69px;
+	box-shadow: 0 0 14px rgba(0, 0, 0, 0.15);
+	border-radius: 100px;
+	padding: 0 2em;
+	background: var(--pg-white);
+}
+
+/* Brand ------------------------------------------------------------------ */
+
+.pg-header__brand {
+	flex-shrink: 0;
+}
+
+.pg-header__brand .custom-logo-link,
+.pg-drawer__brand .custom-logo-link {
+	display: block;
+}
+
+.pg-header__brand img,
+.pg-drawer__brand img {
+	width: auto;
+	max-height: 42px;
+}
+
+.pg-brand {
+	display: block;
+	line-height: 0;
+}
+
+.pg-brand__mark {
+	display: block;
+	width: auto;
+	height: 42px;
+	max-width: 100%;
+}
+
+.pg-brand-text {
+	font-family: var(--pg-font-display);
+	font-size: 1.5rem;
+	font-weight: var(--pg-weight-extrabold);
+	letter-spacing: -0.02em;
+}
+
+.pg-brand-text a {
+	color: var(--pg-blue);
+}
+
+/* Search ----------------------------------------------------------------- */
+
+.pg-header__search {
+	flex: 1 1 auto;
+	max-width: 21.8125rem;
+	margin-inline-start: auto;
+}
+
+.pg-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+/* Two classes, so this beats the shared input[type="search"] rule and its
+   46px floor. */
+.pg-search .pg-search__input {
+	width: 100%;
+	height: 2.5rem;
+	min-height: 2.5rem;
+	padding: 0.5rem 3.5rem 0.5rem 1.375rem;
+	border: 1px solid var(--pg-blue);
+	border-radius: var(--pg-radius-pill);
+	font-size: var(--pg-text-xs);
+	background: transparent;
+}
+
+.pg-search__input::placeholder {
+	color: var(--pg-gray-500);
+	opacity: 1;
+}
+
+.pg-search__input::-webkit-search-cancel-button {
+	-webkit-appearance: none;
+}
+
+.pg-search__submit {
+	position: absolute;
+	right: 1px;
+	top: 50%;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.0625rem;
+	height: 2.375rem;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	transition: background-color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-search__submit:hover {
+	background: var(--pg-blue-deep);
+}
+
+.pg-search__submit svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+/* Predictive results panel */
+.pg-search__panel {
+	position: absolute;
+	top: calc(100% + 0.5rem);
+	left: 0;
+	right: 0;
+	z-index: var(--pg-z-dropdown);
+	max-height: 26rem;
+	overflow-y: auto;
+	padding: var(--pg-space-xs);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-white);
+	box-shadow: var(--pg-shadow-lg);
+}
+
+.pg-search__panel[hidden] {
+	display: none;
+}
+
+.pg-search__result {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	padding: var(--pg-space-xs);
+	border-radius: var(--pg-radius-sm);
+	color: var(--pg-color-heading);
+	transition: background-color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-search__result:hover,
+.pg-search__result.is-active {
+	background: var(--pg-gray-150);
+}
+
+.pg-search__result img {
+	width: 44px;
+	height: 44px;
+	border-radius: var(--pg-radius-xs);
+	object-fit: cover;
+	flex-shrink: 0;
+}
+
+.pg-search__result-title {
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+	line-height: 1.35;
+}
+
+.pg-search__result-meta {
+	font-size: var(--pg-text-2xs);
+	color: var(--pg-color-muted);
+}
+
+.pg-search__status {
+	padding: var(--pg-space-sm);
+	font-size: var(--pg-text-xs);
+	color: var(--pg-color-muted);
+	text-align: center;
+}
+
+.pg-search__all {
+	display: block;
+	margin-top: var(--pg-space-2xs);
+	padding: var(--pg-space-xs);
+	border-top: 1px solid var(--pg-color-border);
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-semibold);
+	text-align: center;
+}
+
+/* Contact blocks --------------------------------------------------------- */
+
+.pg-header__contact {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	flex-shrink: 0;
+}
+
+.pg-header__contact-icon {
+	color: var(--pg-ink);
+}
+
+.pg-header__contact-icon svg {
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.pg-header__contact-copy {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.25;
+}
+
+.pg-header__contact-title {
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-black);
+}
+
+.pg-header__contact-note {
+	font-size: var(--pg-text-2xs);
+	color: var(--pg-gray-550);
+}
+
+@media (max-width: 1279.98px) {
+	.pg-header__contact--shipping {
+		display: none;
+	}
+}
+
+/* Actions ---------------------------------------------------------------- */
+
+.pg-header__actions {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	margin-left: auto;
+	flex-shrink: 0;
+}
+
+.pg-header__action,
+.pg-header__burger {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: var(--pg-radius-circle);
+	color: var(--pg-ink);
+	transition: background-color var(--pg-duration) var(--pg-ease), color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-header__action:hover,
+.pg-header__burger:hover {
+	background: var(--pg-gray-150);
+	color: var(--pg-blue);
+}
+
+.pg-header__action svg,
+.pg-header__burger svg {
+	width: 1.375rem;
+	height: 1.375rem;
+}
+
+.pg-header__cart {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.625rem;
+	height: 2.625rem;
+	border-radius: var(--pg-radius-circle);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	transition: background-color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-header__cart:hover {
+	background: var(--pg-blue-deep);
+	color: var(--pg-white);
+}
+
+.pg-header__cart svg {
+	width: 1.25rem;
+	height: 1.25rem;
+}
+
+.pg-header__cart-count {
+	position: absolute;
+	top: -0.1875rem;
+	right: -0.1875rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.25rem;
+	height: 1.25rem;
+	padding: 0 0.25rem;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-white);
+	color: var(--pg-blue);
+	font-size: 0.6875rem;
+	font-weight: var(--pg-weight-bold);
+	line-height:
+	border: 1px solid var(--pg-blue);
+	border-radius: 0.625rem;
+	background: var(--pg-white);
+	color: var(--pg-black);
+}1;
+}
+
+/* Mobile search drop-down ------------------------------------------------- */
+
+.pg-header__mobile-search {
+	padding: 0 0 var(--pg-space-sm);
+}
+
+.pg-header__mobile-search[hidden] {
+	display: none;
+}
+
+/* -------------------------------------------------------------------------
+   Navigation row
+   ------------------------------------------------------------------------- */
+
+.pg-header__nav-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-md);
+	min-height: 56px;
+	padding: 0 2em;
+}
+
+.pg-header__cta {
+	flex-shrink: 0;
+	min-height: 2.5625rem;
+	padding-block: 0.625rem;
+	padding-inline: 1.25rem;
+}
+
+.pg-nav {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.pg-nav__list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25rem 1.75rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.pg-nav__item {
+	position: relative;
+}
+
+.pg-nav__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 0.5rem 0;
+	color: var(--pg-black);
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-medium);
+	white-space: nowrap;
+}
+
+.pg-nav__link:hover {
+	color: var(--pg-blue);
+}
+
+/* The frame gives the current page no colour of its own; aria-current carries
+   it for assistive tech. */
+.pg-nav__link.is-current {
+	color: var(--pg-black);
+}
+
+.pg-nav__caret svg {
+	width: 0.875rem;
+	height: 0.875rem;
+	transition: transform var(--pg-duration) var(--pg-ease);
+}
+
+.pg-nav__item--has-children:hover .pg-nav__caret svg,
+.pg-nav__item.is-open .pg-nav__caret svg {
+	transform: rotate(180deg);
+}
+
+/* The dedicated toggle only exists for keyboard and touch users. */
+.pg-nav__toggle {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	width: 100%;
+	pointer-events: none;
+}
+
+.pg-nav__empty a {
+	font-size: var(--pg-text-xs);
+	color: var(--pg-red);
+}
+
+/* Standard dropdown ------------------------------------------------------ */
+
+.pg-nav__submenu {
+	position: absolute;
+	top: calc(100% + 0.5rem);
+	left: -1rem;
+	z-index: var(--pg-z-dropdown);
+	min-width: 15rem;
+	padding: var(--pg-space-xs);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-white);
+	box-shadow: var(--pg-shadow-lg);
+	list-style: none;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(6px);
+	transition: opacity var(--pg-duration) var(--pg-ease), transform var(--pg-duration) var(--pg-ease), visibility var(--pg-duration);
+}
+
+.pg-nav__item--has-children:hover > .pg-nav__submenu,
+.pg-nav__item--has-children:focus-within > .pg-nav__submenu,
+.pg-nav__item.is-open > .pg-nav__submenu {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.pg-mega__link {
+	display: flex;
+	flex-direction: column;
+	gap: 0.125rem;
+	padding: 0.625rem 0.875rem;
+	border-radius: var(--pg-radius-sm);
+	color: var(--pg-color-heading);
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+	line-height: 1.35;
+	transition: background-color var(--pg-duration) var(--pg-ease), color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-mega__link:hover {
+	background: var(--pg-gray-150);
+	color: var(--pg-blue);
+}
+
+.pg-mega__desc {
+	font-size: var(--pg-text-2xs);
+	font-weight: var(--pg-weight-regular);
+	color: var(--pg-color-muted);
+}
+
+/* Mega panel ------------------------------------------------------------- */
+
+/* The panel spans the header card rather than the menu item it belongs to, so
+   it stays inside the 1320px column instead of overflowing the viewport. */
+.pg-nav__item--mega {
+	position: static;
+}
+
+/* Flush against the nav row: any margin here leaves a gap the pointer has to
+   cross, and the panel closes underneath it. */
+.pg-mega {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: auto;
+	width: min(58rem, 100%);
+	z-index: var(--pg-z-dropdown);
+	transform: translateY(6px);
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity var(--pg-duration) var(--pg-ease), transform var(--pg-duration) var(--pg-ease), visibility var(--pg-duration);
+}
+
+.pg-nav__item--mega:hover > .pg-mega,
+.pg-nav__item--mega:focus-within > .pg-mega,
+.pg-nav__item--mega.is-open > .pg-mega {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.pg-mega__inner {
+	max-height: min(70vh, 34rem);
+	overflow-y: auto;
+	padding: var(--pg-space-lg);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-white);
+	box-shadow: var(--pg-shadow-lg);
+}
+
+.pg-mega__grid {
+	display: grid;
+	gap: var(--pg-space-xs) var(--pg-space-lg);
+	grid-template-columns: repeat(var(--pg-mega-cols, 4), minmax(0, 1fr));
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* Cards fill the first two columns; a child that has children of its own
+   becomes the link column beside them. */
+.pg-mega__grid--cards {
+	gap: var(--pg-space-sm);
+	grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 12rem);
+	align-items: start;
+}
+
+.pg-mega__grid--cards > .pg-mega__item--has-children {
+	grid-column: 3;
+	/* Spans the two rows the four cards occupy. "1 / -1" resolves against the
+	   explicit grid, which has no rows here, and leaves an empty band. */
+	grid-row: 1 / span 2;
+	padding-left: var(--pg-space-lg);
+	border-left: 1px solid var(--pg-gray-200);
+}
+
+.pg-mega__item--card > .pg-mega__link {
+	flex-direction: row;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	padding: 0.5rem;
+	border: 1px solid var(--pg-gray-200);
+	border-radius: var(--pg-radius-sm);
+	background: var(--pg-white);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-ink);
+}
+
+.pg-mega__item--card > .pg-mega__link:hover {
+	border-color: var(--pg-blue);
+	background: var(--pg-white);
+	color: var(--pg-blue);
+}
+
+.pg-mega__card-media {
+	flex-shrink: 0;
+	width: 4.5rem;
+	height: 4.5rem;
+	border-radius: var(--pg-radius-xs);
+	overflow: hidden;
+	background: var(--pg-gray-100);
+}
+
+.pg-mega__card-media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* The link column's own link acts as its heading. */
+.pg-mega__item--has-children > .pg-mega__link {
+	padding: 0 0 var(--pg-space-xs);
+	font-size: var(--pg-text-2xs);
+	font-weight: var(--pg-weight-semibold);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--pg-color-muted);
+}
+
+.pg-mega__item--has-children > .pg-mega__link:hover {
+	background: transparent;
+	color: var(--pg-blue);
+}
+
+.pg-mega__foot {
+	display: flex;
+	justify-content: flex-start;
+	margin-top: var(--pg-space-lg);
+	padding-top: var(--pg-space-md);
+	border-top: 1px solid var(--pg-gray-200);
+}
+
+/* Third level inside a mega column reads as a plain list. */
+.pg-mega__sublist {
+	list-style: none;
+	margin: 0 0 var(--pg-space-sm);
+	padding: 0;
+}
+
+.pg-mega__sublist .pg-mega__link {
+	padding: 0.3125rem 0;
+	font-weight: var(--pg-weight-regular);
+	color: var(--pg-ink);
+}
+
+.pg-mega__sublist .pg-mega__link:hover {
+	color: var(--pg-blue);
+	background: transparent;
+}
+
+@media (max-width: 1199.98px) {
+	.pg-mega {
+		width: 100%;
+	}
+
+	.pg-mega__grid--cards {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.pg-mega__grid--cards > .pg-mega__item--has-children {
+		grid-column: 1 / -1;
+		grid-row: auto;
+		padding-left: 0;
+		padding-top: var(--pg-space-md);
+		border-left: 0;
+		border-top: 1px solid var(--pg-gray-200);
+	}
+
+	.pg-nav__list {
+		gap: 0.25rem 1rem;
+	}
+
+	.pg-nav__link {
+		font-size: var(--pg-text-xs);
+	}
+}
+
+/* -------------------------------------------------------------------------
+   Mobile drawer
+   ------------------------------------------------------------------------- */
+
+.pg-drawer-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--pg-z-drawer) - 1);
+	background: rgba(1, 32, 47, 0.55);
+	opacity: 0;
+	transition: opacity var(--pg-duration) var(--pg-ease);
+}
+
+.pg-drawer-backdrop.is-open {
+	opacity: 1;
+}
+
+.pg-drawer-backdrop[hidden] {
+	display: none;
+}
+
+.pg-drawer {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: var(--pg-z-drawer);
+	width: min(24rem, 88vw);
+	display: flex;
+	flex-direction: column;
+	background: var(--pg-white);
+	box-shadow: var(--pg-shadow-lg);
+	transform: translateX(100%);
+	transition: transform 280ms var(--pg-ease);
+}
+
+.pg-drawer[hidden] {
+	display: none;
+}
+
+.pg-drawer.is-open {
+	transform: translateX(0);
+}
+
+.pg-drawer__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-md);
+	padding: var(--pg-space-md) var(--pg-space-lg);
+	border-bottom: 1px solid var(--pg-color-border);
+}
+
+.pg-drawer__close {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: var(--pg-radius-circle);
+	background: var(--pg-gray-150);
+	color: var(--pg-ink);
+}
+
+.pg-drawer__close svg {
+	width: 1.25rem;
+	height: 1.25rem;
+}
+
+.pg-drawer__body {
+	flex: 1 1 auto;
+	overflow-y: auto;
+	padding: var(--pg-space-lg);
+	display: flex;
+	flex-direction: column;
+	gap: var(--pg-space-lg);
+}
+
+.pg-mnav__list,
+.pg-mnav__sublist {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.pg-mnav__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-xs);
+	border-bottom: 1px solid var(--pg-gray-200);
+}
+
+.pg-mnav__link {
+	flex: 1 1 auto;
+	padding: 0.875rem 0;
+	color: var(--pg-color-heading);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-medium);
+}
+
+.pg-mnav__link.is-current {
+	color: var(--pg-blue);
+}
+
+.pg-mnav__toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: var(--pg-radius-circle);
+	color: var(--pg-ink);
+	transition: background-color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-mnav__toggle svg {
+	width: 1.125rem;
+	height: 1.125rem;
+	transition: transform var(--pg-duration) var(--pg-ease);
+}
+
+.pg-mnav__toggle[aria-expanded="true"] svg {
+	transform: rotate(180deg);
+}
+
+.pg-mnav__panel {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows var(--pg-duration) var(--pg-ease);
+}
+
+.pg-mnav__panel > div {
+	overflow: hidden;
+}
+
+.pg-mnav__item.is-open > .pg-mnav__panel {
+	grid-template-rows: 1fr;
+}
+
+.pg-mnav__sublist {
+	padding-left: var(--pg-space-md);
+}
+
+.pg-mnav__sublist .pg-mnav__link {
+	padding-block: 0.625rem;
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-regular);
+	color: var(--pg-color-muted);
+}
+
+.pg-drawer__links {
+	display: grid;
+	gap: var(--pg-space-2xs);
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.pg-drawer__links a,
+.pg-drawer__contact a {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	padding: 0.5rem 0;
+	color: var(--pg-color-heading);
+	font-size: var(--pg-text-xs);
+}
+
+.pg-drawer__links svg,
+.pg-drawer__contact svg {
+	width: 1.125rem;
+	height: 1.125rem;
+	color: var(--pg-blue);
+}
+
+.pg-drawer__contact {
+	display: grid;
+	gap: var(--pg-space-2xs);
+	padding-top: var(--pg-space-md);
+	border-top: 1px solid var(--pg-color-border);
+}
+
+.pg-social {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--pg-space-xs);
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.pg-social a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: var(--pg-radius-circle);
+	border: 1px solid var(--pg-color-border);
+	color: var(--pg-ink);
+	transition: background-color var(--pg-duration) var(--pg-ease), color var(--pg-duration) var(--pg-ease), border-color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-social a:hover {
+	background: var(--pg-blue);
+	border-color: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+.pg-social svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+/* -------------------------------------------------------------------------
+   Small screens
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 991.98px) {
+	.pg-header__utility,
+	.pg-header__nav-row {
+		padding-inline: var(--pg-space-md);
+	}
+
+	.pg-header__utility {
+		min-height: 60px;
+	}
+
+	.pg-header__brand img,
+	.pg-header__brand .pg-brand__mark {
+		max-height: 32px;
+		height: 32px;
+	}
+}

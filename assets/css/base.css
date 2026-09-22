@@ -1,0 +1,611 @@
+/* =========================================================================
+   Packgens — design tokens, reset, typography, layout primitives.
+   Values are taken from the Packgens Figma file (1920px artboards,
+   1320px content column).
+   ========================================================================= */
+
+:root {
+	/* --- Brand ------------------------------------------------------- */
+	--pg-blue: #0022b4;          /* Primary. Buttons, hero, header CTA.      */
+	--pg-blue-vivid: #0027d0;    /* Full-bleed brand bands, links.           */
+	--pg-blue-bright: #0834f1;   /* Form submit buttons.                     */
+	--pg-blue-deep: #001a8a;     /* Hover state for --pg-blue.               */
+	--pg-sky: #1b99d6;           /* Logo accent, secondary icons.            */
+	--pg-navy: #012c44;          /* Comparison band and footer.              */
+	--pg-navy-deep: #01202f;     /* Footer base / dividers.                  */
+	--pg-green: #1eba88;         /* Accent: ticks, badges, success marks.    */
+	--pg-green-band: #12805f;    /* Green surfaces that carry text. The Figma
+	                                mint (#1eba88) only reaches 2.5:1 against
+	                                white, so text surfaces use this deeper
+	                                tone at 4.9:1. See DEVELOPMENT_NOTES.md.  */
+	--pg-green-dark: #00b67a;    /* Trustpilot green.                        */
+	--pg-amber: #ffc20c;         /* Stars.                                   */
+	--pg-red: #d92d20;           /* Errors.                                  */
+
+	/* --- Neutrals ---------------------------------------------------- */
+	--pg-white: #ffffff;
+	--pg-cream: #f6f6ec;         /* "3 simple steps" band.                   */
+	--pg-gray-50: #f9fafb;
+	--pg-gray-100: #f6f6f6;
+	--pg-gray-150: #f3f5f6;
+	--pg-gray-200: #f1f1f1;
+	--pg-gray-300: #e4e7ec;
+	--pg-gray-400: #d0d5dd;
+	--pg-gray-450: #8892a3;      /* Empty rating stars: 3.1:1 on white.      */
+	--pg-gray-500: #a1a1a1;
+	--pg-gray-550: #7b7b7b;      /* Header contact notes.                    */
+	--pg-gray-600: #667085;
+	--pg-gray-700: #505050;
+	--pg-gray-800: #2c2f2e;
+	--pg-ink: #191b1b;           /* Headings.                                */
+	--pg-black: #000000;         /* Header contact and nav labels.           */
+
+	/* --- Semantic ---------------------------------------------------- */
+	--pg-color-primary: var(--pg-blue);
+	--pg-color-primary-hover: var(--pg-blue-deep);
+	--pg-color-accent: var(--pg-green);
+	--pg-color-heading: var(--pg-ink);
+	--pg-color-text: #484848;
+	--pg-color-muted: var(--pg-gray-600);
+	--pg-color-link: var(--pg-blue-vivid);
+	--pg-color-bg: var(--pg-white);
+	--pg-color-border: var(--pg-gray-300);
+	--pg-color-surface: var(--pg-gray-100);
+	--pg-color-on-dark: rgba(255, 255, 255, 0.82);
+
+	/* --- Type -------------------------------------------------------- */
+	--pg-font-display: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+	--pg-font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+
+	--pg-weight-regular: 400;
+	--pg-weight-medium: 500;
+	--pg-weight-semibold: 600;
+	--pg-weight-bold: 700;
+	--pg-weight-extrabold: 800;
+
+	/* Fluid display sizes: min at 360px, Figma value at 1440px. */
+	--pg-text-display: clamp(2rem, 1.15rem + 3.8vw, 3.75rem);   /* 60px */
+	--pg-text-h1: clamp(1.875rem, 1.2rem + 3vw, 2.625rem);      /* 42px */
+	--pg-text-h2: clamp(1.625rem, 1.15rem + 2.1vw, 2.125rem);   /* 34px */
+	--pg-text-h3: clamp(1.375rem, 1.2rem + 0.78vw, 1.5rem);     /* 24px */
+	--pg-text-h4: 1.375rem;                                     /* 22px */
+	--pg-text-h5: 1.25rem;                                      /* 20px */
+	--pg-text-h6: 1.125rem;                                     /* 18px */
+	--pg-text-lg: 1.064rem;                                     /* 17px */
+	--pg-text-base: 1rem;                                       /* 16px */
+	--pg-text-sm: 0.9375rem;                                    /* 15px */
+	--pg-text-xs: 0.875rem;                                     /* 14px */
+	--pg-text-2xs: 0.75rem;                                     /* 12px */
+
+	--pg-leading-tight: 1.15;
+	--pg-leading-heading: 1.33;   /* 42/56 and 34/46 both land here. */
+	--pg-leading-snug: 1.375;     /* 16/22 */
+	--pg-leading-normal: 1.625;   /* 16/26 */
+	--pg-leading-relaxed: 1.75;   /* 16/28 */
+
+	/* --- Spacing (4px base) ------------------------------------------ */
+	--pg-space-2xs: 0.25rem;   /* 4  */
+	--pg-space-xs: 0.5rem;     /* 8  */
+	--pg-space-sm: 0.75rem;    /* 12 */
+	--pg-space-md: 1rem;       /* 16 */
+	--pg-space-lg: 1.5rem;     /* 24 */
+	--pg-space-xl: 2rem;       /* 32 */
+	--pg-space-2xl: 2.5rem;    /* 40 */
+	--pg-space-3xl: 3.5rem;    /* 56 */
+	--pg-space-4xl: 5rem;      /* 80 */
+	--pg-space-5xl: 7.5rem;    /* 120 */
+
+	/* Vertical rhythm between full-bleed sections. */
+	--pg-section-y: clamp(3rem, 1.5rem + 5vw, 6rem);
+	--pg-section-y-sm: clamp(2.25rem, 1.4rem + 3vw, 4rem);
+
+	/* --- Layout ------------------------------------------------------ */
+	--pg-container: 1320px;
+	--pg-container-narrow: 900px;
+	--pg-gutter: clamp(1rem, 0.4rem + 2.4vw, 1.5rem);
+	--pg-grid-gap: clamp(1rem, 0.6rem + 1.4vw, 1.75rem);
+
+	/* --- Radii ------------------------------------------------------- */
+	--pg-radius-xs: 0.5rem;    /* 8   */
+	--pg-radius-sm: 0.75rem;   /* 12  */
+	--pg-radius-md: 1.25rem;   /* 20  */
+	--pg-radius-lg: 1.875rem;  /* 30  */
+	--pg-radius-xl: 2.125rem;  /* 34  */
+	--pg-radius-2xl: 2.5rem;   /* 40  */
+	--pg-radius-bar: 2.3125rem; /* 37 */
+	--pg-radius-pill: 6.25rem; /* 100 */
+	--pg-radius-circle: 50%;
+
+	/* --- Elevation --------------------------------------------------- */
+	--pg-shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.05);
+	--pg-shadow-sm: 0 4px 12px rgba(16, 24, 40, 0.06);
+	--pg-shadow-md: 0 10px 30px rgba(16, 24, 40, 0.08);
+	--pg-shadow-lg: 0 22px 60px rgba(1, 44, 68, 0.14);
+	--pg-shadow-header: 0 12px 34px rgba(0, 20, 90, 0.16);
+
+	/* --- Motion ------------------------------------------------------ */
+	--pg-ease: cubic-bezier(0.4, 0, 0.2, 1);
+	--pg-duration: 220ms;
+
+	/* --- Layers ------------------------------------------------------ */
+	--pg-z-header: 100;
+	--pg-z-dropdown: 120;
+	--pg-z-drawer: 200;
+	--pg-z-modal: 300;
+}
+
+/* =========================================================================
+   Reset
+   ========================================================================= */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	scroll-behavior: smooth;
+	scroll-padding-top: 7rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+body {
+	margin: 0;
+	background-color: var(--pg-color-bg);
+	color: var(--pg-color-text);
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-base);
+	line-height: var(--pg-leading-normal);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	/* `clip` contains the full-bleed rows without turning the body into a scroll
+	   container, which `hidden` does -- and a scroll container here becomes the
+	   viewport every `position: sticky` descendant is measured against, so
+	   nothing on the site can stick. */
+	overflow-x: clip;
+}
+
+body.pg-no-scroll {
+	overflow: hidden;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+	color: inherit;
+}
+
+button {
+	background: none;
+	border: 0;
+	cursor: pointer;
+	padding: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+figure,
+blockquote,
+dl,
+dd {
+	margin: 0;
+}
+
+/* :where() keeps this at zero specificity, so a single class rule further down
+   can still set padding or a list marker. A bare ul[class] selector would
+   outrank it. */
+:where(ul[class], ol[class]) {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: var(--pg-color-link);
+	text-decoration: none;
+	transition: color var(--pg-duration) var(--pg-ease);
+}
+
+a:hover {
+	color: var(--pg-color-primary-hover);
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+hr {
+	border: 0;
+	border-top: 1px solid var(--pg-color-border);
+	margin: var(--pg-space-xl) 0;
+}
+
+:focus-visible {
+	outline: 3px solid var(--pg-blue-vivid);
+	outline-offset: 2px;
+	border-radius: var(--pg-radius-xs);
+}
+
+::selection {
+	background: var(--pg-blue-vivid);
+	color: var(--pg-white);
+}
+
+/* =========================================================================
+   Typography
+   ========================================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.pg-h1,
+.pg-h2,
+.pg-h3,
+.pg-h4,
+.pg-h5 {
+	font-family: var(--pg-font-display);
+	color: var(--pg-color-heading);
+	font-weight: var(--pg-weight-bold);
+	line-height: var(--pg-leading-heading);
+	letter-spacing: -0.01em;
+	text-wrap: balance;
+}
+
+h1,
+.pg-h1 {
+	font-size: var(--pg-text-h1);
+}
+
+h2,
+.pg-h2 {
+	font-size: var(--pg-text-h2);
+}
+
+h3,
+.pg-h3 {
+	font-size: var(--pg-text-h3);
+	font-weight: var(--pg-weight-semibold);
+}
+
+h4,
+.pg-h4 {
+	font-size: var(--pg-text-h4);
+	font-weight: var(--pg-weight-semibold);
+	line-height: 1.3;
+}
+
+h5,
+.pg-h5 {
+	font-size: var(--pg-text-h5);
+	font-weight: var(--pg-weight-semibold);
+	line-height: 1.35;
+}
+
+h6 {
+	font-size: var(--pg-text-h6);
+	font-weight: var(--pg-weight-semibold);
+	line-height: 1.4;
+}
+
+.pg-display {
+	font-size: var(--pg-text-display);
+	line-height: var(--pg-leading-tight);
+	font-weight: var(--pg-weight-extrabold);
+}
+
+.pg-lead {
+	font-size: var(--pg-text-lg);
+	line-height: var(--pg-leading-normal);
+	color: var(--pg-color-muted);
+}
+
+.pg-eyebrow {
+	display: inline-block;
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-semibold);
+	letter-spacing: 0.02em;
+	color: var(--pg-color-primary);
+	text-transform: none;
+}
+
+small,
+.pg-text-sm {
+	font-size: var(--pg-text-xs);
+}
+
+strong,
+b {
+	font-weight: var(--pg-weight-semibold);
+}
+
+/* =========================================================================
+   Layout primitives
+   ========================================================================= */
+
+.pg-container {
+	width: 100%;
+	max-width: calc(var(--pg-container) + (var(--pg-gutter) * 2));
+	margin-inline: auto;
+	padding-inline: var(--pg-gutter);
+}
+
+.pg-container--narrow {
+	max-width: calc(var(--pg-container-narrow) + (var(--pg-gutter) * 2));
+}
+
+.pg-container--wide {
+	max-width: 1600px;
+}
+
+.pg-section {
+	position: relative;
+	padding-block: var(--pg-section-y);
+}
+
+.pg-section--tight {
+	padding-block: var(--pg-section-y-sm);
+}
+
+.pg-section--flush-top {
+	padding-top: 0;
+}
+
+.pg-section--flush-bottom {
+	padding-bottom: 0;
+}
+
+/* Section surfaces mapped to the Figma bands. */
+.pg-section--cream { background-color: var(--pg-cream); }
+.pg-section--gray { background-color: var(--pg-gray-200); }
+.pg-section--gray-cool { background-color: var(--pg-gray-150); }
+.pg-section--navy { background-color: var(--pg-navy); }
+.pg-section--blue { background-color: var(--pg-blue-vivid); }
+.pg-section--green { background-color: var(--pg-green); }
+.pg-section--black { background-color: var(--pg-black); }
+
+.pg-section--navy,
+.pg-section--blue,
+.pg-section--black {
+	color: var(--pg-color-on-dark);
+}
+
+.pg-section--green {
+	color: var(--pg-white);
+}
+
+.pg-section--navy :is(h1, h2, h3, h4, h5),
+.pg-section--blue :is(h1, h2, h3, h4, h5),
+.pg-section--black :is(h1, h2, h3, h4, h5),
+.pg-section--green :is(h1, h2, h3, h4, h5) {
+	color: var(--pg-white);
+}
+
+.pg-section--navy .pg-eyebrow,
+.pg-section--blue .pg-eyebrow,
+.pg-section--black .pg-eyebrow,
+.pg-section--green .pg-eyebrow {
+	color: var(--pg-white);
+}
+
+/* Light panels sitting on a dark band keep the normal text colours. Without
+   this, white headings disappear inside white cards. */
+.pg-section--navy :is(.pg-card, .pg-review-card, .pg-comparison__panel, .pg-process, .pg-accordion, .pg-tabs__list, .pg-post-card, .pg-form),
+.pg-section--blue :is(.pg-card, .pg-review-card, .pg-comparison__panel, .pg-process, .pg-accordion, .pg-tabs__list, .pg-post-card, .pg-form),
+.pg-section--green :is(.pg-card, .pg-review-card, .pg-comparison__panel, .pg-process, .pg-accordion, .pg-tabs__list, .pg-post-card, .pg-form) {
+	color: var(--pg-color-text);
+}
+
+.pg-section--navy :is(.pg-card, .pg-review-card, .pg-comparison__panel, .pg-process, .pg-accordion, .pg-post-card) :is(h1, h2, h3, h4, h5),
+.pg-section--blue :is(.pg-card, .pg-review-card, .pg-comparison__panel, .pg-process, .pg-accordion, .pg-post-card) :is(h1, h2, h3, h4, h5),
+.pg-section--green :is(.pg-card, .pg-review-card, .pg-comparison__panel, .pg-process, .pg-accordion, .pg-post-card) :is(h1, h2, h3, h4, h5) {
+	color: var(--pg-color-heading);
+}
+
+/* Grid helper. Cards use --pg-cols with a sensible auto-fit fallback. */
+.pg-grid {
+	display: grid;
+	gap: var(--pg-grid-gap);
+	grid-template-columns: repeat(var(--pg-cols, 1), minmax(0, 1fr));
+}
+
+@media (min-width: 576px) {
+	.pg-grid { grid-template-columns: repeat(var(--pg-cols-sm, var(--pg-cols, 2)), minmax(0, 1fr)); }
+}
+
+@media (min-width: 768px) {
+	.pg-grid { grid-template-columns: repeat(var(--pg-cols-md, var(--pg-cols-sm, 2)), minmax(0, 1fr)); }
+}
+
+@media (min-width: 992px) {
+	.pg-grid { grid-template-columns: repeat(var(--pg-cols-lg, var(--pg-cols-md, 3)), minmax(0, 1fr)); }
+}
+
+@media (min-width: 1200px) {
+	.pg-grid { grid-template-columns: repeat(var(--pg-cols-xl, var(--pg-cols-lg, 4)), minmax(0, 1fr)); }
+}
+
+.pg-stack {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pg-stack-gap, var(--pg-space-md));
+}
+
+.pg-cluster {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-cluster-gap, var(--pg-space-sm));
+}
+
+/* =========================================================================
+   Section header (eyebrow + title + description + optional action)
+   ========================================================================= */
+
+.pg-section-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: var(--pg-space-lg);
+	margin-bottom: clamp(1.75rem, 1rem + 2vw, 3rem);
+}
+
+.pg-section-head__copy {
+	max-width: 44rem;
+}
+
+.pg-section-head--center {
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.pg-section-head--center .pg-section-head__copy {
+	margin-inline: auto;
+}
+
+.pg-section-head__title {
+	margin-bottom: var(--pg-space-sm);
+}
+
+.pg-section-head__desc {
+	color: var(--pg-color-muted);
+	font-size: var(--pg-text-base);
+	line-height: var(--pg-leading-normal);
+	margin: 0;
+}
+
+.pg-section--navy .pg-section-head__desc,
+.pg-section--blue .pg-section-head__desc {
+	color: var(--pg-color-on-dark);
+}
+
+/* The green band is the tightest surface in the palette, so text sitting
+   directly on it stays at full white to hold 4.9:1. Text inside the white
+   cards that sit on the band keeps its normal colours. */
+.pg-section--green .pg-section-head__desc,
+.pg-section--green .pg-cta__desc,
+.pg-section--green .pg-cta__phone-label,
+.pg-section--green .pg-hero__desc,
+.pg-section--green .pg-usp__text {
+	color: var(--pg-white);
+}
+
+.pg-section--green :is(.pg-card, .pg-review-card, .pg-post-card) :is(p, .pg-card__excerpt) {
+	color: var(--pg-color-muted);
+}
+
+.pg-section-head__actions {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	flex-shrink: 0;
+}
+
+/* =========================================================================
+   Utilities
+   ========================================================================= */
+
+.screen-reader-text,
+.pg-sr-only {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.pg-skip-link {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	transform: translate(-50%, -120%);
+	z-index: var(--pg-z-modal);
+	background: var(--pg-white);
+	color: var(--pg-blue);
+	padding: var(--pg-space-sm) var(--pg-space-lg);
+	border-radius: 0 0 var(--pg-radius-sm) var(--pg-radius-sm);
+	font-weight: var(--pg-weight-semibold);
+	box-shadow: var(--pg-shadow-md);
+	transition: transform var(--pg-duration) var(--pg-ease);
+}
+
+.pg-skip-link:focus {
+	transform: translate(-50%, 0);
+}
+
+.pg-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	line-height: 0;
+}
+
+.pg-icon svg {
+	width: 1em;
+	height: 1em;
+}
+
+.pg-text-center { text-align: center; }
+.pg-hidden { display: none !important; }
+
+/* The header swaps between its desktop and drawer layouts at 992px, so both
+   visibility helpers pivot on the same breakpoint. */
+@media (max-width: 991.98px) {
+	.pg-hide-mobile { display: none !important; }
+}
+
+@media (min-width: 992px) {
+	.pg-hide-desktop { display: none !important; }
+}
+
+.pg-visually-balanced {
+	text-wrap: pretty;
+}
+
+/* Keeps wide tables and code from breaking the page on small screens. */
+.pg-scroll-x {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}

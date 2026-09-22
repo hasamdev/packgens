@@ -1,0 +1,461 @@
+/* =========================================================================
+   Packgens — footer and trust strip.
+   ========================================================================= */
+
+.pg-section--usp {
+	padding-block: clamp(1.75rem, 1.2rem + 1.8vw, 2.75rem);
+}
+
+.pg-section--usp .pg-usp {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	gap: 0;
+	grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.pg-usp__inner {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-md);
+	color: inherit;
+}
+
+.pg-usp__copy {
+	display: flex;
+	flex-direction: column;
+	gap: 0.125rem;
+}
+
+/*
+ * The strip draws its own icons as plain white line art rather than the
+ * circled marks the component uses elsewhere, and separates the columns with
+ * a dotted rule.
+ */
+.pg-section--usp .pg-usp__item {
+	padding-inline: clamp(1rem, 0.4rem + 1.8vw, 2.25rem);
+}
+
+.pg-section--usp .pg-usp__item + .pg-usp__item {
+	border-left: 2px dotted rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 767.98px) {
+	.pg-section--usp .pg-usp__item + .pg-usp__item {
+		border-left: 0;
+	}
+}
+
+.pg-section--usp .pg-usp__icon {
+	width: 3.625rem;
+	height: 3.625rem;
+	border-radius: 0;
+	background: none;
+	color: var(--pg-white);
+}
+
+/* Explicit sizes: the shared .pg-icon wrapper has no box for a percentage to
+   resolve against, and these files carry no width/height of their own. */
+.pg-section--usp .pg-usp__icon svg {
+	width: 3.625rem;
+	height: 3.625rem;
+}
+
+.pg-section--usp .pg-usp__title {
+	font-size: var(--pg-text-h6);
+	font-weight: var(--pg-weight-bold);
+	line-height: 1.3;
+}
+
+.pg-section--usp .pg-usp__text {
+	font-size: var(--pg-text-sm);
+	line-height: 1.45;
+	color: rgba(255, 255, 255, 0.92);
+}
+
+/* -------------------------------------------------------------------------
+   Footer shell
+   ------------------------------------------------------------------------- */
+
+.pg-footer {
+	background: var(--pg-navy);
+	color: var(--pg-color-on-dark);
+	padding-block: clamp(2.5rem, 1.5rem + 3vw, 4rem) var(--pg-space-lg);
+	font-size: var(--pg-text-xs);
+}
+
+.pg-footer a {
+	color: var(--pg-color-on-dark);
+}
+
+.pg-footer a:hover {
+	color: var(--pg-white);
+}
+
+.pg-footer__grid {
+	display: grid;
+	gap: clamp(1.75rem, 1rem + 2.5vw, 3rem);
+	grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+	.pg-footer__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1100px) {
+	.pg-footer__grid {
+		grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 1fr));
+	}
+}
+
+.pg-footer__heading {
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-h5);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-white);
+	margin-bottom: var(--pg-space-md);
+	padding-bottom: var(--pg-space-sm);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Brand column ----------------------------------------------------------- */
+
+/* The plate and the newsletter card meet flush, so the column carries no gap
+   of its own and the blocks below it space themselves. */
+.pg-footer__brand-col {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+
+
+/* The plate and the newsletter card below it read as one stacked block, so
+   they share a width and sit tight to each other. */
+.pg-footer__logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 5.8125rem;
+	padding: var(--pg-space-md) var(--pg-space-lg);
+	/* Square where it meets the card below, so the two share a straight right
+	   edge and pinch together on the left. */
+	border-radius: var(--pg-radius-lg) var(--pg-radius-lg) 0 var(--pg-radius-lg);
+	background: var(--pg-white);
+}
+
+.pg-footer__logo img,
+.pg-footer__logo .pg-brand__mark {
+	max-height: 40px;
+	height: 40px;
+	width: auto;
+}
+
+/* The white logo plate needs the brand colour back for the text fallback. */
+.pg-footer__logo .pg-brand-text a {
+	color: var(--pg-blue);
+}
+
+.pg-footer__about {
+	margin: 0;
+	line-height: var(--pg-leading-normal);
+}
+
+.pg-newsletter {
+	display: flex;
+	flex-direction: column;
+	min-height: 17.1875rem;
+	padding: var(--pg-space-lg);
+	border-radius: var(--pg-radius-lg) 0 var(--pg-radius-lg) var(--pg-radius-lg);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+.pg-newsletter__title {
+	font-size: var(--pg-text-h4);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-white);
+	line-height: 1.35;
+	margin-bottom: var(--pg-space-xs);
+}
+
+/* One phrase of the offer carries the accent colour. */
+.pg-newsletter__title .pg-accent {
+	color: var(--pg-green);
+	font-weight: var(--pg-weight-bold);
+}
+
+.pg-newsletter__text {
+	margin: 0 0 var(--pg-space-md);
+	color: rgba(255, 255, 255, 0.8);
+}
+
+/* The field sits at the foot of the card whatever the copy above it. */
+.pg-newsletter form,
+.pg-newsletter__field {
+	margin-top: auto;
+}
+
+.pg-newsletter__field {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+	padding-bottom: var(--pg-space-2xs);
+}
+
+.pg-newsletter__field input[type="email"] {
+	flex: 1 1 auto;
+	min-height: 2.25rem;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: var(--pg-white);
+	font-size: var(--pg-text-xs);
+}
+
+.pg-newsletter__field input[type="email"]:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+.pg-newsletter__field input::placeholder {
+	color: rgba(255, 255, 255, 0.65);
+}
+
+.pg-newsletter__submit {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	border-radius: var(--pg-radius-circle);
+	color: var(--pg-white);
+	transition: background-color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-newsletter__submit:hover {
+	background: rgba(255, 255, 255, 0.2);
+}
+
+.pg-newsletter__submit svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.pg-social--light a {
+	border-color: rgba(255, 255, 255, 0.35);
+	color: var(--pg-white);
+}
+
+.pg-social--light a:hover {
+	background: var(--pg-white);
+	border-color: var(--pg-white);
+	color: var(--pg-navy);
+}
+
+/* Link columns ----------------------------------------------------------- */
+
+.pg-footer__menu {
+	display: grid;
+	gap: var(--pg-space-xs);
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.pg-footer__menu a {
+	display: inline-block;
+	padding-block: 0.125rem;
+}
+
+.pg-footer__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--pg-space-xs);
+	margin-top: var(--pg-space-lg);
+}
+
+.pg-footer__actions .pg-btn {
+	min-height: 2.625rem;
+	padding-block: 0.5rem;
+	font-size: var(--pg-text-xs);
+}
+
+.pg-footer__contact {
+	margin-top: var(--pg-space-xl);
+	display: grid;
+	gap: var(--pg-space-2xs);
+}
+
+.pg-footer__contact-title {
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-white);
+	margin-top: var(--pg-space-sm);
+}
+
+.pg-footer__contact p {
+	margin: 0;
+}
+
+.pg-footer__contact a,
+.pg-footer__address {
+	display: inline-flex;
+	align-items: flex-start;
+	gap: var(--pg-space-xs);
+}
+
+.pg-footer__contact svg {
+	width: 1rem;
+	height: 1rem;
+	margin-top: 0.125rem;
+	flex-shrink: 0;
+}
+
+/* Payments --------------------------------------------------------------- */
+
+.pg-footer__payments {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-md);
+	padding: 0 var(--pg-space-lg);
+	min-height: 3rem;
+	max-height: 3rem;
+	border-radius: var(--pg-radius-pill) var(--pg-radius-pill) 0 var(--pg-radius-pill);
+	background: rgba(255, 255, 255, 0.06);
+}
+
+/*
+ * Stacked, the social block follows the brand column rather than the link
+ * columns it comes after in the markup.
+ */
+.pg-footer__brand-col { order: 0; }
+.pg-footer__social { order: 1; }
+.pg-footer__col { order: 2; }
+.pg-footer__payments { order: 3; }
+
+/*
+ * From the wide breakpoint the social block and the payments strip share the
+ * second row, which is what lines their centres up: the strip takes the link
+ * columns' width beside them.
+ */
+@media (min-width: 1100px) {
+	.pg-footer__brand-col {
+		grid-column: 1;
+		grid-row: 1;
+	}
+
+	.pg-footer__social {
+		grid-column: 1;
+		grid-row: 2;
+		align-self: center;
+	}
+
+	/* Pinned to the foot of the row, then nudged by half the difference
+	   between its height and the icons' so the two centre lines meet. */
+	.pg-footer__payments {
+		grid-column: 2 / -1;
+		grid-row: 2;
+		align-self: end;
+		margin-bottom: -0.375rem;
+	}
+}
+
+.pg-footer__payments-title {
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-white);
+	margin: 0;
+}
+
+.pg-logo-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.pg-logo-row img {
+	height: 28px;
+	width: auto;
+	object-fit: contain;
+}
+
+.pg-logo-row--sm img {
+	height: 20px;
+}
+
+/* Bottom bar ------------------------------------------------------------- */
+
+.pg-footer__bottom {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-md);
+	margin-top: var(--pg-space-lg);
+	padding-top: var(--pg-space-lg);
+	border-top: 1px solid rgba(255, 255, 255, 0.14);
+	font-size: var(--pg-text-2xs);
+}
+
+.pg-footer__copyright {
+	margin: 0;
+}
+
+.pg-footer__delivery {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+}
+
+.pg-footer__legal-menu {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.pg-footer__legal-menu li + li::before {
+	content: "\00b7";
+	margin-right: var(--pg-space-xs);
+	color: rgba(255, 255, 255, 0.45);
+}
+
+.pg-footer__legal-menu li {
+	display: flex;
+	align-items: center;
+}
+
+@media (max-width: 767.98px) {
+	.pg-footer__payments {
+		border-radius: var(--pg-radius-md);
+		justify-content: center;
+		text-align: center;
+	}
+
+	.pg-footer__bottom {
+		justify-content: center;
+		text-align: center;
+	}
+}
+
+/* "Follow us" is a plain label, not a ruled column heading. */
+.pg-footer__social .pg-footer__heading {
+	padding-bottom: 0;
+	border-bottom: 0;
+	margin-bottom: var(--pg-space-sm);
+}

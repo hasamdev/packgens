@@ -1,0 +1,19 @@
+/*
+Theme Name: Packgens
+Theme URI: https://packgens.com/
+Author: Packgens Development Team
+Author URI: https://packgens.com/
+Description: A custom, conversion-focused WordPress theme for Packgens. Built for custom packaging and printing: product catalogue, instant quote requests, WooCommerce commerce, testimonials, materials, blog and SEO-ready templates.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 7.1
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: packgens
+Domain Path: /languages
+Tags: custom-logo, custom-menu, featured-images, translation-ready, e-commerce, blog, grid-layout, block-styles, theme-options
+
+This file carries the theme header only. All styles live in /assets/css and are
+enqueued conditionally from inc/enqueue.php.
+*/

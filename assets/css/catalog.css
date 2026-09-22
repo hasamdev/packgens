@@ -1,0 +1,167 @@
+/* =========================================================================
+   Packgens — product catalogue (shop, category, tag, product search).
+   ========================================================================= */
+
+.pg-catalog__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-md);
+	margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+.pg-catalog__head .pg-section-head__title {
+	margin: 0;
+	text-align: center;
+}
+
+@media (min-width: 768px) {
+	.pg-catalog__head {
+		justify-content: center;
+		position: relative;
+	}
+
+	.pg-catalog__tools {
+		position: absolute;
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+}
+
+/* WooCommerce ordering select, restyled. */
+.woocommerce-ordering select,
+.pg-catalog__tools select {
+	min-height: 2.75rem;
+	font-size: var(--pg-text-xs);
+	border-radius: var(--pg-radius-pill);
+}
+
+.woocommerce-ordering {
+	margin: 0;
+}
+
+.pg-product-grid {
+	align-items: stretch;
+}
+
+/* Card badges sit over the media, as in the Figma catalogue. */
+.pg-product-card .pg-card__media {
+	aspect-ratio: 4 / 3;
+}
+
+.pg-product-card .pg-card__body {
+	gap: var(--pg-space-2xs);
+}
+
+.pg-product-card .pg-card__footer {
+	align-items: center;
+}
+
+/* The catalogue grid keeps the price and the action on one line. The homepage
+   row runs the button full width instead, so this only applies here. */
+.pg-product-grid .pg-product-card .pg-card__footer .pg-btn {
+	flex: 0 0 auto;
+}
+
+/* Result summary above search listings. */
+.pg-search-summary {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-md);
+	margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+.pg-search-summary p {
+	margin: 0;
+	color: var(--pg-color-muted);
+	font-size: var(--pg-text-sm);
+}
+
+.pg-search--inline {
+	max-width: 22rem;
+	width: 100%;
+}
+
+/* Empty catalogue state keeps the page from collapsing. */
+.pg-section--catalog .pg-empty {
+	background: var(--pg-gray-100);
+	border-radius: var(--pg-radius-md);
+}
+
+/* The long-form card is drawn with a wider, softer shadow on a category page
+   than the one the homepage settled on. */
+.tax-product_cat .pg-longform {
+	border-radius: 40px;
+	box-shadow: 0 0 40px rgba(20, 19, 19, 0.15);
+}
+
+/* The steps sit on white here rather than the homepage's cream, so a hairline
+   marks where the band starts and the card carries its own lift. */
+.tax-product_cat .pg-section--process {
+	border-top: 1px solid #e8e8e8;
+}
+
+.tax-product_cat .pg-process {
+	border-radius: 40px 40px 0 40px;
+	box-shadow: 0 13px 61.5604px rgba(21, 21, 21, 0.15);
+}
+
+/* Review badges on the light band are white cards. The blue-band version is a
+   translucent white panel with white type, which is invisible here, so the
+   colours come back to ink alongside the card treatment. */
+.pg-section--reviews.pg-section--gray .pg-review-badge {
+	background: #ffffff;
+	box-shadow: 0 10px 14.6px rgba(21, 21, 21, 0.07);
+	border-radius: 20px;
+	color: var(--pg-color-heading);
+}
+
+.pg-section--reviews.pg-section--gray a.pg-review-badge:hover,
+.pg-section--reviews.pg-section--gray a.pg-review-badge:focus-visible {
+	background: #ffffff;
+	color: var(--pg-color-heading);
+	box-shadow: 0 10px 24px rgba(21, 21, 21, 0.12);
+}
+
+/* The Google mark is forced white on the brand band; here it reads as ink. */
+.pg-section--reviews.pg-section--gray [data-pg-platform="google"] .pg-review-badge__brand > .pg-icon svg {
+	color: var(--pg-color-heading);
+}
+
+/* The default hairline on the carousel arrows is nearly the same value as this
+   band's grey, so the circles need a stronger outline to read against it. */
+.pg-section--reviews.pg-section--gray .pg-icon-btn {
+	border-color: #c9c9c9;
+}
+
+/* Review cards lift off the light band. The marquee viewport clips its
+   overflow, so the row makes room for the shadow and pulls the space back. */
+.pg-section--reviews.pg-section--gray .pg-review-card {
+	border-radius: 30px;
+	box-shadow: 0 28.9334px 61.5604px rgba(21, 21, 21, 0.15);
+}
+
+/* Each row clips its own overflow, so it needs padding for the shadow. Pulling
+   the same amount back keeps the rows their normal distance apart: the top row's
+   shadow falls behind the row below it and is never seen anyway. */
+.pg-section--reviews.pg-section--gray .pg-marquee__viewport {
+	padding-top: 1.5rem;
+	margin-top: -1.5rem;
+}
+
+/* Only the bottom row's shadow has open space beneath it to show in. */
+.pg-section--reviews.pg-section--gray .pg-carousel:last-of-type .pg-marquee__viewport {
+	padding-bottom: 4rem;
+	margin-bottom: -1.5rem;
+}
+
+/* The row is a positioned, overflow-hidden box, so without this it paints over
+   the arrows below it and swallows their clicks. */
+.pg-section--reviews.pg-section--gray .pg-reviews__foot {
+	position: relative;
+	z-index: 1;
+}

@@ -1,0 +1,851 @@
+/* =========================================================================
+   Packgens — WooCommerce pages the theme does not fully re-template
+   (cart, checkout, account, notices).
+   ========================================================================= */
+
+.pg-wc {
+	position: relative;
+}
+
+/* Cart, checkout and account share the standard page rhythm. */
+.woocommerce-cart .pg-main,
+.woocommerce-checkout .pg-main,
+.woocommerce-account .pg-main {
+	padding-bottom: var(--pg-section-y);
+}
+
+.woocommerce-cart .pg-wc,
+.woocommerce-checkout .pg-wc,
+.woocommerce-account .pg-wc {
+	width: 100%;
+	max-width: calc(var(--pg-container) + (var(--pg-gutter) * 2));
+	margin-inline: auto;
+	padding-inline: var(--pg-gutter);
+	padding-top: var(--pg-section-y-sm);
+}
+
+/* -------------------------------------------------------------------------
+   Notices
+   ------------------------------------------------------------------------- */
+
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error,
+.wc-block-components-notice-banner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	margin: 0 0 var(--pg-space-lg);
+	padding: var(--pg-space-md) var(--pg-space-lg);
+	border: 0;
+	border-left: 4px solid var(--pg-blue);
+	border-radius: var(--pg-radius-sm);
+	background: var(--pg-gray-100);
+	color: var(--pg-color-text);
+	font-size: var(--pg-text-sm);
+	list-style: none;
+}
+
+.woocommerce-message {
+	border-left-color: var(--pg-green);
+}
+
+.woocommerce-error {
+	border-left-color: var(--pg-red);
+	background: rgba(217, 45, 32, 0.08);
+}
+
+.woocommerce-message .button,
+.woocommerce-info .button {
+	margin-left: auto;
+}
+
+/* WooCommerce positions its own tick absolutely, which drops it straight on
+   top of the message once the notice becomes a flex row. */
+.woocommerce-message::before,
+.woocommerce-info::before,
+.woocommerce-error::before {
+	position: static;
+	flex-shrink: 0;
+	margin: 0;
+	top: auto;
+	left: auto;
+	font-size: 1.125rem;
+	line-height: 1;
+}
+
+/* Notices are moved into focus for screen readers. The page focus ring around
+   a status message reads as an error state, so it goes here. */
+.woocommerce-message:focus,
+.woocommerce-info:focus,
+.woocommerce-error:focus,
+.woocommerce-message:focus-visible,
+.woocommerce-info:focus-visible,
+.woocommerce-error:focus-visible {
+	outline: none;
+}
+
+/* The notice row sits in the page container when the theme prints it itself. */
+.pg-wc-notices {
+	margin-top: var(--pg-space-lg);
+}
+
+.pg-wc-notices :is(.woocommerce-message, .woocommerce-info, .woocommerce-error):last-child {
+	margin-bottom: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Buttons WooCommerce renders itself
+   ------------------------------------------------------------------------- */
+
+.woocommerce .button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce a.button,
+.woocommerce #respond input#submit {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--pg-space-xs);
+	min-height: 3rem;
+	padding: 0.75rem 1.75rem;
+	border: 0;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-medium);
+	line-height: 1.25;
+	transition: background-color var(--pg-duration) var(--pg-ease);
+}
+
+.woocommerce .button:hover,
+.woocommerce button.button:hover,
+.woocommerce a.button:hover,
+.woocommerce #respond input#submit:hover {
+	background: var(--pg-blue-deep);
+	color: var(--pg-white);
+}
+
+.woocommerce .button.alt {
+	background: var(--pg-green);
+}
+
+.woocommerce .button.alt:hover {
+	background: var(--pg-green-dark);
+}
+
+/* -------------------------------------------------------------------------
+   Cart and checkout tables
+   ------------------------------------------------------------------------- */
+
+.woocommerce table.shop_table {
+	border: 1px solid var(--pg-color-border);
+	border-radius: var(--pg-radius-md);
+	border-collapse: separate;
+	border-spacing: 0;
+	overflow: hidden;
+	font-size: var(--pg-text-sm);
+}
+
+.woocommerce table.shop_table th,
+.woocommerce table.shop_table td {
+	padding: var(--pg-space-md);
+	border-bottom: 1px solid var(--pg-color-border);
+	text-align: left;
+	vertical-align: middle;
+}
+
+.woocommerce table.shop_table thead th {
+	background: var(--pg-gray-100);
+	font-family: var(--pg-font-body);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-color-heading);
+}
+
+.woocommerce table.shop_table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.woocommerce .cart_item img {
+	width: 64px;
+	height: auto;
+	border-radius: var(--pg-radius-xs);
+}
+
+.woocommerce .quantity input.qty {
+	max-width: 5rem;
+	min-height: 2.75rem;
+	text-align: center;
+	border-radius: var(--pg-radius-pill);
+}
+
+.woocommerce-cart-form__cart-item .product-remove a.remove {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	border-radius: var(--pg-radius-circle);
+	background: var(--pg-gray-150);
+	color: var(--pg-ink);
+	text-decoration: none;
+	font-size: 1.125rem;
+	line-height: 1;
+}
+
+.woocommerce-cart-form__cart-item .product-remove a.remove:hover {
+	background: var(--pg-red);
+	color: var(--pg-white);
+}
+
+.cart-collaterals .cart_totals,
+.woocommerce-checkout-review-order {
+	padding: var(--pg-space-lg);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-gray-100);
+}
+
+.cart-collaterals h2,
+.woocommerce-billing-fields h3,
+.woocommerce-shipping-fields h3,
+.woocommerce-additional-fields h3,
+#order_review_heading {
+	font-size: var(--pg-text-h4);
+	margin-bottom: var(--pg-space-md);
+}
+
+/* -------------------------------------------------------------------------
+   Checkout and account forms
+   ------------------------------------------------------------------------- */
+
+.woocommerce form .form-row {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+	margin: 0 0 var(--pg-space-md);
+	padding: 0;
+}
+
+.woocommerce form .form-row label {
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-color-heading);
+}
+
+.woocommerce form .form-row .required {
+	color: var(--pg-red);
+	text-decoration: none;
+}
+
+.woocommerce form .form-row input.input-text,
+.woocommerce form .form-row textarea,
+.woocommerce form .form-row select,
+.select2-container .select2-selection--single {
+	min-height: 2.875rem;
+	padding: 0.625rem 1.125rem;
+	border: 1px solid #c3c3c3;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-white);
+	font-size: var(--pg-text-sm);
+}
+
+.woocommerce form .form-row textarea {
+	min-height: 7rem;
+	border-radius: var(--pg-radius-md);
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+	line-height: 1.6;
+	padding-left: 0;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+	height: 100%;
+	right: 0.75rem;
+}
+
+.woocommerce-form-login,
+.woocommerce-form-register,
+.woocommerce-form-coupon {
+	padding: var(--pg-space-lg);
+	border: 1px solid var(--pg-color-border);
+	border-radius: var(--pg-radius-md);
+}
+
+/* Account navigation ------------------------------------------------------ */
+
+.woocommerce-MyAccount-navigation ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: var(--pg-space-2xs);
+}
+
+.woocommerce-MyAccount-navigation a {
+	display: block;
+	padding: var(--pg-space-sm) var(--pg-space-md);
+	border-radius: var(--pg-radius-sm);
+	color: var(--pg-color-heading);
+	font-size: var(--pg-text-sm);
+}
+
+.woocommerce-MyAccount-navigation li.is-active a,
+.woocommerce-MyAccount-navigation a:hover {
+	background: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+@media (min-width: 768px) {
+	.woocommerce-account .woocommerce-MyAccount-navigation {
+		float: left;
+		width: 25%;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content {
+		float: right;
+		width: 72%;
+	}
+}
+
+/* -------------------------------------------------------------------------
+   Product reviews
+   ------------------------------------------------------------------------- */
+
+.woocommerce #reviews #comments ol.commentlist {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: var(--pg-space-lg);
+}
+
+.woocommerce #reviews .comment_container {
+	display: flex;
+	gap: var(--pg-space-md);
+	padding: var(--pg-space-lg);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-white);
+}
+
+.woocommerce #reviews .comment_container img.avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: var(--pg-radius-circle);
+}
+
+.woocommerce .star-rating span::before,
+.woocommerce .star-rating::before {
+	color: var(--pg-amber);
+}
+
+/* -------------------------------------------------------------------------
+   Saved items
+   ------------------------------------------------------------------------- */
+
+.pg-wishlist-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--pg-space-xs);
+	border: 0;
+	background: none;
+	color: var(--pg-color-heading);
+	cursor: pointer;
+	transition: color var(--pg-duration) var(--pg-ease), background-color var(--pg-duration) var(--pg-ease);
+}
+
+/* The icon sits inside two spans; left inline they put the glyph on the text
+   baseline of a 26px line box, which is what pushed it above centre. */
+.pg-wishlist-btn__icon,
+.pg-wishlist-btn .pg-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 0;
+}
+
+.pg-wishlist-btn svg {
+	display: block;
+	width: 1.125rem;
+	height: 1.125rem;
+	transition: fill var(--pg-duration) var(--pg-ease);
+}
+
+.pg-wishlist-btn.is-saved {
+	color: var(--pg-red, #d92d20);
+}
+
+/* A filled heart is the only state change that reads at card size. */
+.pg-wishlist-btn.is-saved svg {
+	fill: currentColor;
+}
+
+/* On a card the button is a floating disc in the image corner. */
+.pg-wishlist-btn--card {
+	position: absolute;
+	top: var(--pg-space-md);
+	right: var(--pg-space-md);
+	z-index: 2;
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0;
+	border-radius: var(--pg-radius-circle);
+	background: rgba(255, 255, 255, 0.92);
+	box-shadow: 0 2px 8px rgba(21, 21, 21, 0.12);
+}
+
+.pg-wishlist-btn--card:hover {
+	background: var(--pg-white);
+	color: var(--pg-red, #d92d20);
+}
+
+.pg-wishlist-btn--card .pg-wishlist-btn__label {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+/* Beside Add to Basket it reads as a labelled control. */
+.pg-wishlist-btn--inline {
+	min-height: 3rem;
+	padding: 0.75rem 1.5rem;
+	border: 1px solid var(--pg-color-border);
+	border-radius: var(--pg-radius-pill);
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-medium);
+}
+
+.pg-wishlist-btn--inline:hover {
+	border-color: var(--pg-color-heading);
+}
+
+/* Header heart count. */
+.pg-header__action--wishlist {
+	position: relative;
+}
+
+.pg-header__count--wishlist {
+	position: absolute;
+	top: -0.25rem;
+	right: -0.375rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.125rem;
+	height: 1.125rem;
+	padding: 0 0.25rem;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-blue-vivid);
+	color: var(--pg-white);
+	font-size: 0.6875rem;
+	font-weight: var(--pg-weight-bold);
+	line-height: 1;
+}
+
+.pg-header__count--wishlist.is-empty {
+	display: none;
+}
+
+/* A class-level `display` outranks the attribute, so say it explicitly. */
+.pg-wishlist-empty[hidden],
+.pg-grid[hidden] {
+	display: none;
+}
+
+/* Empty state. */
+.pg-wishlist-empty {
+	display: grid;
+	justify-items: center;
+	gap: var(--pg-space-sm);
+	max-width: 32rem;
+	margin-inline: auto;
+	padding: clamp(2rem, 1.4rem + 2.4vw, 3.5rem) var(--pg-space-lg);
+	border-radius: var(--pg-radius-2xl);
+	background: var(--pg-gray-150);
+	text-align: center;
+}
+
+.pg-wishlist-empty__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: var(--pg-radius-circle);
+	background: var(--pg-white);
+	color: var(--pg-blue);
+}
+
+.pg-wishlist-empty__icon svg {
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.pg-wishlist-empty__title {
+	margin: 0;
+	font-size: var(--pg-text-h4);
+}
+
+.pg-wishlist-empty__text {
+	margin: 0 0 var(--pg-space-sm);
+	color: var(--pg-color-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Cart and checkout (WooCommerce Blocks)
+
+   Both pages are ordinary pages running the cart/checkout blocks, so they come
+   through page.php in the narrow prose container with the plugin's own
+   defaults. These rules give them the site container, the theme's panels,
+   inputs and buttons.
+   ------------------------------------------------------------------------- */
+
+.woocommerce-cart .pg-section--page-content .pg-container--narrow,
+.woocommerce-checkout .pg-section--page-content .pg-container--narrow {
+	max-width: calc(var(--pg-container) + (var(--pg-gutter) * 2));
+}
+
+.woocommerce-cart .pg-prose > * + *,
+.woocommerce-checkout .pg-prose > * + * {
+	margin-top: 0;
+}
+
+.wp-block-woocommerce-cart,
+.woocommerce-checkout {
+	max-width: none;
+	font-size: var(--pg-text-sm);
+	color: var(--pg-color-text);
+}
+
+/* --- The two columns ---------------------------------------------------- */
+
+/* The two columns are already sized to 65/35 by the plugin, so a gap on top of
+   that overflows the row and wraps the sidebar underneath. Hold the row and let
+   the columns shrink into the gap instead. */
+.wc-block-components-sidebar-layout {
+	flex-wrap: nowrap;
+	gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+.wc-block-components-sidebar-layout > * {
+	min-width: 0;
+}
+
+@media (max-width: 767.98px) {
+	.wc-block-components-sidebar-layout {
+		flex-wrap: wrap;
+	}
+}
+
+.wc-block-cart__main,
+.wc-block-checkout__main {
+	padding: 0;
+}
+
+/* The order summary reads as a card, like every other panel on the site. */
+.wc-block-components-sidebar {
+	align-self: flex-start;
+	padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+	border: 1px solid var(--pg-color-border);
+	border-radius: var(--pg-radius-lg);
+	background: var(--pg-white);
+	box-shadow: 0 4px 24px rgba(21, 21, 21, 0.06);
+}
+
+.wc-block-cart__totals-title,
+.wc-block-components-checkout-order-summary__title {
+	font-family: var(--pg-font-display, inherit);
+	font-size: var(--pg-text-h6);
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-color-heading);
+	text-transform: none;
+	letter-spacing: normal;
+}
+
+/* --- Line items --------------------------------------------------------- */
+
+/* The line items get the same card treatment as the totals panel. */
+.wc-block-cart__main {
+	padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+	border: 1px solid var(--pg-color-border);
+	border-radius: var(--pg-radius-lg);
+	background: var(--pg-white);
+	box-shadow: 0 4px 24px rgba(21, 21, 21, 0.06);
+}
+
+.wc-block-cart-items {
+	border-collapse: separate;
+}
+
+.wc-block-cart-item__image {
+	width: 6rem;
+	padding-right: var(--pg-space-md);
+}
+
+.wc-block-cart-item__image img {
+	width: 100%;
+	aspect-ratio: 1;
+	object-fit: cover;
+}
+
+.wc-block-cart-items__header {
+	font-size: var(--pg-text-2xs);
+	font-weight: var(--pg-weight-semibold);
+	letter-spacing: 0.06em;
+	color: var(--pg-color-muted);
+}
+
+.wc-block-cart-items__row {
+	border-bottom: 1px solid var(--pg-color-border);
+}
+
+.wc-block-cart-item__image img {
+	border-radius: var(--pg-radius-md);
+}
+
+a.wc-block-components-product-name,
+.wc-block-components-product-name {
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-color-heading);
+	text-decoration: none;
+}
+
+.wc-block-components-product-name:hover {
+	color: var(--pg-blue);
+}
+
+.wc-block-cart-item__remove-link {
+	color: var(--pg-color-muted);
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+.wc-block-cart-item__remove-link:hover {
+	color: var(--pg-red);
+}
+
+/* --- Quantity stepper --------------------------------------------------- */
+
+.wc-block-components-quantity-selector {
+	border: 1px solid #c3c3c3;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-white);
+	overflow: hidden;
+}
+
+.wc-block-components-quantity-selector::after {
+	display: none;
+}
+
+.wc-block-components-quantity-selector__input {
+	min-height: 2.75rem;
+	border: 0;
+	background: none;
+	font-size: var(--pg-text-sm);
+	color: var(--pg-color-heading);
+}
+
+.wc-block-components-quantity-selector__button {
+	border: 0;
+	background: none;
+	color: var(--pg-color-heading);
+	font-size: var(--pg-text-base);
+}
+
+.wc-block-components-quantity-selector__button:hover {
+	color: var(--pg-blue);
+}
+
+/* --- Totals ------------------------------------------------------------- */
+
+.wc-block-components-totals-item__label {
+	color: var(--pg-color-text);
+}
+
+.wc-block-components-totals-item__value {
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-color-heading);
+}
+
+.wc-block-components-totals-footer-item .wc-block-components-totals-item__label,
+.wc-block-components-totals-footer-item .wc-block-components-totals-item__value {
+	font-size: var(--pg-text-h6);
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-color-heading);
+}
+
+.wc-block-components-totals-wrapper {
+	border-top-color: var(--pg-color-border);
+}
+
+.wc-block-components-panel__button {
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-color-heading);
+}
+
+/* --- Buttons ------------------------------------------------------------ */
+
+.wc-block-components-button:not(.is-link) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--pg-space-xs);
+	min-height: 3.25rem;
+	padding: 0.75rem 1.75rem;
+	border: 0;
+	border-radius: var(--pg-radius-pill);
+	background-color: var(--pg-blue);
+	color: var(--pg-white);
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-semibold);
+	text-decoration: none;
+	transition: background-color var(--pg-duration) var(--pg-ease);
+}
+
+.wc-block-components-button:not(.is-link):hover,
+.wc-block-components-button:not(.is-link):focus {
+	background-color: var(--pg-blue-deep, #001a8c);
+	color: var(--pg-white);
+}
+
+/* The block draws the label as an underlined span of its own. */
+.wc-block-components-button__text {
+	text-decoration: none;
+}
+
+.wc-block-components-button:not(.is-link)::after {
+	display: none;
+}
+
+.wc-block-cart__submit-button,
+.wc-block-components-checkout-place-order-button {
+	width: 100%;
+}
+
+/* --- Checkout form ------------------------------------------------------ */
+
+.wc-block-components-checkout-step {
+	padding-left: 0;
+}
+
+.wc-block-components-checkout-step__heading {
+	margin-top: 0;
+}
+
+.wc-block-components-checkout-step__title {
+	font-family: var(--pg-font-display, inherit);
+	font-size: var(--pg-text-h5);
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-color-heading);
+}
+
+.wc-block-components-checkout-step__description {
+	color: var(--pg-color-muted);
+}
+
+/* The form column reads as a card, like the summary beside it. */
+.wc-block-checkout__main {
+	padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+	border: 1px solid var(--pg-color-border);
+	border-radius: var(--pg-radius-lg);
+	background: var(--pg-white);
+	box-shadow: 0 4px 24px rgba(21, 21, 21, 0.06);
+}
+
+/* The plugin's own rule is `.wc-block-components-form .wc-block-components-text-input
+   input[type=text]`, so these have to match that weight to land. */
+.woocommerce-checkout .wc-block-components-text-input input[type="text"],
+.woocommerce-checkout .wc-block-components-text-input input[type="email"],
+.woocommerce-checkout .wc-block-components-text-input input[type="tel"],
+.woocommerce-checkout .wc-block-components-text-input input[type="number"],
+.woocommerce-cart .wc-block-components-text-input input[type="text"],
+.woocommerce-cart .wc-block-components-text-input input[type="email"],
+.woocommerce-checkout .wc-block-components-combobox-control input[type="text"],
+.woocommerce-checkout .wc-block-components-address-form select,
+.woocommerce-checkout .wc-block-components-select .wc-block-components-select__container {
+	min-height: 3.25rem;
+	padding: 1.25rem 1.125rem 0.5rem;
+	border: 1px solid #c3c3c3;
+	border-radius: var(--pg-radius-pill);
+	background-color: var(--pg-white);
+	font-size: var(--pg-text-sm);
+	color: var(--pg-color-heading);
+}
+
+/* The floating label sits inside the field, so it follows the same inset. */
+.woocommerce-checkout .wc-block-components-text-input label {
+	left: 1.125rem;
+}
+
+.woocommerce-checkout :is(input, select):focus {
+	border-color: var(--pg-blue);
+	box-shadow: 0 0 0 3px rgba(0, 34, 180, 0.12);
+	outline: none;
+}
+
+.wc-block-components-textarea {
+	border: 1px solid #c3c3c3;
+	border-radius: var(--pg-radius-md);
+	min-height: 7rem;
+}
+
+.wc-block-components-text-input.is-active label,
+.wc-block-components-text-input label {
+	color: var(--pg-color-muted);
+}
+
+.wc-block-components-checkbox__input[type="checkbox"] {
+	border-radius: var(--pg-radius-xs);
+}
+
+/* Payment and shipping option rows read as the theme's panels. */
+.wc-block-components-radio-control__option,
+.wc-block-checkout__payment-method .wc-block-components-radio-control {
+	border-radius: var(--pg-radius-md);
+}
+
+.wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-option,
+.wc-block-components-radio-control-accordion-option {
+	margin-bottom: var(--pg-space-xs);
+}
+
+.wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-option:last-child {
+	margin-bottom: 0;
+}
+
+/* The plugin marks the chosen method with a 1.5px inset ring in `currentColor`,
+   which lands as body grey here rather than reading as a selection. */
+.wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-option--checked,
+.wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-option--checked-option-highlighted {
+	border-color: var(--pg-blue);
+	box-shadow: inset 0 0 0 1.5px var(--pg-blue);
+}
+
+/* Its border ring is drawn on a pseudo-element that keeps a 4px radius of its
+   own, so it would cut the corners if the plugin ever gives it a width. */
+.wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-option::after,
+.wc-block-checkout__payment-method .wc-block-components-radio-control__option::after {
+	border-radius: inherit;
+}
+
+/* The radio dot itself. */
+.wc-block-checkout__payment-method {
+	accent-color: var(--pg-blue);
+}
+
+/* --- Empty cart --------------------------------------------------------- */
+
+.wp-block-woocommerce-empty-cart-block {
+	text-align: center;
+}
+

@@ -1,0 +1,1021 @@
+/* =========================================================================
+   Packgens — standard pages, contact, FAQ, reviews and 404.
+   ========================================================================= */
+
+.pg-section--page-content .pg-prose {
+	margin-inline: auto;
+}
+
+/* -------------------------------------------------------------------------
+   Legal pages (terms, privacy, returns)
+   ------------------------------------------------------------------------- */
+
+/* No hero, so the card carries its own clearance under the fixed header. */
+.pg-section--legal {
+	padding-top: calc(var(--pg-header-h) + var(--pg-space-xl));
+	background: var(--pg-gray-150);
+}
+
+.pg-legal {
+	padding: clamp(1.75rem, 1.1rem + 2.6vw, 3.25rem) clamp(1.25rem, 0.5rem + 3vw, 3rem);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-white);
+	box-shadow: 0 4px 24px rgba(21, 21, 21, 0.05);
+}
+
+.pg-legal__title {
+	margin: 0 0 clamp(1.5rem, 1rem + 2vw, 2.75rem);
+	font-size: var(--pg-text-h2);
+	text-align: center;
+}
+
+/* Section headings run in brand blue at body-ish size: they mark the clauses
+   rather than compete with the page title. */
+.pg-legal__body :is(h2, h3, h4, h5) {
+	margin-top: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+	font-size: var(--pg-text-h6);
+	font-weight: var(--pg-weight-semibold);
+	line-height: 1.4;
+	color: var(--pg-blue-vivid);
+}
+
+.pg-legal__body > :first-child {
+	margin-top: 0;
+}
+
+.pg-legal__body {
+	font-size: var(--pg-text-sm);
+	line-height: var(--pg-leading-normal);
+}
+
+.pg-legal__body :is(p, ul, ol) {
+	margin-top: var(--pg-space-sm);
+}
+
+.pg-legal__body :is(ul, ol) {
+	padding-left: 1.125rem;
+}
+
+.pg-legal__body li + li {
+	margin-top: var(--pg-space-xs);
+}
+
+.pg-legal__body a {
+	color: var(--pg-color-link);
+}
+
+/* -------------------------------------------------------------------------
+   Contact
+   ------------------------------------------------------------------------- */
+
+/* The artwork runs off the bottom edge of the band, so there is no room for
+   the hero's usual bottom padding here. The top gap stays a flat 50px under
+   the header at every width, rather than the fluid clamp the other heroes
+   use. */
+.page-template-contact .pg-hero {
+	padding-top: calc(var(--pg-header-h) + 50px);
+	padding-bottom: 0;
+}
+
+.pg-contact {
+	display: grid;
+	gap: clamp(1.75rem, 1.2rem + 3vw, 3.5rem);
+	align-items: start;
+}
+
+@media (min-width: 992px) {
+	.pg-contact {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	}
+}
+
+.pg-form--contact {
+	border: 1px solid #e9e9e9;
+	border-radius: var(--pg-radius-lg);
+	overflow: hidden;
+	background: var(--pg-white);
+}
+
+.pg-form--contact .pg-form__title {
+	margin: 0;
+	/* The extra room at the foot is what the body's shoulder sits over. */
+	padding: var(--pg-space-md) var(--pg-space-lg) calc(var(--pg-space-md) + 1.25rem);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	font-size: var(--pg-text-h4);
+	text-align: center;
+}
+
+/* The white half curves up over the foot of the blue bar; the negative margin
+   is what makes the overlap. */
+.pg-form--contact .pg-form__body {
+	position: relative;
+	margin-top: -1.5rem;
+	padding: clamp(1.25rem, 0.9rem + 1.4vw, 2rem);
+	border-radius: var(--pg-radius-lg) var(--pg-radius-lg) 0 0;
+	background: var(--pg-white);
+}
+
+.pg-contact__channels {
+	display: grid;
+	/* The row gap is what breaks the dashed rule between the two rows, as the
+	   design draws it. */
+	gap: var(--pg-space-lg) 0;
+	grid-template-columns: 1fr;
+}
+
+/* One line at desktop widths, as in the design. */
+.pg-section--contact .pg-section-head__desc {
+	max-width: 56rem;
+}
+
+@media (min-width: 560px) {
+	.pg-contact__channels {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.pg-channel {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	padding: var(--pg-space-lg);
+	text-align: center;
+}
+
+.pg-channel:nth-child(odd) {
+	border-right: 2px dashed #e3e3e3;
+}
+
+@media (max-width: 559.98px) {
+	.pg-channel:nth-child(odd) {
+		border-right: 0;
+	}
+}
+
+/* The supplied marks draw their own blue disc and the green presence dot, so
+   the wrapper only sizes them. */
+.pg-channel__icon {
+	display: inline-flex;
+	width: 4.25rem;
+	height: 4.25rem;
+}
+
+.pg-channel__icon svg {
+	width: 100%;
+	height: 100%;
+}
+
+.pg-channel__title {
+	margin: 0;
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-blue-vivid);
+}
+
+.pg-channel__value {
+	margin: 0;
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-color-heading);
+}
+
+.pg-channel__value a {
+	color: inherit;
+}
+
+.pg-channel__note {
+	margin: 0;
+	font-size: var(--pg-text-xs);
+	color: var(--pg-color-muted);
+	line-height: var(--pg-leading-snug);
+}
+
+.pg-channel--social {
+	grid-column: 1 / -1;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.9375rem var(--pg-space-lg);
+	border: 1px solid var(--pg-color-border) !important;
+	/* Square bottom-right, as the design draws it. */
+	border-radius: var(--pg-radius-pill) var(--pg-radius-pill) 0 var(--pg-radius-pill);
+	margin-top: var(--pg-space-md);
+}
+
+@media (min-width: 992px) {
+	.pg-channel--social {
+		max-height: 63px;
+	}
+}
+
+/* ---- Trust band -------------------------------------------------------
+   A blue panel and a tinted one side by side, with the artwork straddling
+   the seam between them. */
+
+/* Two separately rounded blocks sitting side by side rather than one card cut
+   in half: the page shows through the notch where their facing corners curve
+   away from each other, which is what the design draws. */
+.pg-trust {
+	display: grid;
+	margin-top: clamp(2rem, 1.4rem + 2.4vw, 3.5rem);
+	border-radius: var(--pg-radius-2xl);
+	background: var(--pg-blue);
+	overflow: hidden;
+}
+
+@media (min-width: 768px) {
+	.pg-trust {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+	}
+}
+
+.pg-trust__intro {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: clamp(1rem, 0.7rem + 1.2vw, 1.75rem);
+	padding: clamp(1.75rem, 1.2rem + 2vw, 3rem) clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+	color: var(--pg-white);
+}
+
+.pg-trust__title {
+	flex: 0.8 1 10rem;
+	margin: 0;
+	font-size: var(--pg-text-h4);
+	line-height: 1.3;
+	color: var(--pg-white);
+}
+
+.pg-trust__rating {
+	display: grid;
+	justify-items: center;
+	gap: 0.125rem;
+	margin: 0;
+	padding: var(--pg-space-sm) var(--pg-space-md);
+	/* Radius and wash taken from the supplied chip artwork. */
+	border-radius: 1rem;
+	background: rgba(255, 255, 255, 0.16);
+	text-align: center;
+}
+
+.pg-trust__score {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: var(--pg-text-lg);
+	font-weight: var(--pg-weight-bold);
+}
+
+.pg-trust__score svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+.pg-trust__count {
+	max-width: 5rem;
+	font-size: var(--pg-text-2xs);
+	line-height: 1.25;
+}
+
+.pg-trust__body {
+	display: flex;
+	align-items: center;
+	gap: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+	padding: clamp(1.25rem, 1rem + 1.2vw, 2rem) clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
+	border-radius: var(--pg-radius-2xl) var(--pg-radius-2xl) var(--pg-radius-2xl) 0;
+	background: var(--pg-gray-150);
+}
+
+/* Pulled back over the blue panel's edge, straddling the seam between the two
+   halves as the design draws it. */
+.pg-trust__media {
+	flex: 0 0 auto;
+	align-self: center;
+	margin: 0;
+}
+
+.pg-trust__media img {
+	display: block;
+	width: auto;
+	height: clamp(6rem, 4rem + 5vw, 9.5rem);
+}
+
+@media (min-width: 768px) {
+	.pg-trust__media {
+		margin-left: clamp(-4.5rem, -2.5rem - 3vw, -2.5rem);
+	}
+}
+
+.pg-trust__points {
+	display: grid;
+	gap: var(--pg-space-md) var(--pg-space-lg);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (min-width: 560px) {
+	.pg-trust__points {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.pg-trust__points li {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-color-heading);
+}
+
+.pg-trust__points svg {
+	flex-shrink: 0;
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+/* -------------------------------------------------------------------------
+   FAQ page
+   ------------------------------------------------------------------------- */
+
+/* With the hero switched off, this is the first block on the page and the
+   header sits over it, so it carries the clearance the hero used to provide. */
+.pg-has-plain-header .pg-section--faq-page {
+	padding-top: calc(var(--pg-header-h) + var(--pg-space-lg));
+}
+
+.pg-section--faq-page {
+	background: var(--pg-gray-150);
+}
+
+.pg-faq-page {
+	display: grid;
+	gap: clamp(1.5rem, 1rem + 3vw, 3rem);
+	align-items: start;
+}
+
+@media (min-width: 992px) {
+	.pg-faq-page {
+		grid-template-columns: 20rem minmax(0, 1fr);
+	}
+}
+
+.pg-faq-page__aside {
+	position: sticky;
+	top: calc(var(--pg-header-h) * 0.55);
+}
+
+@media (max-width: 991.98px) {
+	.pg-faq-page__aside {
+		position: static;
+	}
+}
+
+.pg-faq-page__group + .pg-faq-page__group {
+	margin-top: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+}
+
+.pg-faq-page__group-title {
+	margin-bottom: var(--pg-space-md);
+	font-size: var(--pg-text-h3);
+}
+
+.pg-faq-page__panel {
+	padding: var(--pg-space-2xs) clamp(1rem, 0.7rem + 1vw, 1.5rem);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-white);
+	box-shadow: 0 4px 24px rgba(21, 21, 21, 0.06);
+}
+
+/* ---- Sidebar group nav ------------------------------------------------ */
+
+.pg-faq-nav {
+	margin-bottom: var(--pg-space-lg);
+	padding-bottom: var(--pg-space-sm);
+	border-radius: var(--pg-radius-2xl);
+	background: var(--pg-white);
+	box-shadow: 0px 2px 6px rgba(25, 33, 61, 0.1);
+	overflow: hidden;
+	padding: 12px 5px;
+}
+
+.pg-faq-nav__label {
+	display: block;
+	padding: var(--pg-space-md) var(--pg-space-lg);
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-ink);
+	color: var(--pg-white);
+	font-weight: var(--pg-weight-bold);
+}
+
+.pg-faq-nav__list {
+	display: grid;
+	margin: 0;
+	padding: var(--pg-space-xs) 0 0;
+	list-style: none;
+}
+
+.pg-faq-nav__list a {
+	display: block;
+	padding: var(--pg-space-sm) var(--pg-space-lg);
+	color: var(--pg-color-text);
+}
+
+.pg-faq-nav__list a:hover,
+.pg-faq-nav__list a:focus-visible {
+	color: var(--pg-blue-vivid);
+}
+
+/* ---- Flush accordion: the rows inside the FAQ card ---------------------
+   Rows sit straight on the panel, separated by hairlines rather than gaps,
+   and the open one is marked by colour alone -- no fill, no lift. */
+
+.pg-accordion--flush {
+	gap: 0;
+}
+
+.pg-accordion--flush .pg-accordion__item,
+.pg-accordion--flush .pg-accordion__item.is-open {
+	background: transparent;
+	border-radius: 0;
+	box-shadow: none;
+	overflow: visible;
+}
+
+.pg-accordion--flush .pg-accordion__item + .pg-accordion__item {
+	border-top: 1px solid var(--pg-gray-300);
+}
+
+.pg-accordion--flush .pg-accordion__trigger {
+	padding: 1.125rem 0;
+	color: var(--pg-color-heading);
+}
+
+.pg-accordion--flush .pg-accordion__item.is-open .pg-accordion__trigger {
+	background: transparent;
+	color: var(--pg-blue-vivid);
+	border-radius: 0;
+	/* The answer reads as part of the question, so it sits close under it. */
+	padding-bottom: var(--pg-space-xs);
+}
+
+.pg-accordion--flush .pg-accordion__icon {
+	color: var(--pg-gray-450);
+}
+
+.pg-accordion--flush .pg-accordion__item.is-open .pg-accordion__icon {
+	color: inherit;
+}
+
+.pg-accordion--flush .pg-accordion__content {
+	padding: 0 0 1.25rem;
+	max-width: 46rem;
+	font-size: var(--pg-text-xs);
+	color: var(--pg-color-muted);
+}
+
+/* -------------------------------------------------------------------------
+   404
+   ------------------------------------------------------------------------- */
+
+.pg-section--404 {
+	padding-top: calc(var(--pg-header-h) + var(--pg-space-3xl));
+}
+
+.pg-404__code {
+	margin: 0;
+	font-family: var(--pg-font-display);
+	font-size: clamp(4rem, 2rem + 10vw, 8rem);
+	font-weight: var(--pg-weight-extrabold);
+	line-height: 1;
+	color: var(--pg-blue);
+}
+
+.pg-404__title {
+	margin: var(--pg-space-md) 0 var(--pg-space-xs);
+}
+
+.pg-404__text {
+	margin: 0 auto var(--pg-space-lg);
+	max-width: 34rem;
+	color: var(--pg-color-muted);
+}
+
+.pg-404__search {
+	display: flex;
+	justify-content: center;
+	margin-bottom: var(--pg-space-lg);
+}
+
+.pg-404__search .pg-search {
+	max-width: 24rem;
+	width: 100%;
+}
+
+.pg-404__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: var(--pg-space-sm);
+}
+
+/* -------------------------------------------------------------------------
+   Reviews page
+   ------------------------------------------------------------------------- */
+
+.pg-section--reviews-page .pg-review-card {
+	border: 1px solid var(--pg-color-border);
+}
+
+/* -------------------------------------------------------------------------
+   Empty state icon
+   ------------------------------------------------------------------------- */
+
+.pg-empty__icon svg {
+	width: 2.5rem;
+	height: 2.5rem;
+	margin-inline: auto;
+	color: var(--pg-gray-400);
+}
+
+.pg-empty__search {
+	display: flex;
+	justify-content: center;
+	margin-block: var(--pg-space-lg);
+}
+
+.pg-empty__search .pg-search {
+	max-width: 22rem;
+	width: 100%;
+}
+
+/* =========================================================================
+   About page
+   ========================================================================= */
+
+/*
+ * The hero and the statistics band read as one brand-coloured block, so the
+ * band owns the colour and both sections sit on it transparently.
+ */
+.pg-about-band {
+	position: relative;
+	isolation: isolate;
+	background: var(--pg-blue) var(--pg-band-image, none) center / cover no-repeat;
+	color: var(--pg-color-on-dark);
+}
+
+/* One flat brand wash over the artwork, so the hero and the numbers below it
+   read as a single band rather than two. */
+.pg-about-band::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background: rgba(0, 34, 180, 0.95);
+}
+
+.pg-about-band .pg-hero {
+	background: none;
+}
+
+/* The artwork is on the band, so the hero's own copy of it would double up
+   under the wash and stop short of the statistics. */
+.pg-about-band .pg-hero__bg {
+	display: none;
+}
+
+.pg-about-band .pg-hero::after,
+.pg-about-band .pg-hero::before {
+	display: none;
+}
+
+.pg-about-band .pg-section--stats {
+	padding-top: 0;
+	padding-bottom: clamp(3rem, 2rem + 4vw, 6rem);
+	background: none;
+}
+
+/* Numbers run across the band rather than stacking. */
+.pg-about-band .pg-stats__list {
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(0, 1fr);
+	justify-items: center;
+	text-align: center;
+}
+
+.pg-about-band .pg-stats__item {
+	display: block;
+	padding-block: 0;
+	border-top: 0;
+}
+
+.pg-about-band .pg-stats__item + .pg-stats__item {
+	border-top: 0;
+}
+
+.pg-about-band .pg-stats__copy {
+	align-items: center;
+	text-align: center;
+}
+
+.pg-about-band .pg-stats__value {
+	font-size: clamp(2rem, 1.3rem + 3vw, 3rem);
+	color: var(--pg-white);
+}
+
+.pg-about-band .pg-stats__title,
+.pg-about-band .pg-stats__desc {
+	color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 767.98px) {
+	.pg-about-band .pg-stats__list {
+		grid-auto-flow: row;
+	}
+}
+
+/* Tabs across the foot of the band, sitting on its lower edge. */
+.pg-hero__tabs {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: var(--pg-space-2xs);
+	list-style: none;
+	margin: clamp(2rem, 1.4rem + 2vw, 3.5rem) 0 0;
+	padding: 0;
+}
+
+.pg-hero__tab {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.75rem;
+	padding: 0 var(--pg-space-lg);
+	border-radius: var(--pg-radius-sm) var(--pg-radius-sm) 0 0;
+	background: rgba(255, 255, 255, 0.14);
+	color: var(--pg-white);
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-medium);
+}
+
+a.pg-hero__tab:hover {
+	background: rgba(255, 255, 255, 0.24);
+	color: var(--pg-white);
+}
+
+.pg-hero__tab.is-active {
+	background: var(--pg-white);
+	color: var(--pg-color-heading);
+}
+
+a.pg-hero__tab.is-active:hover {
+	background: var(--pg-white);
+	color: var(--pg-blue);
+}
+
+/* The band's tabs sit flush with its bottom edge. */
+.pg-about-band .pg-section--stats {
+	padding-bottom: 0;
+}
+
+.pg-about-band .pg-hero__tabs {
+	margin-bottom: 0;
+}
+
+/* About block: the direct-call pill beside the button --------------------- */
+
+.pg-about__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-md);
+}
+
+.pg-about__direct {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	padding: 0.375rem 0.375rem 0.375rem var(--pg-space-md);
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-gray-150);
+	color: var(--pg-color-heading);
+}
+
+.pg-about__direct:hover {
+	background: var(--pg-gray-200);
+	color: var(--pg-color-heading);
+}
+
+.pg-about__direct-copy {
+	display: flex;
+	flex-direction: column;
+	text-align: left;
+}
+
+.pg-about__direct-label {
+	font-size: var(--pg-text-2xs);
+	color: var(--pg-color-muted);
+}
+
+.pg-about__direct-number {
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-blue);
+}
+
+.pg-about__direct-photo img {
+	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: var(--pg-radius-circle);
+	object-fit: cover;
+}
+
+/* Mission / vision / values ---------------------------------------------- */
+
+.pg-section--values {
+	--pg-values-tabs-height: 3.125rem;
+	--pg-values-tabs-gap: 30px;
+}
+
+.pg-values__tabs {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: var(--pg-space-2xs);
+	margin-bottom: var(--pg-values-tabs-gap);
+	padding: 0.3125rem;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-gray-150);
+}
+
+.pg-values__tab {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-2xs);
+	min-height: 2.5rem;
+	padding: 0 var(--pg-space-lg);
+	border: 0;
+	border-radius: var(--pg-radius-pill);
+	background: none;
+	color: var(--pg-color-text);
+	font: inherit;
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-medium);
+	cursor: pointer;
+	transition: background-color var(--pg-duration) var(--pg-ease),
+		color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-values__tab[aria-selected="true"] {
+	background: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+.pg-values__tab svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.pg-values__panel[hidden] {
+	display: none;
+}
+
+.pg-values__panel {
+	display: grid;
+	gap: clamp(1.5rem, 1rem + 3vw, 4rem);
+	align-items: center;
+}
+
+@media (min-width: 900px) {
+	.pg-values__panel {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	}
+}
+
+/* The copy starts level with the top of the artwork, so the heading keeps its
+   30px from the tab row however tall the image gets. */
+.pg-values__copy {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pg-space-md);
+	align-self: start;
+}
+
+.pg-values__title {
+	margin: 0;
+	font-size: var(--pg-text-h2);
+	line-height: 1.25;
+}
+
+.pg-values__desc {
+	margin: 0;
+	color: var(--pg-color-muted);
+}
+
+/* The checklist stands further off the copy than the heading and paragraph do.
+   The column's own gap already contributes, so only the remainder is added. */
+.pg-values__copy .pg-checklist {
+	margin-top: calc(50px - var(--pg-space-md));
+}
+
+.pg-values__media {
+	margin: 0;
+	border-radius: var(--pg-radius-md);
+	overflow: hidden;
+}
+
+.pg-values__media img {
+	display: block;
+	width: 100%;
+	height: auto;
+	max-height: 440px;
+	object-fit: cover;
+}
+
+/* The tab row belongs to the copy column alone, so once the two sit side by side
+   the artwork is lifted back over it and starts level with the tabs. */
+@media (min-width: 900px) {
+	.pg-values__media {
+		align-self: start;
+		margin-top: calc(-1 * (var(--pg-values-tabs-height) + var(--pg-values-tabs-gap)));
+	}
+}
+
+/* Quote band -------------------------------------------------------------- */
+
+.pg-quote-band {
+	display: grid;
+	gap: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+	align-items: center;
+}
+
+@media (min-width: 992px) {
+	.pg-quote-band {
+		grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.9fr);
+	}
+}
+
+.pg-quote-band__copy {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pg-space-md);
+}
+
+.pg-quote-band__title {
+	margin: 0;
+	font-size: clamp(1.625rem, 1.2rem + 1.9vw, 2.125rem);
+	line-height: 1.25;
+	color: var(--pg-white);
+}
+
+.pg-quote-band__desc {
+	margin: 0;
+	font-size: var(--pg-text-sm);
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.pg-quote-band__points {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--pg-space-md);
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.pg-quote-band__points li {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	max-width: 8rem;
+	font-size: var(--pg-text-2xs);
+	line-height: 1.35;
+	color: var(--pg-white);
+}
+
+.pg-quote-band__point-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 2rem;
+	height: 2rem;
+	border-radius: var(--pg-radius-sm);
+	background: var(--pg-green);
+	color: var(--pg-white);
+}
+
+.pg-quote-band__point-icon svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.pg-quote-band__media img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.pg-quote-band__actions {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	text-align: center;
+}
+
+.pg-quote-band__mark svg {
+	width: 1.75rem;
+	height: 1.75rem;
+	color: var(--pg-white);
+}
+
+.pg-quote-band__phone-label {
+	font-size: var(--pg-text-sm);
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.pg-quote-band__phone {
+	font-family: var(--pg-font-display);
+	font-size: var(--pg-text-h5);
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-white);
+}
+
+.pg-quote-band__phone:hover {
+	color: var(--pg-white);
+}
+
+.pg-quote-band__actions .pg-btn {
+	margin-top: var(--pg-space-xs);
+}
+
+.pg-quote-band__note {
+	margin: 0;
+	font-size: var(--pg-text-2xs);
+	color: rgba(255, 255, 255, 0.85);
+}
+
+/* Gold star beside a rating value. */
+.pg-stats__value {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+}
+
+.pg-stats__star svg {
+	width: 0.75em;
+	height: 0.75em;
+}
+
+/* Caret on the active tab, pointing up into the band. */
+.pg-hero__tab {
+	position: relative;
+}
+
+.pg-hero__tab-caret {
+	position: absolute;
+	/* A hair of overlap, so no seam shows between the caret and the tab. */
+	bottom: calc(100% - 1px);
+	left: 50%;
+	transform: translateX(-50%);
+	color: var(--pg-white);
+}
+
+.pg-hero__tab-caret svg {
+	width: 1.375rem;
+	height: 0.75rem;
+}
+
+/* The two blocks below the band sit closer together than the section rhythm. */
+.page-template-about .pg-section--about {
+	padding-bottom: 0;
+}
+
+.page-template-about .pg-section--values {
+	padding-top: 115px;
+}
+
+/* Raised call pill in the about block. */
+.pg-about__direct {
+	box-shadow: -5px 11px 15px rgba(0, 51, 150, 0.1);
+}
+
+/* Quote band: capped height, and the assurances read on two lines. */
+.pg-section--quote-band {
+	padding-block: 0;
+}
+
+.pg-quote-band {
+	max-height: 311px;
+}
+
+.pg-quote-band__media img {
+	max-height: 279px;
+	width: auto;
+	margin-inline: auto;
+	object-fit: contain;
+}

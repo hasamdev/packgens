@@ -1,0 +1,974 @@
+/* =========================================================================
+   Packgens — blog archive and single post.
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   Filters
+   ------------------------------------------------------------------------- */
+
+.pg-blog-filters {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-md);
+	margin-bottom: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+	padding: var(--pg-space-sm) var(--pg-space-md);
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-gray-150);
+}
+
+.pg-blog-filters__cats,
+.pg-blog-filters__search {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	position: relative;
+}
+
+.pg-blog-filters__cats select {
+	min-width: 14rem;
+	border-color: transparent;
+	background-color: var(--pg-white);
+}
+
+.pg-blog-filters__search input[type="search"] {
+	min-width: 14rem;
+	padding-right: 3rem;
+	border-color: transparent;
+	background-color: var(--pg-white);
+}
+
+.pg-blog-filters__search .pg-search__submit {
+	position: absolute;
+	right: 0.25rem;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+@media (max-width: 640px) {
+	.pg-blog-filters {
+		border-radius: var(--pg-radius-md);
+	}
+
+	.pg-blog-filters__cats,
+	.pg-blog-filters__search,
+	.pg-blog-filters__cats select,
+	.pg-blog-filters__search input[type="search"] {
+		width: 100%;
+		min-width: 0;
+	}
+}
+
+/* -------------------------------------------------------------------------
+   Single post
+   ------------------------------------------------------------------------- */
+
+.pg-post__hero {
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	padding-top: calc(var(--pg-header-h) + clamp(1.5rem, 1rem + 3vw, 3.5rem));
+	padding-bottom: clamp(2rem, 1.4rem + 3vw, 4rem);
+}
+
+.pg-post__hero-inner {
+	display: grid;
+	gap: clamp(1.5rem, 1rem + 3vw, 3rem);
+	align-items: center;
+}
+
+@media (min-width: 900px) {
+	.pg-post__hero-inner {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	}
+}
+
+.pg-post__meta-top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	margin-bottom: var(--pg-space-md);
+}
+
+.pg-post__meta-top .pg-badge--outline {
+	color: var(--pg-white);
+	border-color: rgba(255, 255, 255, 0.5);
+}
+
+.pg-post__title {
+	margin: 0;
+	color: var(--pg-white);
+	font-size: clamp(1.875rem, 1.2rem + 3vw, 3rem);
+}
+
+.pg-post__byline {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	margin-top: var(--pg-space-lg);
+}
+
+.pg-post__avatar {
+	border-radius: var(--pg-radius-circle);
+}
+
+.pg-post__author {
+	display: block;
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-white);
+	font-size: var(--pg-text-sm);
+}
+
+.pg-post__reading {
+	display: block;
+	font-size: var(--pg-text-2xs);
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.pg-post__hero-media img {
+	width: 100%;
+	border-radius: var(--pg-radius-md);
+}
+
+/* Layout ----------------------------------------------------------------- */
+
+.pg-post__layout {
+	display: grid;
+	gap: clamp(1.75rem, 1.2rem + 3vw, 3.5rem);
+	align-items: start;
+}
+
+@media (min-width: 992px) {
+	.pg-post__layout {
+		grid-template-columns: minmax(0, 1fr) 21rem;
+	}
+}
+
+.pg-post__content .pg-breadcrumb {
+	margin-bottom: var(--pg-space-lg);
+}
+
+.pg-post__tags {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	margin-top: var(--pg-space-2xl);
+	padding-top: var(--pg-space-lg);
+	border-top: 1px solid var(--pg-color-border);
+}
+
+.pg-post__tags-label {
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-color-heading);
+	font-size: var(--pg-text-xs);
+}
+
+.pg-post__tags a {
+	padding: 0.25rem 0.75rem;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-gray-150);
+	color: var(--pg-color-text);
+	font-size: var(--pg-text-2xs);
+}
+
+.pg-post__tags a:hover {
+	background: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+/* Sidebar ---------------------------------------------------------------- */
+
+.pg-post__sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pg-space-md);
+	position: sticky;
+	top: calc(var(--pg-header-h) * 0.55);
+}
+
+@media (max-width: 991.98px) {
+	.pg-post__sidebar {
+		position: static;
+	}
+}
+
+.pg-toc {
+	border-radius: var(--pg-radius-md);
+	overflow: hidden;
+	background: var(--pg-gray-150);
+}
+
+.pg-toc__toggle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	gap: var(--pg-space-sm);
+	padding: var(--pg-space-md) var(--pg-space-lg);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	font-weight: var(--pg-weight-semibold);
+	font-size: var(--pg-text-base);
+}
+
+.pg-toc__toggle svg {
+	width: 1.125rem;
+	height: 1.125rem;
+	transition: transform var(--pg-duration) var(--pg-ease);
+}
+
+.pg-toc__toggle[aria-expanded="false"] svg {
+	transform: rotate(-90deg);
+}
+
+.pg-toc__list {
+	margin: 0;
+	padding: var(--pg-space-md) var(--pg-space-lg) var(--pg-space-md) 2.25rem;
+	display: grid;
+	gap: var(--pg-space-xs);
+	font-size: var(--pg-text-xs);
+}
+
+.pg-toc__list a {
+	color: var(--pg-color-text);
+}
+
+.pg-toc__list a:hover {
+	color: var(--pg-blue);
+}
+
+.pg-post-cta {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pg-space-md);
+	padding: var(--pg-space-lg);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-ink);
+	color: var(--pg-white);
+}
+
+.pg-post-cta__title {
+	margin: 0;
+	color: var(--pg-white);
+	font-size: var(--pg-text-h4);
+}
+
+.pg-share {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-sm);
+}
+
+.pg-share__label {
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-color-heading);
+}
+
+.pg-share__list {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-2xs);
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.pg-share__list a,
+.pg-share__copy {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: var(--pg-radius-circle);
+	background: var(--pg-gray-150);
+	color: var(--pg-ink);
+	transition: background-color var(--pg-duration) var(--pg-ease), color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-share__list a:hover,
+.pg-share__copy:hover {
+	background: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+.pg-share__list svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.pg-widgets {
+	display: grid;
+	gap: var(--pg-space-md);
+}
+
+.pg-widget {
+	padding: var(--pg-space-lg);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-gray-150);
+}
+
+.pg-widget__title {
+	margin-bottom: var(--pg-space-sm);
+	font-size: var(--pg-text-h5);
+}
+
+/* -------------------------------------------------------------------------
+   Comments
+   ------------------------------------------------------------------------- */
+
+.pg-comments__title {
+	margin-bottom: var(--pg-space-lg);
+	font-size: var(--pg-text-h3);
+}
+
+.pg-comments__list {
+	list-style: none;
+	margin: 0 0 var(--pg-space-2xl);
+	padding: 0;
+	display: grid;
+	gap: var(--pg-space-lg);
+}
+
+.pg-comments__list .children {
+	list-style: none;
+	margin: var(--pg-space-lg) 0 0 var(--pg-space-lg);
+	padding: 0;
+	display: grid;
+	gap: var(--pg-space-lg);
+}
+
+.pg-comments .comment-body {
+	padding: var(--pg-space-lg);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-gray-100);
+}
+
+.pg-comments .comment-author img {
+	border-radius: var(--pg-radius-circle);
+	margin-right: var(--pg-space-xs);
+}
+
+.pg-comments .comment-meta {
+	font-size: var(--pg-text-2xs);
+	color: var(--pg-color-muted);
+	margin-bottom: var(--pg-space-xs);
+}
+
+.pg-comments .comment-form {
+	display: grid;
+	gap: var(--pg-space-md);
+}
+
+.pg-comments .comment-form p {
+	margin: 0;
+}
+
+.pg-comments .comment-form label {
+	display: block;
+	margin-bottom: 0.375rem;
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+}
+
+
+/* -------------------------------------------------------------------------
+   Blog index layout
+   ------------------------------------------------------------------------- */
+
+.pg-blog-layout {
+	display: grid;
+	gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+	align-items: start;
+}
+
+@media (min-width: 992px) {
+	.pg-blog-layout {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+	}
+}
+
+/* Two cards to a row, with the wide ones spanning both. */
+.pg-post-grid {
+	display: grid;
+	gap: var(--pg-space-lg);
+}
+
+@media (min-width: 576px) {
+	.pg-post-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.pg-post-grid > .pg-post-card--wide {
+		grid-column: 1 / -1;
+	}
+}
+
+/* The wide card turns on its side: media left, copy right. */
+@media (min-width: 576px) {
+	.pg-post-card--wide {
+		display: grid;
+		grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
+		align-items: stretch;
+	}
+
+	.pg-post-card--wide .pg-post-card__media img {
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.pg-post-card--wide .pg-post-card__terms {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-xs);
+}
+
+/* On the wide card the category reads as a chip rather than a link colour. */
+.pg-post-card--wide .pg-post-card__terms a {
+	padding: 0.25rem 0.75rem;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-gray-100);
+	color: var(--pg-color-text);
+	font-weight: var(--pg-weight-medium);
+}
+
+.pg-post-card__posted {
+	color: var(--pg-color-muted);
+	font-size: var(--pg-text-xs);
+}
+
+.pg-post-card--wide .pg-post-card__title {
+	font-size: var(--pg-text-h5);
+}
+
+/* -------------------------------------------------------------------------
+   Blog sidebar
+   ------------------------------------------------------------------------- */
+
+.pg-blog-side {
+	display: grid;
+	gap: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+	align-content: start;
+}
+
+/* The sidebar follows the reader down the list. Only from the breakpoint where
+   the two columns actually sit side by side: stacked, there is nothing to
+   stick beside. The offset clears the fixed header. */
+@media (min-width: 992px) {
+	.pg-blog-side {
+		position: sticky;
+		top: calc(var(--pg-header-h) * 0.6);
+	}
+}
+
+.pg-blog-side__panel {
+	padding: var(--pg-space-lg);
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-gray-100);
+}
+
+.pg-blog-side__title {
+	margin: 0 0 var(--pg-space-md);
+	font-size: var(--pg-text-h6);
+}
+
+.pg-blog-search {
+	position: relative;
+	display: flex;
+}
+
+.pg-blog-search input[type="search"] {
+	width: 100%;
+	padding-right: 3.25rem;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-white);
+}
+
+.pg-blog-search__submit {
+	position: absolute;
+	top: 50%;
+	right: 0.25rem;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border: 0;
+	border-radius: var(--pg-radius-circle);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	cursor: pointer;
+}
+
+.pg-blog-search__submit svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+.pg-blog-side__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--pg-space-xs);
+	margin: var(--pg-space-md) 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.pg-blog-side__tags a {
+	display: inline-flex;
+	padding: 0.3125rem 0.75rem;
+	border-radius: var(--pg-radius-sm);
+	background: var(--pg-white);
+	color: var(--pg-color-text);
+	font-size: var(--pg-text-xs);
+}
+
+.pg-blog-side__tags a:hover {
+	background: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+.pg-blog-popular {
+	display: grid;
+	gap: var(--pg-space-sm);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.pg-blog-popular__item {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	padding: var(--pg-space-xs);
+	border-radius: var(--pg-radius-sm);
+	background: var(--pg-gray-100);
+}
+
+.pg-blog-popular__media {
+	flex: 0 0 4.5rem;
+	overflow: hidden;
+	border-radius: var(--pg-radius-xs);
+	line-height: 0;
+}
+
+.pg-blog-popular__media img {
+	width: 4.5rem;
+	height: 3.25rem;
+	object-fit: cover;
+}
+
+.pg-blog-popular__copy {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.pg-blog-popular__term {
+	font-size: var(--pg-text-2xs);
+	color: var(--pg-color-muted);
+}
+
+.pg-blog-popular__title {
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-color-heading);
+	line-height: 1.35;
+}
+
+.pg-blog-popular__title:hover {
+	color: var(--pg-blue-vivid);
+}
+
+/* The blog hero takes the About page's flat wash rather than the centred
+   hero's gradient, which fades at both edges and lets the artwork read there. */
+.blog .pg-hero__bg::after {
+	background: rgba(0, 34, 180, 0.95);
+}
+
+
+/* -------------------------------------------------------------------------
+   Single post
+   ------------------------------------------------------------------------- */
+
+.pg-post__hero {
+	position: relative;
+	isolation: isolate;
+	padding-top: calc(var(--pg-header-h) + clamp(1rem, 0.6rem + 1.4vw, 2rem));
+	padding-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+	background: var(--pg-blue);
+	color: var(--pg-color-on-dark);
+}
+
+.pg-post__hero-inner {
+	display: grid;
+	gap: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+	align-items: center;
+}
+
+@media (min-width: 992px) {
+	.pg-post__hero-inner {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+	}
+}
+
+.pg-post__hero-copy {
+	display: grid;
+	gap: var(--pg-space-md);
+	align-content: center;
+}
+
+/* The category sits left and the date right, across the copy column. */
+.pg-post__meta-top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-sm);
+}
+
+.pg-post__meta-top .pg-badge {
+	background: rgba(255, 255, 255, 0.16);
+	color: var(--pg-white);
+}
+
+.pg-post__meta-top .pg-badge--outline {
+	border-color: transparent;
+	background: none;
+	color: rgba(255, 255, 255, 0.85);
+	font-weight: var(--pg-weight-regular);
+}
+
+.pg-post__title {
+	margin: 0;
+	font-size: clamp(1.625rem, 1.1rem + 2.2vw, 2.5rem);
+	line-height: 1.2;
+	color: var(--pg-white);
+}
+
+.pg-post__byline {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	font-size: var(--pg-text-sm);
+}
+
+.pg-post__avatar {
+	border-radius: var(--pg-radius-circle);
+	object-fit: cover;
+}
+
+.pg-post__author {
+	display: block;
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-white);
+}
+
+.pg-post__reading {
+	display: block;
+	font-size: var(--pg-text-xs);
+	color: rgba(255, 255, 255, 0.8);
+}
+
+/* Capped so the artwork sits inside the band rather than setting its height.
+   `contain` keeps the whole frame in view: a cover crop would cut the top and
+   bottom off a landscape photo at this height. */
+.pg-post__hero-media img {
+	width: 100%;
+	max-height: 15rem;
+	border-radius: var(--pg-radius-md);
+	object-fit: contain;
+	object-position: center;
+}
+
+/* ---- Article column and sidebar --------------------------------------- */
+
+.pg-post__layout {
+	display: grid;
+	gap: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+	align-items: start;
+}
+
+@media (min-width: 992px) {
+	.pg-post__layout {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 21.5rem);
+	}
+
+	/* The sidebar rides along while the article scrolls past it. */
+	.pg-post-aside {
+		position: sticky;
+		top: calc(var(--pg-header-h) * 0.6);
+	}
+}
+
+.pg-post-aside {
+	display: grid;
+	gap: var(--pg-space-lg);
+	align-content: start;
+}
+
+/* ---- Table of contents ------------------------------------------------ */
+
+/* A solid blue bar that opens downward. `details` gives the toggle for free,
+   so the panel works before any script runs and from the keyboard. */
+.pg-post-toc {
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	overflow: hidden;
+}
+
+.pg-post-toc__summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-sm);
+	padding: var(--pg-space-md) var(--pg-space-lg);
+	color: var(--pg-white);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-bold);
+	cursor: pointer;
+	list-style: none;
+}
+
+.pg-post-toc__summary::-webkit-details-marker {
+	display: none;
+}
+
+.pg-post-toc__caret svg {
+	width: 1.25rem;
+	height: 1.25rem;
+	transition: transform var(--pg-duration) var(--pg-ease);
+}
+
+.pg-post-toc[open] .pg-post-toc__caret svg {
+	transform: rotate(180deg);
+}
+
+.pg-post-toc__list {
+	display: grid;
+	gap: var(--pg-space-xs);
+	margin: 0;
+	padding: 0 var(--pg-space-lg) var(--pg-space-lg) calc(var(--pg-space-lg) + 1.1rem);
+	font-size: var(--pg-text-sm);
+}
+
+.pg-post-toc__list a {
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.pg-post-toc__list a:hover {
+	color: var(--pg-white);
+	text-decoration: underline;
+}
+
+/* ---- Trust card ------------------------------------------------------- */
+
+.pg-post-promo {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--pg-radius-md);
+	background: var(--pg-black);
+	color: var(--pg-color-on-dark);
+}
+
+.pg-post-promo__head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: var(--pg-space-md);
+	padding: var(--pg-space-lg) var(--pg-space-lg) var(--pg-space-sm);
+}
+
+.pg-post-promo__title {
+	margin: 0;
+	font-size: var(--pg-text-h5);
+	line-height: 1.25;
+	color: var(--pg-white);
+}
+
+.pg-post-promo__rating {
+	display: grid;
+	gap: 0.125rem;
+	flex-shrink: 0;
+	width: 5.5rem;
+	padding: var(--pg-space-sm);
+	border-radius: var(--pg-radius-sm);
+	background: #2b2b2b;
+}
+
+.pg-post-promo__score {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: var(--pg-text-lg);
+	font-weight: var(--pg-weight-bold);
+	color: var(--pg-white);
+}
+
+.pg-post-promo__score svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.pg-post-promo__reviews {
+	font-size: var(--pg-text-xs);
+	line-height: 1.3;
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.pg-post-promo__media {
+	margin: 0 0 -1px;
+}
+
+/* The artwork is transparent and rides above the white panel, so the boxes
+   stand in front of it rather than being clipped by its curve. */
+.pg-post-promo__media img {
+	position: relative;
+	z-index: 3;
+	display: block;
+	width: 100%;
+	max-width: 270px;
+	margin-inline: auto;
+	height: auto;
+}
+
+/* The white half curves up over the foot of the artwork, which is what gives
+   the card its shape. The negative margin is what makes it overlap. */
+/* Pulled 2px past the card's foot so no sliver of black shows beneath it. */
+.pg-post-promo__foot {
+	position: relative;
+	display: grid;
+	gap: var(--pg-space-lg);
+	margin-top: -1.25rem;
+	margin-bottom: -2px;
+	/* The list clears the curve at the top of the white area. */
+	padding: 60px var(--pg-space-lg) var(--pg-space-lg);
+	border-radius: 2.5rem 2.5rem var(--pg-radius-md) var(--pg-radius-md);
+	background: var(--pg-white);
+	color: var(--pg-color-text);
+}
+
+.pg-post-promo__foot .pg-checklist {
+	gap: var(--pg-space-md);
+}
+
+.pg-post-promo__foot .pg-checklist li {
+	gap: var(--pg-space-sm);
+	font-size: var(--pg-text-base);
+	color: var(--pg-color-heading);
+}
+
+/* The supplied mark carries its own green disc and white tick, so nothing here
+   recolours it -- only the size is set. */
+.pg-post-promo__foot .pg-checklist svg {
+	width: 1.3125rem;
+	height: 1.3125rem;
+	margin-top: 0;
+}
+
+/* ---- Share row -------------------------------------------------------- */
+
+.pg-post-share {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-sm);
+}
+
+.pg-post-share__label {
+	font-size: var(--pg-text-base);
+	color: var(--pg-color-heading);
+}
+
+.pg-post-share__list {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	margin: 0;
+	padding: var(--pg-space-xs) var(--pg-space-md);
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-gray-100);
+	list-style: none;
+}
+
+.pg-post-share__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	border-radius: var(--pg-radius-circle);
+	color: var(--pg-white);
+	transition: transform var(--pg-duration) var(--pg-ease);
+}
+
+.pg-post-share__link:hover {
+	transform: translateY(-2px);
+	color: var(--pg-white);
+}
+
+.pg-post-share__link svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+/* Each mark carries its own network's colour, as the design draws them. */
+.pg-post-share__link--facebook { background: #1877f2; }
+.pg-post-share__link--linkedin { background: #0a66c2; border-radius: var(--pg-radius-xs); }
+.pg-post-share__link--x { background: #000000; border-radius: var(--pg-radius-xs); }
+.pg-post-share__link--whatsapp { background: #25d366; }
+
+/* Instagram has no share endpoint, so its mark is the gradient only where the
+   theme links out to the profile. */
+.pg-post-share__link--instagram {
+	border-radius: var(--pg-radius-xs);
+	background: linear-gradient(45deg, #f9ce34, #ee2a7b 45%, #6228d7);
+}
+
+.pg-post-share__link--link {
+	background: none;
+	color: var(--pg-color-muted);
+}
+
+.pg-post-share__link--link:hover {
+	color: var(--pg-color-heading);
+}
+
+/* ---- Related row ------------------------------------------------------ */
+
+/* On this band both controls are outlined in ink rather than brand blue. */
+.pg-section--related .pg-icon-btn {
+	border-color: var(--pg-ink);
+	color: var(--pg-ink);
+}
+
+.pg-section--related .pg-icon-btn:hover:not(:disabled) {
+	background: var(--pg-ink);
+	border-color: var(--pg-ink);
+	color: var(--pg-white);
+}
+
+.pg-section--related .pg-reviews__foot .pg-btn--outline {
+	--pg-btn-fg: var(--pg-ink);
+	--pg-btn-border: var(--pg-ink);
+	--pg-btn-bg-hover: var(--pg-ink);
+	--pg-btn-fg-hover: var(--pg-white);
+}
+
+.pg-related__track .swiper-slide {
+	height: auto;
+}
+
+.pg-related__track .pg-post-card {
+	height: 100%;
+}

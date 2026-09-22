@@ -1,0 +1,37 @@
+/* =========================================================================
+   Packgens — front page specifics.
+   The homepage reuses the section library; only the arrangement differs.
+   ========================================================================= */
+
+/* The trust strip overlaps the hero, as in the Figma layout. */
+.home .pg-section--usp:first-of-type {
+	margin-top: calc(var(--pg-space-2xl) * -1);
+}
+
+.home .pg-hero {
+	padding-bottom: clamp(4rem, 2.5rem + 6vw, 8rem);
+}
+
+.home .pg-hero--center .pg-hero__title {
+	max-width: 20ch;
+}
+
+/* Categories band sits close under the hero. */
+.home .pg-section--categories {
+	padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+}
+
+/* The about band's left image is taller on the homepage. */
+.home .pg-about__figure--tall img {
+	aspect-ratio: 3 / 4;
+}
+
+/* Promo band uses the darker brand tone for contrast against the green CTA. */
+.home .pg-section--promo {
+	padding-block: clamp(2rem, 1.4rem + 2.5vw, 3.5rem);
+}
+
+/* Comparison band keeps its dark surface flush to the CTA that follows. */
+.home .pg-section--comparison + .pg-section--cta {
+	margin-top: 0;
+}

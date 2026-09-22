@@ -1,0 +1,1181 @@
+/* =========================================================================
+   Packgens — shared components.
+   Buttons, badges, forms, cards, accordions, tabs, breadcrumbs, pagination.
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   Buttons — Figma: pill radius 100px, 41–50px tall, Inter Medium 16px.
+   ------------------------------------------------------------------------- */
+
+.pg-btn {
+	--pg-btn-bg: var(--pg-blue);
+	--pg-btn-fg: var(--pg-white);
+	--pg-btn-border: transparent;
+	--pg-btn-bg-hover: var(--pg-blue-deep);
+	--pg-btn-fg-hover: var(--pg-white);
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--pg-space-xs);
+	min-height: 3rem;
+	padding: 0.75rem 1.75rem;
+	border: 1px solid var(--pg-btn-border);
+	border-radius: var(--pg-radius-pill);
+	background-color: var(--pg-btn-bg);
+	color: var(--pg-btn-fg);
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-medium);
+	line-height: 1.25;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background-color var(--pg-duration) var(--pg-ease),
+		color var(--pg-duration) var(--pg-ease),
+		border-color var(--pg-duration) var(--pg-ease),
+		transform var(--pg-duration) var(--pg-ease);
+}
+
+.pg-btn:hover:not(:disabled) {
+	background-color: var(--pg-btn-bg-hover);
+	color: var(--pg-btn-fg-hover);
+	transform: translateY(-1px);
+}
+
+.pg-btn:disabled,
+.pg-btn[aria-disabled="true"],
+.pg-btn.is-loading {
+	opacity: 0.6;
+	cursor: not-allowed;
+	transform: none;
+}
+
+.pg-btn__icon svg {
+	width: 1.125em;
+	height: 1.125em;
+}
+
+.pg-btn--primary {
+	--pg-btn-bg: var(--pg-blue);
+	--pg-btn-bg-hover: var(--pg-blue-deep);
+}
+
+.pg-btn--bright {
+	--pg-btn-bg: var(--pg-blue-bright);
+	--pg-btn-bg-hover: var(--pg-blue);
+}
+
+.pg-btn--accent {
+	--pg-btn-bg: var(--pg-green-band);
+	--pg-btn-bg-hover: #0d6b4f;
+}
+
+/* The quote panel in a category hero. The design carries every field name in
+   its placeholder, so the labels are read out but not drawn, and the two
+   actions share the row: a dashed outline to attach, green to send. */
+.pg-form--no-labels :is(.pg-field__label, .pg-form__consent) {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.pg-form--panel :is(.pg-input, .pg-select, select) {
+	min-height: 3.5rem;
+	padding-inline: var(--pg-space-lg);
+}
+
+.pg-form--panel .pg-textarea {
+	min-height: 6.25rem;
+	padding: var(--pg-space-md) var(--pg-space-lg);
+	border-radius: var(--pg-radius-lg);
+}
+
+.pg-form--panel .pg-form__actions {
+	gap: var(--pg-space-md);
+	margin-top: var(--pg-space-lg);
+}
+
+.pg-form--panel .pg-file,
+.pg-form--panel .pg-btn[type="submit"] {
+	flex: 1 1 0;
+	justify-content: center;
+	min-height: 3.5rem;
+}
+
+.pg-hero__form .pg-form--panel .pg-file {
+	border-color: rgba(255, 255, 255, 0.55);
+	background: none;
+	color: var(--pg-white);
+}
+
+.pg-hero__form .pg-form--panel .pg-file:hover,
+.pg-hero__form .pg-form--panel .pg-file:focus-within {
+	border-color: var(--pg-white);
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.pg-hero__form .pg-form--panel .pg-btn[type="submit"] {
+	--pg-btn-bg: #00b25e;
+	--pg-btn-bg-hover: #009750;
+}
+
+/* Colours follow the ground the panel is placed on, not the variant. */
+.pg-hero__form .pg-form--panel :is(.pg-field__label, .pg-form__consent, .pg-form__title, legend) {
+	color: var(--pg-white);
+}
+
+.pg-form--panel .pg-field__label {
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+}
+
+.pg-btn--dark {
+	--pg-btn-bg: var(--pg-ink);
+	--pg-btn-bg-hover: var(--pg-black);
+}
+
+.pg-btn--white {
+	--pg-btn-bg: var(--pg-white);
+	--pg-btn-fg: var(--pg-black);
+	--pg-btn-bg-hover: var(--pg-gray-100);
+	--pg-btn-fg-hover: var(--pg-blue);
+}
+
+.pg-btn--outline {
+	--pg-btn-bg: transparent;
+	--pg-btn-fg: var(--pg-blue);
+	--pg-btn-border: currentColor;
+	--pg-btn-bg-hover: var(--pg-blue);
+	--pg-btn-fg-hover: var(--pg-white);
+}
+
+/* Outline sitting on a dark/brand band. */
+.pg-btn--outline-light {
+	--pg-btn-bg: transparent;
+	--pg-btn-fg: var(--pg-white);
+	--pg-btn-border: rgba(255, 255, 255, 0.6);
+	--pg-btn-bg-hover: var(--pg-white);
+	--pg-btn-fg-hover: var(--pg-blue);
+}
+
+.pg-btn--ghost {
+	--pg-btn-bg: var(--pg-white);
+	--pg-btn-fg: var(--pg-ink);
+	--pg-btn-bg-hover: var(--pg-gray-200);
+	--pg-btn-fg-hover: var(--pg-ink);
+	min-height: 2.5rem;
+	padding: 0.5rem 1.25rem;
+}
+
+.pg-btn--soft {
+	--pg-btn-bg: var(--pg-gray-200);
+	--pg-btn-fg: var(--pg-ink);
+	--pg-btn-bg-hover: var(--pg-gray-300);
+	--pg-btn-fg-hover: var(--pg-ink);
+}
+
+.pg-btn--link {
+	--pg-btn-bg: transparent;
+	--pg-btn-fg: var(--pg-color-heading);
+	--pg-btn-bg-hover: transparent;
+	--pg-btn-fg-hover: var(--pg-blue);
+	min-height: 0;
+	padding: 0;
+	font-weight: var(--pg-weight-medium);
+}
+
+.pg-btn--link:hover:not(:disabled) {
+	transform: none;
+}
+
+.pg-btn--sm {
+	min-height: 2.3125rem;
+	padding: 0.4375rem 1.25rem;
+	font-size: var(--pg-text-xs);
+}
+
+.pg-btn--lg {
+	min-height: 3.375rem;
+	padding: 0.875rem 2.25rem;
+}
+
+.pg-btn--block {
+	width: 100%;
+}
+
+/* Circular icon button used by carousels and the gallery lightbox. */
+.pg-icon-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: var(--pg-radius-circle);
+	border: 1px solid var(--pg-color-border);
+	background: var(--pg-white);
+	color: var(--pg-ink);
+	transition: background-color var(--pg-duration) var(--pg-ease),
+		color var(--pg-duration) var(--pg-ease),
+		border-color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-icon-btn:hover:not(:disabled) {
+	background: var(--pg-blue);
+	border-color: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+.pg-icon-btn:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.pg-icon-btn svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.pg-section--navy .pg-icon-btn,
+.pg-section--blue .pg-icon-btn,
+.pg-section--green .pg-icon-btn {
+	background: transparent;
+	border-color: rgba(255, 255, 255, 0.55);
+	color: var(--pg-white);
+}
+
+.pg-section--navy .pg-icon-btn:hover,
+.pg-section--blue .pg-icon-btn:hover,
+.pg-section--green .pg-icon-btn:hover {
+	background: var(--pg-white);
+	color: var(--pg-blue);
+}
+
+/* -------------------------------------------------------------------------
+   Badges & pills
+   ------------------------------------------------------------------------- */
+
+.pg-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-2xs);
+	padding: 0.4375rem 1.25rem;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-white);
+	color: var(--pg-ink);
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+	line-height: 1.375;
+	white-space: nowrap;
+}
+
+.pg-badge--brand { background: var(--pg-blue); color: var(--pg-white); }
+.pg-badge--accent { background: var(--pg-green); color: var(--pg-white); }
+.pg-badge--soft { background: var(--pg-gray-200); color: var(--pg-ink); }
+.pg-badge--outline { background: transparent; border: 1px solid var(--pg-color-border); }
+
+.pg-badge--floating {
+	position: absolute;
+	top: var(--pg-space-md);
+	left: var(--pg-space-md);
+	z-index: 2;
+	box-shadow: var(--pg-shadow-xs);
+}
+
+/* -------------------------------------------------------------------------
+   Star rating
+   ------------------------------------------------------------------------- */
+
+.pg-stars {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.125rem;
+	color: var(--pg-amber);
+}
+
+.pg-stars__star svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+.pg-stars__star.is-empty { color: var(--pg-gray-450); }
+.pg-stars__star.is-half { color: var(--pg-amber); opacity: 0.55; }
+
+.pg-stars__value {
+	margin-left: var(--pg-space-xs);
+	font-weight: var(--pg-weight-semibold);
+	font-size: var(--pg-text-xs);
+}
+
+/* Overlapping round portraits, used wherever review proof is shown. */
+.pg-avatars {
+	display: inline-flex;
+	align-items: center;
+}
+
+.pg-avatars img {
+	width: 2rem;
+	height: 2rem;
+	border-radius: var(--pg-radius-circle);
+	object-fit: cover;
+	border: 2px solid var(--pg-white);
+}
+
+.pg-avatars img + img {
+	margin-left: -0.625rem;
+}
+
+.pg-rating-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	padding: 0.5rem 1.25rem;
+	border-radius: var(--pg-radius-pill);
+	background: rgba(255, 255, 255, 0.14);
+	color: var(--pg-white);
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-semibold);
+}
+
+/* -------------------------------------------------------------------------
+   Forms — Figma: 42–48px tall, pill radius, 1px #C3C3C3 border.
+   ------------------------------------------------------------------------- */
+
+.pg-field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+	min-width: 0;
+}
+
+.pg-field__label {
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-color-heading);
+}
+
+.pg-field__label .pg-required {
+	color: var(--pg-red);
+	margin-left: 0.125rem;
+}
+
+.pg-input,
+.pg-select,
+.pg-textarea,
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="number"],
+input[type="search"],
+input[type="password"],
+input[type="date"],
+select,
+textarea {
+	width: 100%;
+	min-height: 2.875rem;
+	padding: 0.625rem 1.125rem;
+	border: 1px solid #c3c3c3;
+	border-radius: var(--pg-radius-pill);
+	background-color: var(--pg-white);
+	color: var(--pg-color-heading);
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-sm);
+	line-height: 1.4;
+	transition: border-color var(--pg-duration) var(--pg-ease), box-shadow var(--pg-duration) var(--pg-ease);
+	appearance: none;
+}
+
+textarea,
+.pg-textarea {
+	min-height: 8.5rem;
+	border-radius: var(--pg-radius-md);
+	resize: vertical;
+}
+
+.pg-input:focus,
+.pg-select:focus,
+.pg-textarea:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: none;
+	border-color: var(--pg-blue);
+	box-shadow: 0 0 0 3px rgba(0, 34, 180, 0.12);
+}
+
+::placeholder {
+	color: #6d6d6d;
+	opacity: 1;
+}
+
+.pg-select,
+select {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8' viewBox='0 0 14 8' fill='none'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23191B1B' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 1.125rem center;
+	padding-right: 2.75rem;
+}
+
+.pg-field.has-error .pg-input,
+.pg-field.has-error .pg-select,
+.pg-field.has-error .pg-textarea {
+	border-color: var(--pg-red);
+}
+
+.pg-field__error {
+	font-size: var(--pg-text-2xs);
+	color: var(--pg-red);
+}
+
+.pg-form__row {
+	display: grid;
+	gap: 0.875rem;
+	grid-template-columns: 1fr;
+}
+
+@media (min-width: 576px) {
+	.pg-form__row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 768px) {
+	.pg-form__row--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.pg-form__grid {
+	display: grid;
+	gap: 0.875rem;
+}
+
+fieldset.pg-field {
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+fieldset.pg-field > .pg-field__label {
+	display: block;
+	margin-bottom: 0.375rem;
+	padding: 0;
+}
+
+.pg-form__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	margin-top: var(--pg-space-md);
+}
+
+/* File input styled as a pill button. */
+.pg-file {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	min-height: 3rem;
+	padding: 0.75rem 1.5rem;
+	border: 1px dashed #aeaeae;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-gray-200);
+	color: var(--pg-ink);
+	font-size: var(--pg-text-sm);
+	cursor: pointer;
+	transition: border-color var(--pg-duration) var(--pg-ease), background-color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-file:hover {
+	border-color: var(--pg-blue);
+	background: var(--pg-white);
+}
+
+.pg-file input[type="file"] {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.pg-file__name {
+	font-size: var(--pg-text-2xs);
+	color: var(--pg-color-muted);
+}
+
+/* Honeypot. Hidden from people, reachable by bots. */
+.pg-hp {
+	position: absolute !important;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.pg-form__message {
+	margin-top: var(--pg-space-md);
+	padding: var(--pg-space-sm) var(--pg-space-md);
+	border-radius: var(--pg-radius-sm);
+	font-size: var(--pg-text-sm);
+	display: none;
+}
+
+.pg-form__message.is-visible { display: block; }
+.pg-form__message.is-success { background: rgba(30, 186, 136, 0.12); color: #0f7a58; }
+.pg-form__message.is-error { background: rgba(217, 45, 32, 0.1); color: var(--pg-red); }
+
+/* Forms rendered on a brand-coloured panel. */
+.pg-form--on-brand .pg-field__label { color: var(--pg-white); }
+.pg-form--on-brand .pg-input,
+.pg-form--on-brand .pg-select,
+.pg-form--on-brand .pg-textarea { border-color: transparent; }
+
+/* -------------------------------------------------------------------------
+   Cards
+   ------------------------------------------------------------------------- */
+
+.pg-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	border-radius: var(--pg-radius-2xl);
+	background: var(--pg-white);
+	overflow: hidden;
+	transition: transform var(--pg-duration) var(--pg-ease), box-shadow var(--pg-duration) var(--pg-ease);
+}
+
+.pg-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--pg-shadow-md);
+}
+
+.pg-card__media {
+	position: relative;
+	display: block;
+	aspect-ratio: 4 / 3;
+	overflow: hidden;
+	border-radius: var(--pg-radius-xl);
+	background: var(--pg-gray-100);
+}
+
+.pg-card__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 400ms var(--pg-ease);
+}
+
+.pg-card:hover .pg-card__media img {
+	transform: scale(1.04);
+}
+
+.pg-card__body {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	gap: var(--pg-space-xs);
+	padding: var(--pg-space-md) var(--pg-space-md) var(--pg-space-lg);
+	background: var(--pg-gray-100);
+}
+
+.pg-card__title {
+	font-size: var(--pg-text-h5);
+	font-weight: var(--pg-weight-semibold);
+	line-height: 1.3;
+	margin: 0;
+}
+
+.pg-card__title a {
+	color: inherit;
+}
+
+.pg-card__title a:hover {
+	color: var(--pg-blue);
+}
+
+.pg-card__excerpt {
+	font-size: var(--pg-text-xs);
+	line-height: var(--pg-leading-snug);
+	color: var(--pg-color-muted);
+	margin: 0;
+}
+
+.pg-card__footer {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-xs);
+	margin-top: auto;
+	padding-top: var(--pg-space-sm);
+}
+
+.pg-card__price {
+	font-size: var(--pg-text-xs);
+	color: var(--pg-color-muted);
+}
+
+.pg-card__price strong {
+	color: var(--pg-blue-vivid);
+	font-weight: var(--pg-weight-semibold);
+}
+
+/* Whole-card click target that keeps inner links usable. */
+.pg-card__overlay-link {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	font-size: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Accordion (FAQ)
+   ------------------------------------------------------------------------- */
+
+.pg-accordion {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pg-space-sm);
+}
+
+.pg-accordion__item {
+	border-radius: var(--pg-radius-sm);
+	background: var(--pg-gray-150);
+	overflow: hidden;
+	transition: background-color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-accordion__trigger {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--pg-space-md);
+	width: 100%;
+	padding: 1.125rem 1.5rem;
+	font-family: var(--pg-font-body);
+	font-size: var(--pg-text-base);
+	font-weight: var(--pg-weight-medium);
+	line-height: 1.4;
+	color: var(--pg-color-heading);
+	text-align: left;
+	transition: color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-accordion__icon {
+	flex-shrink: 0;
+	transition: transform var(--pg-duration) var(--pg-ease);
+}
+
+.pg-accordion__icon svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.pg-accordion__item.is-open {
+	background: var(--pg-white);
+	box-shadow: 0px 28.9334px 63.5px rgba(20, 19, 19, 0.16);
+	border-radius: var(--pg-radius-sm);
+}
+
+.pg-accordion__item.is-open .pg-accordion__trigger {
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	border-radius: var(--pg-radius-sm) var(--pg-radius-sm) var(--pg-radius-md) var(--pg-radius-md);
+}
+
+.pg-accordion__item.is-open .pg-accordion__icon {
+	transform: rotate(180deg);
+}
+
+.pg-accordion__panel {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows var(--pg-duration) var(--pg-ease);
+}
+
+.pg-accordion__item.is-open .pg-accordion__panel {
+	grid-template-rows: 1fr;
+}
+
+.pg-accordion__panel > div {
+	overflow: hidden;
+}
+
+.pg-accordion__content {
+	padding: 1.125rem;
+	font-size: var(--pg-text-sm);
+	line-height: var(--pg-leading-normal);
+	color: var(--pg-black);
+}
+
+.pg-accordion__content > *:last-child {
+	margin-bottom: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Tabs
+   ------------------------------------------------------------------------- */
+
+.pg-tabs__list {
+	display: flex;
+	flex-wrap: nowrap;
+	gap: var(--pg-space-2xs);
+	padding: 0.375rem;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-gray-150);
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.pg-tabs__list::-webkit-scrollbar {
+	display: none;
+}
+
+.pg-tabs__tab {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	padding: 0.75rem 1.5rem;
+	border-radius: var(--pg-radius-pill);
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-medium);
+	color: var(--pg-color-heading);
+	white-space: nowrap;
+	transition: background-color var(--pg-duration) var(--pg-ease), color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-tabs__tab[aria-selected="true"] {
+	background: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+.pg-tabs__panel[hidden] {
+	display: none;
+}
+
+.pg-tabs__panel {
+	padding-top: var(--pg-space-xl);
+}
+
+/* -------------------------------------------------------------------------
+   Breadcrumb
+   ------------------------------------------------------------------------- */
+
+.pg-breadcrumb {
+	font-size: var(--pg-text-xs);
+	color: var(--pg-color-muted);
+}
+
+.pg-breadcrumb ol {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.375rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.pg-breadcrumb li {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+}
+
+.pg-breadcrumb li + li::before {
+	content: "/";
+	color: var(--pg-gray-400);
+}
+
+.pg-breadcrumb a {
+	color: var(--pg-color-muted);
+}
+
+.pg-breadcrumb a:hover {
+	color: var(--pg-blue);
+}
+
+.pg-breadcrumb [aria-current="page"] {
+	color: var(--pg-color-heading);
+	font-weight: var(--pg-weight-medium);
+}
+
+/* -------------------------------------------------------------------------
+   Pagination
+   ------------------------------------------------------------------------- */
+
+.pg-pagination {
+	display: flex;
+	justify-content: center;
+	margin-top: var(--pg-space-2xl);
+}
+
+.pg-pagination .nav-links,
+.pg-pagination .page-numbers {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--pg-space-2xs);
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.pg-pagination .page-numbers:not(ul) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.75rem;
+	height: 2.75rem;
+	padding: 0 0.75rem;
+	border-radius: var(--pg-radius-circle);
+	border: 1px solid var(--pg-color-border);
+	color: var(--pg-color-heading);
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+	transition: background-color var(--pg-duration) var(--pg-ease), color var(--pg-duration) var(--pg-ease);
+}
+
+.pg-pagination .page-numbers.current,
+.pg-pagination .page-numbers:hover:not(.dots) {
+	background: var(--pg-blue);
+	border-color: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+.pg-pagination .page-numbers.dots {
+	border-color: transparent;
+}
+
+/* -------------------------------------------------------------------------
+   Carousel scaffolding shared by every slider
+   ------------------------------------------------------------------------- */
+
+.pg-carousel {
+	position: relative;
+}
+
+/*
+ * Before Swiper initialises — and if it never does — the track is a native
+ * scroll-snap row, so the cards stay reachable by touch, trackpad and keyboard.
+ * Swiper adds .swiper-initialized and takes the layout over from there.
+ * Two-class selectors throughout, so these win over Swiper's own base CSS
+ * whichever order the stylesheets land in.
+ */
+.pg-carousel__track:not(.swiper-initialized) {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(15rem, 1fr);
+	gap: var(--pg-grid-gap);
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	padding-bottom: var(--pg-space-xs);
+	scrollbar-width: thin;
+}
+
+.pg-carousel__track:not(.swiper-initialized) .swiper-wrapper {
+	display: contents;
+}
+
+.pg-carousel__track:not(.swiper-initialized) .swiper-slide {
+	scroll-snap-align: start;
+}
+
+/*
+ * A one-at-a-time row has nothing to scroll, so the fallback is simply the
+ * first slide. Without this the hero renders every headline in a row and at
+ * the height of the tallest, then snaps to one the moment Swiper initialises.
+ */
+.pg-carousel__track--single:not(.swiper-initialized) {
+	display: block;
+	overflow: hidden;
+	scroll-snap-type: none;
+	padding-bottom: 0;
+}
+
+.pg-carousel__track--single:not(.swiper-initialized) .swiper-wrapper {
+	display: block;
+}
+
+.pg-carousel__track--single:not(.swiper-initialized) .swiper-slide + .swiper-slide {
+	display: none;
+}
+
+/* Cards fill the tallest slide in view rather than each sitting at its own
+   height, which is what the design shows. */
+.pg-carousel__track .swiper-slide {
+	height: auto;
+}
+
+.pg-carousel__track .swiper-slide > * {
+	height: 100%;
+}
+
+/* Full-bleed bands let slides run past the container; the section clips them
+   at the viewport edge. */
+.pg-carousel--bleed .pg-carousel__track {
+	overflow: visible;
+}
+
+.pg-section:has(> .pg-container > .pg-carousel--bleed),
+.pg-section--industries,
+.pg-section--reviews {
+	overflow: hidden;
+}
+
+.pg-carousel__nav {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-xs);
+}
+
+.pg-carousel__nav--center {
+	justify-content: center;
+	margin-top: var(--pg-space-xl);
+}
+
+/* -------------------------------------------------------------------------
+   Marquee: a row that drifts on its own
+   ------------------------------------------------------------------------- */
+
+.pg-carousel--marquee {
+	position: relative;
+}
+
+.pg-marquee__viewport {
+	overflow: hidden;
+}
+
+/* A bleeding row is clipped by its section at the viewport edge instead. */
+.pg-carousel--bleed .pg-marquee__viewport {
+	overflow: visible;
+}
+
+/* Arrow nudges live on their own layer, so they compose with the drift below
+   rather than fighting it for the transform property. */
+.pg-marquee__shift {
+	transition: transform 600ms var(--pg-ease);
+	will-change: transform;
+}
+
+.pg-marquee__track {
+	display: flex;
+	width: max-content;
+	gap: var(--pg-grid-gap);
+	animation: pg-marquee-drift var(--pg-marquee-duration, 60s) linear infinite;
+	will-change: transform;
+}
+
+[data-pg-marquee="reverse"] .pg-marquee__track {
+	animation-direction: reverse;
+}
+
+/* The second copy sits in the same flex row, so the seam is never visible. */
+.pg-marquee__clone {
+	display: contents;
+}
+
+/* Half the track, plus half a gap: the gap after the last original card has to
+   be taken off for the loop point to land exactly on the duplicate. */
+@keyframes pg-marquee-drift {
+	to {
+		transform: translateX(calc(-50% - var(--pg-grid-gap) / 2));
+	}
+}
+
+/* Reading beats motion: hovering or tabbing into a row holds it still. */
+.pg-marquee__viewport:hover .pg-marquee__track,
+.pg-marquee__viewport:focus-within .pg-marquee__track {
+	animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.pg-marquee__track {
+		animation: none;
+	}
+
+	.pg-marquee__viewport {
+		overflow-x: auto;
+	}
+
+	.pg-marquee__shift {
+		transition: none;
+	}
+}
+
+/* Arrows on the container edges, vertically centred on the imagery. */
+.pg-carousel__nav--sides {
+	position: absolute;
+	inset-inline: calc(var(--pg-space-md) * -1);
+	top: 40%;
+	justify-content: space-between;
+	pointer-events: none;
+}
+
+.pg-carousel__nav--sides .pg-icon-btn {
+	width: 3.375rem;
+	height: 2.4375rem;
+	border-radius: var(--pg-radius-pill);
+	border-color: transparent;
+	background: var(--pg-white);
+	color: var(--pg-color-heading);
+	box-shadow: 0 4px 16px rgba(16, 24, 40, 0.12);
+	pointer-events: auto;
+}
+
+/* Overlaid arrows keep taking clicks even when Swiper marks them disabled.
+   Without this the click falls through to the card underneath and navigates. */
+.pg-carousel__nav--sides .swiper-button-disabled,
+.pg-carousel__nav--sides .swiper-button-lock {
+	pointer-events: auto;
+	cursor: default;
+}
+
+@media (max-width: 767.98px) {
+	.pg-carousel__nav--sides {
+		inset-inline: 0;
+	}
+}
+
+/* Swiper marks the ends of the track, and locks the arrows when nothing
+   overflows. Both read as disabled rather than disappearing, so the section
+   header keeps the composition the design shows. */
+.pg-carousel__nav .swiper-button-disabled,
+.pg-carousel__nav .swiper-button-lock {
+	opacity: 0.4;
+	pointer-events: none;
+}
+
+/* Swiper sets display:none on a locked arrow. Keep it in the layout. */
+.pg-carousel__nav .swiper-button-lock {
+	display: inline-flex;
+}
+
+/* Standalone scrolling row, used where there is no carousel behaviour to add
+   (the product gallery thumbnails). */
+.pg-scroller {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(15rem, 1fr);
+	gap: var(--pg-grid-gap);
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	padding-bottom: var(--pg-space-xs);
+	scrollbar-width: thin;
+}
+
+.pg-scroller > * {
+	scroll-snap-align: start;
+}
+
+/* -------------------------------------------------------------------------
+   Feature / USP strip
+   ------------------------------------------------------------------------- */
+
+.pg-usp {
+	display: grid;
+	gap: var(--pg-space-md);
+	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+	align-items: center;
+}
+
+.pg-usp__item {
+	display: flex;
+	align-items: center;
+	gap: var(--pg-space-sm);
+	padding-inline: var(--pg-space-md);
+}
+
+.pg-usp__item + .pg-usp__item {
+	border-left: 1px solid var(--pg-color-border);
+}
+
+@media (max-width: 767.98px) {
+	.pg-usp__item + .pg-usp__item {
+		border-left: 0;
+	}
+}
+
+.pg-usp__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	flex-shrink: 0;
+	border-radius: var(--pg-radius-circle);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+}
+
+.pg-usp__icon svg {
+	width: 1.25rem;
+	height: 1.25rem;
+}
+
+.pg-usp__title {
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-semibold);
+	color: var(--pg-color-heading);
+	line-height: 1.35;
+}
+
+.pg-usp__text {
+	font-size: var(--pg-text-2xs);
+	color: var(--pg-color-muted);
+	line-height: 1.45;
+}
+
+.pg-section--navy .pg-usp__title,
+.pg-section--blue .pg-usp__title,
+.pg-section--navy .pg-usp__text,
+.pg-section--blue .pg-usp__text {
+	color: var(--pg-white);
+}
+
+.pg-section--blue .pg-usp__icon {
+	background: var(--pg-white);
+	color: var(--pg-blue);
+}
+
+/* -------------------------------------------------------------------------
+   Empty / loading states
+   ------------------------------------------------------------------------- */
+
+.pg-empty {
+	padding: var(--pg-space-3xl) var(--pg-space-md);
+	text-align: center;
+	color: var(--pg-color-muted);
+}
+
+.pg-empty__title {
+	margin-bottom: var(--pg-space-xs);
+}
+
+.pg-spinner {
+	display: inline-block;
+	width: 1.125rem;
+	height: 1.125rem;
+	border: 2px solid currentColor;
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: pg-spin 700ms linear infinite;
+}
+
+@keyframes pg-spin {
+	to { transform: rotate(360deg); }
+}
+
+.pg-is-busy {
+	opacity: 0.55;
+	pointer-events: none;
+	transition: opacity var(--pg-duration) var(--pg-ease);
+}
