@@ -1004,13 +1004,21 @@ a.pg-hero__tab.is-active:hover {
 	box-shadow: -5px 11px 15px rgba(0, 51, 150, 0.1);
 }
 
-/* Quote band: capped height, and the assurances read on two lines. */
+/* Quote band: capped height, and the assurances read on two lines. The cap
+   only holds where the three columns have the width of the design; narrower,
+   or stacked, the content is taller than 311px and spilled out of the band. */
 .pg-section--quote-band {
-	padding-block: 0;
+	padding-block: clamp(2.5rem, 1.5rem + 3vw, 3.5rem);
 }
 
-.pg-quote-band {
-	max-height: 311px;
+@media (min-width: 1200px) {
+	.pg-section--quote-band {
+		padding-block: 0;
+	}
+
+	.pg-quote-band {
+		max-height: 311px;
+	}
 }
 
 .pg-quote-band__media img {

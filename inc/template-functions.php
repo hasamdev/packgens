@@ -41,7 +41,8 @@ function packgens_view_has_hero() {
 	}
 
 	// Templates that always render a compact band of their own.
-	return is_singular( 'post' ) || is_archive() || is_search() || is_404() || is_home();
+	// Not the 404: its template has no band, so the header must paint one.
+	return is_singular( 'post' ) || is_archive() || is_search() || is_home();
 }
 
 /**
@@ -222,10 +223,30 @@ function packgens_pagination( $query = null ) {
 		return;
 	}
 
+	// The post allow-list has no SVG, which stripped the arrow icons and left
+	// the previous/next links as empty circles.
+	$allowed = array_merge(
+		wp_kses_allowed_html( 'post' ),
+		array(
+			'svg'  => array(
+				'xmlns'           => true,
+				'viewbox'         => true,
+				'fill'            => true,
+				'stroke'          => true,
+				'stroke-width'    => true,
+				'stroke-linecap'  => true,
+				'stroke-linejoin' => true,
+				'focusable'       => true,
+				'aria-hidden'     => true,
+			),
+			'path' => array( 'd' => true ),
+		)
+	);
+
 	printf(
 		'<nav class="pg-pagination" aria-label="%s">%s</nav>',
 		esc_attr__( 'Pagination', 'packgens' ),
-		wp_kses_post( $links )
+		wp_kses( $links, $allowed )
 	);
 }
 

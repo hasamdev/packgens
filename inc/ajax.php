@@ -44,7 +44,9 @@ function packgens_ajax_search() {
 			$product = wc_get_product( $post_id );
 
 			if ( $product ) {
-				$meta = wp_strip_all_tags( $product->get_price_html() );
+				// Decoded: the script escapes the text itself, so entities such
+				// as &pound; would otherwise show literally.
+				$meta = html_entity_decode( wp_strip_all_tags( $product->get_price_html() ), ENT_QUOTES, 'UTF-8' );
 			}
 		} else {
 			$meta = get_the_date( '', $post_id );
@@ -68,10 +70,14 @@ function packgens_ajax_search() {
 				),
 				home_url( '/' )
 			),
-			'allLabel' => sprintf(
-				/* translators: %s: search term. */
-				__( 'View all results for &ldquo;%s&rdquo;', 'packgens' ),
-				$term
+			'allLabel' => html_entity_decode(
+				sprintf(
+					/* translators: %s: search term. */
+					__( 'View all results for &ldquo;%s&rdquo;', 'packgens' ),
+					$term
+				),
+				ENT_QUOTES,
+				'UTF-8'
 			),
 		)
 	);

@@ -417,6 +417,13 @@
 		align-items: stretch;
 	}
 
+	/* Stretched to the row height, the shared 16/11 ratio would derive the
+	   media's width from that height and push the image over the copy. */
+	.pg-post-card--wide .pg-post-card__media {
+		aspect-ratio: auto;
+		min-height: 14rem;
+	}
+
 	.pg-post-card--wide .pg-post-card__media img {
 		height: 100%;
 		object-fit: cover;

@@ -202,6 +202,15 @@ select {
 	color: inherit;
 }
 
+/* iOS Safari zooms the page into any field set below 16px when it takes focus.
+   Touch screens get 16px fields; the `html body` prefix clears the component
+   rules (search, quantity, WooCommerce) that set a smaller size. */
+@media (pointer: coarse) {
+	html body :is(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]), select, textarea) {
+		font-size: max(1rem, 16px);
+	}
+}
+
 button {
 	background: none;
 	border: 0;
@@ -606,6 +615,9 @@ b {
 
 /* Keeps wide tables and code from breaking the page on small screens. */
 .pg-scroll-x {
+	/* Positioned so absolutely placed children (the .pg-sr-only labels in
+	   table cells) are clipped here too, rather than widening the page. */
+	position: relative;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 }

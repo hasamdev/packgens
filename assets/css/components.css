@@ -104,9 +104,29 @@
 
 .pg-form--panel .pg-file,
 .pg-form--panel .pg-btn[type="submit"] {
-	flex: 1 1 0;
+	/* The basis makes the pair stack in a narrow panel instead of squeezing
+	   each label to a word per line. */
+	flex: 1 1 12rem;
 	justify-content: center;
 	min-height: 3.5rem;
+	white-space: nowrap;
+}
+
+/* The panel's padding replaced the room the select keeps for its chevron. */
+.pg-form--panel :is(.pg-select, select) {
+	padding-right: 3rem;
+}
+
+/* The panel sits in columns of very different widths (hero, product page,
+   quote page), so its paired fields respond to the panel, not the viewport. */
+.pg-form--panel {
+	container-type: inline-size;
+}
+
+@container (max-width: 30rem) {
+	.pg-form--panel .pg-form__row--2 {
+		grid-template-columns: minmax(0, 1fr);
+	}
 }
 
 .pg-hero__form .pg-form--panel .pg-file {

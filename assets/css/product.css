@@ -9,6 +9,8 @@
 
 .pg-product__layout {
 	display: grid;
+	/* Explicit track so the thumbnail scroller cannot widen the single column. */
+	grid-template-columns: minmax(0, 1fr);
 	gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
 	margin-top: var(--pg-space-lg);
 }
@@ -485,6 +487,24 @@
 	color: var(--pg-color-heading);
 }
 
+/* On phones the 30rem floor scrolled the values out of view. The table fits
+   the screen instead, the label column widening so neither side is crushed. */
+@media (max-width: 575.98px) {
+	.pg-spec-table {
+		min-width: 0;
+	}
+
+	.pg-spec-table th,
+	.pg-spec-table td {
+		padding: var(--pg-space-md) var(--pg-space-sm);
+		font-size: var(--pg-text-xs);
+	}
+
+	.pg-spec-table th {
+		width: 40%;
+	}
+}
+
 /* -------------------------------------------------------------------------
    Reviews block
    ------------------------------------------------------------------------- */
@@ -512,6 +532,7 @@
 
 .pg-product__media-col {
 	display: grid;
+	grid-template-columns: minmax(0, 1fr);
 	gap: var(--pg-space-lg);
 	align-content: start;
 }
@@ -601,6 +622,10 @@
 
 .pg-product__offer-copy-btn {
 	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2rem;
+	min-height: 2rem;
 	padding: 0.25rem;
 	border: 0;
 	background: none;
@@ -679,6 +704,36 @@
 .pg-product__buy .pg-product__delivery {
 	grid-column: 2;
 	grid-row: 2;
+}
+
+/* On phones the two actions cannot share a row without squeezing the delivery
+   note into a circle and pushing the quantity stepper off-screen, so price and
+   quantity share the first row and each action takes the full width below. */
+@media (max-width: 519.98px) {
+	.pg-product__buy {
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+
+	.pg-product__buy .quantity {
+		justify-self: end;
+	}
+
+	/* Beside the stepper the price has little room; it wraps rather than
+	   running underneath it. */
+	.pg-product__buy .pg-product__price {
+		flex-wrap: wrap;
+		row-gap: 0;
+		min-width: 0;
+	}
+
+	.pg-product__buy .single_add_to_cart_button,
+	.pg-product__buy .pg-product__delivery {
+		grid-column: 1 / -1;
+	}
+
+	.pg-product__buy .pg-product__delivery {
+		grid-row: 3;
+	}
 }
 
 .pg-product__actions .pg-btn,

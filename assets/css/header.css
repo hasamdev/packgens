@@ -358,6 +358,11 @@ a.pg-header__strip-link:focus-visible .pg-usp__title {
 	flex-shrink: 0;
 }
 
+.pg-search__result-title,
+.pg-search__result-meta {
+	display: block;
+}
+
 .pg-search__result-title {
 	font-size: var(--pg-text-xs);
 	font-weight: var(--pg-weight-medium);
@@ -1053,5 +1058,24 @@ a.pg-header__strip-link:focus-visible .pg-usp__title {
 	.pg-header__brand .pg-brand__mark {
 		max-height: 32px;
 		height: 32px;
+	}
+}
+
+/* On the narrowest phones the logo and the three actions no longer fit at
+   full size, so the logo steps down and the spacing tightens. */
+@media (max-width: 379.98px) {
+	.pg-header__utility {
+		gap: var(--pg-space-xs);
+		padding-inline: var(--pg-space-sm);
+	}
+
+	.pg-header__brand img,
+	.pg-header__brand .pg-brand__mark {
+		max-height: 28px;
+		height: 28px;
+	}
+
+	.pg-header__actions {
+		gap: 0.25rem;
 	}
 }

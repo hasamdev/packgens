@@ -849,3 +849,104 @@ a.wc-block-components-product-name,
 	text-align: center;
 }
 
+
+/* WooCommerce's show-password toggle is a 22px target. Padding grows the hit
+   area and the matching negative margin keeps the eye icon where it was. */
+.woocommerce form .password-input .show-password-input,
+.woocommerce-page form .password-input .show-password-input {
+	box-sizing: content-box;
+	padding: 0.5rem;
+	margin: -0.5rem;
+}
+
+/* "New in store" grid under the empty cart. WooCommerce's block ships with
+   images at their own heights and underlined links, so the rows stagger; here
+   it takes the theme's card treatment: square media, two up on phones, four
+   from tablets. The longer selectors clear the plugin's own column rules,
+   which reach four classes. */
+.wp-block-woocommerce-empty-cart-block .wc-block-grid {
+	margin-top: var(--pg-space-lg);
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-grid .wc-block-grid__products {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--pg-grid-gap);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (min-width: 768px) {
+	.wp-block-woocommerce-empty-cart-block .wc-block-grid .wc-block-grid__products {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-grid .wc-block-grid__products > .wc-block-grid__product {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--pg-space-xs);
+	width: auto;
+	max-width: none;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: inherit;
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-grid__product-link {
+	display: block;
+	width: 100%;
+	color: var(--pg-color-heading);
+	text-decoration: none;
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-grid__product-image {
+	margin: 0 0 var(--pg-space-sm);
+	aspect-ratio: 1 / 1;
+	border-radius: var(--pg-radius-md);
+	overflow: hidden;
+	background: var(--pg-gray-100);
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-grid__product-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-grid__product-title {
+	font-size: var(--pg-text-sm);
+	font-weight: var(--pg-weight-semibold);
+	line-height: 1.35;
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-grid__product-price {
+	margin: 0;
+	font-size: var(--pg-text-xs);
+	color: var(--pg-color-muted);
+}
+
+/* Pinned to the foot of the card so the buttons share a line across the row. */
+.wp-block-woocommerce-empty-cart-block .wc-block-grid__product-add-to-cart {
+	margin-top: auto;
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-grid__product-add-to-cart .wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.75rem;
+	padding: 0.5rem 1.25rem;
+	border-radius: var(--pg-radius-pill);
+	background: var(--pg-blue);
+	color: var(--pg-white);
+	font-size: var(--pg-text-xs);
+	font-weight: var(--pg-weight-medium);
+	text-decoration: none;
+}
+
+.wp-block-woocommerce-empty-cart-block .wc-block-grid__product-add-to-cart .wp-block-button__link:hover {
+	background: var(--pg-blue-deep);
+}
