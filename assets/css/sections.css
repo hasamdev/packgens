@@ -508,9 +508,15 @@
 	overflow-x: clip;
 }
 
-/* Room under the panel for the labels the cards push outside it. */
+/* Room under the panel for the labels the cards push outside it. That room is
+   padding on a clipping box rather than margin: the track itself is left open
+   so the labels can show, and `clip-path` only hides the off-screen slides
+   visually. Without a real clip here they widened the page by thousands of
+   pixels on browsers that lack `overflow: clip` (iOS Safari before 16), and
+   the whole page panned sideways. */
 .pg-section--categories .pg-carousel {
-	margin-bottom: 4.5rem;
+	overflow: hidden;
+	padding-bottom: 4.5rem;
 }
 
 .pg-cat-card {
@@ -1088,6 +1094,26 @@
 	padding-inline: var(--pg-space-lg);
 }
 
+/* The pill radius suits the one-line desktop bar only. Taller on tablets and
+   stacked on phones, 100px corners turned both blocks into ellipses that
+   crowded the copy and the button, so the corners step down to the card
+   radii. The square top-right corner stays, tucking the bar under the card. */
+@media (max-width: 1199.98px) {
+	.pg-process__cta,
+	.pg-process__cta-actions {
+		border-radius: var(--pg-radius-2xl);
+		border-top-right-radius: 0;
+	}
+}
+
+@media (max-width: 767.98px) {
+	.pg-process__cta,
+	.pg-process__cta-actions {
+		border-radius: var(--pg-radius-lg);
+		border-top-right-radius: 0;
+	}
+}
+
 /* -------------------------------------------------------------------------
    Why choose us
    ------------------------------------------------------------------------- */
@@ -1223,6 +1249,9 @@
 	   instead of widening the whole grid past the viewport. */
 	grid-template-columns: minmax(0, 1fr);
 	align-items: stretch;
+	/* Stacked, the two panels are separate rounded cards, so they need a gap
+	   between them; side by side they meet flush. */
+	gap: var(--pg-space-md);
 	max-width: 1280px;
 	margin: auto;
 }
@@ -1230,12 +1259,13 @@
 @media (min-width: 992px) {
 	.pg-comparison {
 		grid-template-columns: minmax(0, 3.75fr) minmax(0, 1fr);
+		gap: 0;
 	}
 }
 
 .pg-comparison__panel {
 	padding: clamp(1.25rem, 0.9rem + 1.6vw, 2.5rem);
-	border-radius: var(--pg-radius-lg) var(--pg-radius-lg) 0 var(--pg-radius-lg);
+	border-radius: var(--pg-radius-lg);
 	background: var(--pg-white);
 	color: var(--pg-color-text);
 }
@@ -1372,7 +1402,7 @@
 	justify-content: space-between;
 	gap: var(--pg-space-lg);
 	padding: var(--pg-space-xl) var(--pg-space-lg);
-	border-radius: var(--pg-radius-lg) var(--pg-radius-lg) var(--pg-radius-lg) 0;
+	border-radius: var(--pg-radius-lg);
 	border: 3px solid #FFFFFF;
 	background: var(--pg-blue);
 	text-align: center;
@@ -1409,6 +1439,18 @@
 	font-size: var(--pg-text-h5);
 	font-weight: var(--pg-weight-bold);
 	line-height: 1.25;
+}
+
+/* The facing corners square off only where the panel and the promo sit side
+   by side and meet; stacked, each is a card rounded on all four corners. */
+@media (min-width: 992px) {
+	.pg-comparison__panel {
+		border-bottom-right-radius: 0;
+	}
+
+	.pg-comparison__promo {
+		border-bottom-left-radius: 0;
+	}
 }
 
 /* One word of the offer carries the accent colour. */

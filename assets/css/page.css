@@ -285,8 +285,16 @@
 	align-items: center;
 	gap: clamp(1rem, 0.6rem + 1.6vw, 2rem);
 	padding: clamp(1.25rem, 1rem + 1.2vw, 2rem) clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
-	border-radius: var(--pg-radius-2xl) var(--pg-radius-2xl) var(--pg-radius-2xl) 0;
+	border-radius: var(--pg-radius-2xl);
 	background: var(--pg-gray-150);
+}
+
+/* The square corner is the seam with the blue panel, which only exists side by
+   side; stacked, the body is rounded on all four corners. */
+@media (min-width: 768px) {
+	.pg-trust__body {
+		border-bottom-left-radius: 0;
+	}
 }
 
 /* Pulled back over the blue panel's edge, straddling the seam between the two

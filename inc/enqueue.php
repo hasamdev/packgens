@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Versioned asset URL. Uses filemtime in debug so cache busting works locally.
+ * Versioned asset URL.
  *
  * @param string $relative Path relative to the theme root.
  * @return string
@@ -27,12 +27,12 @@ function packgens_asset( $relative ) {
  * @return string
  */
 function packgens_asset_version( $relative ) {
-	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-		$path = PACKGENS_DIR . ltrim( $relative, '/' );
+	// The file's modified time, not the theme version: with a fixed version a
+	// browser keeps serving its cached copy after a stylesheet changes.
+	$path = PACKGENS_DIR . ltrim( $relative, '/' );
 
-		if ( file_exists( $path ) ) {
-			return (string) filemtime( $path );
-		}
+	if ( file_exists( $path ) ) {
+		return PACKGENS_VERSION . '.' . filemtime( $path );
 	}
 
 	return PACKGENS_VERSION;
