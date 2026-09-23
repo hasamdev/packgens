@@ -494,17 +494,13 @@ a.pg-header__strip-link:focus-visible .pg-usp__title {
 	min-width: 1.25rem;
 	height: 1.25rem;
 	padding: 0 0.25rem;
+	border: 1px solid var(--pg-blue);
 	border-radius: var(--pg-radius-pill);
 	background: var(--pg-white);
-	color: var(--pg-blue);
+	color: var(--pg-black);
 	font-size: 0.6875rem;
 	font-weight: var(--pg-weight-bold);
-	line-height:
-	border: 1px solid var(--pg-blue);
-	border-radius: 0.625rem;
-	background: var(--pg-white);
-	color: var(--pg-black);
-}1;
+	line-height: 1;
 }
 
 /* Mobile search drop-down ------------------------------------------------- */

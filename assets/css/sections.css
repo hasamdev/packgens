@@ -262,6 +262,13 @@
 	overflow: visible;
 }
 
+/* The section that follows a strip hero needs room for the overlap. Declared
+   ahead of the narrow-screen reset below, which has to come later to win. */
+.pg-hero--has-strip + .pg-section,
+.pg-hero--has-strip + section {
+	padding-top: clamp(4rem, 2.5rem + 5vw, 7rem);
+}
+
 .pg-hero__strip-wrap {
 	position: absolute;
 	left: 50%;
@@ -338,18 +345,11 @@
 		white-space: normal;
 	}
 
-	.pg-hero__feature:nth-child(odd) {
-		border-left: 0;
-	}
-}
-
-@media (max-width: 575.98px) {
-	.pg-hero__strip {
-		grid-template-columns: 1fr;
-	}
-
-	.pg-hero__feature {
-		border-left: 0;
+	/* Two across, only the left column keeps its divider; otherwise the right
+	   column draws a stray rule against the strip's edge. The catalogue hero's
+	   strip is a flex row with its own dividers, so it is left alone. */
+	.pg-hero:not(.pg-hero--form) .pg-hero__feature:nth-child(even) {
+		border-right: 0;
 	}
 }
 
@@ -392,35 +392,31 @@
 	}
 }
 
-/* Between the drawer breakpoint and small phones a 2x2 grid balances better
-   than auto-fit's 3 + 1. */
-@media (min-width: 560px) and (max-width: 991.98px) {
-	.pg-hero__strip {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		border-radius: var(--pg-radius-2xl);
-	}
-
-	.pg-hero__feature:nth-child(odd) {
-		border-left: 0;
-	}
-}
-
 @media (max-width: 767.98px) {
 	.pg-hero__strip {
 		padding: var(--pg-space-sm);
 	}
 
-	.pg-hero__feature:not(:last-child) {
+	.pg-hero--form .pg-hero__feature:not(:last-child) {
 		border-right: 0;
 		border-bottom: 1px solid var(--pg-gray-300);
 		padding-top: var(--pg-space-sm);
 	}
 }
 
-/* The section that follows a strip hero needs room for the overlap. */
-.pg-hero--has-strip + .pg-section,
-.pg-hero--has-strip + section {
-	padding-top: clamp(4rem, 2.5rem + 5vw, 7rem);
+/* Small phones stack the strip to one column, and the dividers turn to rules
+   between rows. The space sits above each rule, not below it, so the copy does
+   not run down onto the line. The 2x2 grid holds from 560px up. */
+@media (max-width: 559.98px) {
+	.pg-hero__strip {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.pg-hero:not(.pg-hero--form) .pg-hero__feature:not(:last-child) {
+		border-right: 0;
+		border-bottom: 1px solid var(--pg-gray-300);
+		padding-bottom: var(--pg-space-sm);
+	}
 }
 
 /* -------------------------------------------------------------------------
@@ -568,7 +564,15 @@
 	height: 2.5rem;
 }
 
+/* Cards run ~125px wide on phones and tablets, and the track only leaves
+   --pg-cat-label of room below the panel, so a third line would be cut off
+   by the clip-path. Two lines fit; anything longer ends in an ellipsis. */
 .pg-cat-card__title {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	overflow: hidden;
 	font-size: var(--pg-text-base);
 	font-weight: var(--pg-weight-medium);
 	line-height: 1.35;
@@ -1057,6 +1061,16 @@
 	padding-inline: var(--pg-space-lg);
 }
 
+/* Stacked, the bar is far taller than a pill, and a 100px corner on it clips
+   the headline and the buttons, so both blocks ease back to the card radius. */
+@media (max-width: 767.98px) {
+	.pg-process__cta,
+	.pg-process__cta-actions {
+		border-radius: var(--pg-radius-2xl);
+		border-top-right-radius: 0;
+	}
+}
+
 /* -------------------------------------------------------------------------
    Why choose us
    ------------------------------------------------------------------------- */
@@ -1105,11 +1119,16 @@
 	border-top: 1px solid var(--pg-color-border);
 }
 
-.pg-why__item:nth-child(-n+2) {
+.pg-why__item:first-child {
 	border-top: 0;
 }
 
 @media (min-width: 640px) {
+	/* Two across, the second item also sits on the top row. */
+	.pg-why__item:nth-child(2) {
+		border-top: 0;
+	}
+
 	.pg-why__item:nth-child(odd) {
 		border-right: 1px solid var(--pg-color-border);
 	}
@@ -1377,6 +1396,17 @@
 
 .pg-comparison__points li + li {
 	border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* From tablet up the points hold one row, so the dividers only ever fall
+   between neighbours. With auto-fit, three points wrapped to 2 + 1 just above
+   768px and the third drew its divider against the container edge. */
+@media (min-width: 768px) {
+	.pg-comparison__points {
+		grid-template-columns: none;
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(0, 1fr);
+	}
 }
 
 @media (max-width: 767.98px) {
