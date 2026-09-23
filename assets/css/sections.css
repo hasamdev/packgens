@@ -52,8 +52,8 @@
 		background: linear-gradient(
 			270deg,
 			rgba(0, 34, 180, 0.35) 0%,
-			rgba(0, 34, 180, 0.95) 8%,
-			rgba(0, 34, 180, 0.95) 92%,
+			rgba(0, 34, 180, 0.95) -1%,
+			rgba(0, 34, 180, 0.95) 100%,
 			rgba(0, 34, 180, 0.35) 100%
 		);
 	}
@@ -107,6 +107,19 @@
 	flex-wrap: wrap;
 	gap: var(--pg-space-sm);
 	margin-top: var(--pg-space-md);
+}
+
+/* Phones: each action takes the full width of the copy column, one per row. */
+@media (max-width: 767.98px) {
+	.pg-hero__actions {
+		align-self: stretch;
+		width: 100%;
+	}
+
+	.pg-hero__actions .pg-btn {
+		flex: 1 1 100%;
+		justify-content: center;
+	}
 }
 
 .pg-hero .pg-rating-pill {
@@ -1493,6 +1506,14 @@
 	}
 }
 
+/* On tablets and phones the points wrap or stack, and centred items no longer
+   share a left edge, so they align to the start. */
+@media (max-width: 1199.98px) {
+	.pg-comparison__points li {
+		justify-content: flex-start;
+	}
+}
+
 /* -------------------------------------------------------------------------
    Materials
    ------------------------------------------------------------------------- */
@@ -2061,6 +2082,9 @@ a.pg-review-badge:hover {
 
 .pg-brands {
 	display: grid;
+	/* Explicit track: an implicit `auto` column would size itself to the
+	   unwrapped carousel row and run past the viewport. */
+	grid-template-columns: minmax(0, 1fr);
 	gap: clamp(1.5rem, 1rem + 5vw, 7.5rem);
 	align-items: center;
 }
@@ -2105,6 +2129,45 @@ a.pg-review-badge:hover {
 .pg-brands__list li:hover img {
 	filter: none;
 	opacity: 1;
+}
+
+/* Swiper's base rule centres the container with auto margins, which stops a
+   grid item stretching: it shrank to its content and wrapped far too early. */
+.pg-brands__carousel {
+	width: 100%;
+	margin-inline: 0;
+}
+
+/* Until brands.js finds the row wrapping, the Swiper markup is a plain row:
+   slides take their logo's width rather than Swiper's full-width default. */
+.pg-brands__carousel .pg-brands__item {
+	display: flex;
+	align-items: center;
+	width: auto;
+	height: auto;
+}
+
+/* Carousel: one line, and Swiper owns the spacing through slide margins. */
+.pg-brands__carousel.swiper-initialized .pg-brands__list,
+.pg-brands__carousel.is-scroller .pg-brands__list {
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	gap: 0;
+}
+
+/* Where Swiper is not loaded, the row scrolls natively instead. */
+.pg-brands__carousel.is-scroller {
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: none;
+}
+
+.pg-brands__carousel.is-scroller .pg-brands__list {
+	gap: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+}
+
+.pg-brands__carousel.is-scroller .pg-brands__item {
+	scroll-snap-align: start;
 }
 
 /* -------------------------------------------------------------------------

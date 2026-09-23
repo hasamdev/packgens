@@ -29,11 +29,20 @@ if ( empty( $logos ) ) {
 			</div>
 		<?php endif; ?>
 
-		<ul class="pg-brands__list">
-			<?php foreach ( $logos as $logo_id ) : ?>
-				<li><?php packgens_image( $logo_id, 'medium', array(), '' ); ?></li>
-			<?php endforeach; ?>
-		</ul>
+		<?php
+		/*
+		 * A plain logo row that assets/js/brands.js turns into a carousel only
+		 * when the logos no longer fit on one line. The Swiper classes are
+		 * inert until then.
+		 */
+		?>
+		<div class="pg-brands__carousel swiper" data-pg-brands>
+			<ul class="pg-brands__list swiper-wrapper">
+				<?php foreach ( $logos as $logo_id ) : ?>
+					<li class="pg-brands__item swiper-slide"><?php packgens_image( $logo_id, 'medium', array(), '' ); ?></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
 
 	</div>
 </section>

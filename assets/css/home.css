@@ -3,11 +3,6 @@
    The homepage reuses the section library; only the arrangement differs.
    ========================================================================= */
 
-/* The trust strip overlaps the hero, as in the Figma layout. */
-.home .pg-section--usp:first-of-type {
-	margin-top: calc(var(--pg-space-2xl) * -1);
-}
-
 .home .pg-hero {
 	padding-bottom: clamp(4rem, 2.5rem + 6vw, 8rem);
 }

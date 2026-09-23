@@ -173,6 +173,14 @@ function packgens_enqueue_assets() {
 		wp_enqueue_style( 'swiper' );
 	}
 
+	// The brands row upgrades to a Swiper carousel where Swiper is on the page
+	// and falls back to a native scroller elsewhere, so it loads everywhere.
+	packgens_register_script(
+		'packgens-brands',
+		'brands.js',
+		$needs_carousel ? array( 'packgens-app', 'swiper' ) : array( 'packgens-app' )
+	);
+
 	wp_enqueue_style( 'packgens-base' );
 	wp_enqueue_style( 'packgens-components' );
 	wp_enqueue_style( 'packgens-header' );
@@ -184,6 +192,7 @@ function packgens_enqueue_assets() {
 	wp_enqueue_script( 'packgens-search' );
 	wp_enqueue_script( 'packgens-accordion' );
 	wp_enqueue_script( 'packgens-forms' );
+	wp_enqueue_script( 'packgens-brands' );
 
 	if ( class_exists( 'WooCommerce' ) ) {
 		wp_enqueue_script( 'packgens-wishlist' );
