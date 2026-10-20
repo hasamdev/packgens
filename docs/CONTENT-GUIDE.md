@@ -137,15 +137,30 @@ So: **change it once in Category Defaults; override only the exceptions.**
 
 ## 5. Products
 
+Most of what sits around a product is the same on every product, so it is
+edited once under **Packgens → Product Defaults**:
+
+- Price caption ("Starting From /", "/ unit"), price note and delivery button
+- The rating strip and offer/coupon strip
+- The help card and the feature list under the gallery
+- The extra tabs beneath the product (artwork guidelines, shipping, …) and
+  the heading above them
+
 Edit a product (**Products → All Products**) and, below the usual WooCommerce
-boxes, you will find **Product Details**:
+boxes, you will find **Product Details**. Its **This product** tab holds what is
+different per product:
 
 - Badge ("Best Seller", "Best Price") shown on the card
-- Price caption and delivery note
-- The rating strip and offer/coupon strip
-- The help card and the two feature cards
-- The tabs beneath the product (description, specifications, artwork guidelines,
-  FAQs)
+- Subtitle, quantity tiers and the specifications table
+- **Hide shared content on this product** — tick a block (e.g. Offer strip) to
+  leave it off this product only
+
+The other tabs repeat the shared fields. Leave them blank and the product uses
+Product Defaults (the grey placeholder shows the shared text). Fill one in and
+it replaces the shared value on this product only. Adding any feature or extra
+tab on a product replaces the whole shared list for that product.
+
+So: **change it once in Product Defaults; override only the exceptions.**
 
 Price, stock and images stay in WooCommerce's own panels.
 

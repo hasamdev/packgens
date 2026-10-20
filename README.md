@@ -159,6 +159,21 @@ through `get_field()`, because SCF fills anything unsaved with the field's own
 `default_value`: an untouched **Layout** select reads as `center`, not as
 absent. See `packgens_stored_section_keys()` in `inc/sections.php`.
 
+### Product defaults
+
+Single products work the same way. **Packgens → Product Defaults**
+(`PACKGENS_PRODUCT_DEFAULTS_ID`) holds the shared Product Details: price
+captions, delivery button, rating and offer strips, help card, feature list and
+extra tabs. `packgens_product_shared_fields()` builds those fields once for both
+screens. The product copy has no `default_value`, so an untouched field stays
+blank and inherits.
+
+Templates read through `packgens_product_details()` /
+`packgens_product_detail()` (`inc/integrations/woocommerce.php`), never
+`product_details` directly. The merge is per key, a repeater with rows replaces
+the shared set whole, and `hide_shared` empties whole blocks for one product.
+Badge, subtitle, tiers and specs are per product only.
+
 To add a section: add a field group in `inc/fields.php`, a template part in
 `template-parts/sections/`, and an entry in `packgens_section_choices()`.
 
@@ -172,6 +187,7 @@ theme content in the Customizer.
 | **Packgens → Global Content** | 13 tabs: article sidebar, header strip, trust strip, footer, quote form, and the interface text below |
 | **Packgens → Site Settings** | Contact details, social profiles, announcement bar, header CTA, global links, form handling |
 | **Packgens → Category Defaults** | The section content every product category falls back to |
+| **Packgens → Product Defaults** | The Product Details every single product falls back to |
 
 ### Interface text
 

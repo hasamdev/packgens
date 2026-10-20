@@ -18,7 +18,7 @@ if ( post_password_required() ) {
 $product_id = $product->get_id();
 $badge      = packgens_group_field( 'product_details', 'badge', $product_id );
 $tabs       = packgens_product_tabs( $product_id );
-$tabs_title = packgens_group_field( 'product_details', 'tabs_title', $product_id, __( 'Product Packages Details', 'packgens' ) );
+$tabs_title = packgens_product_detail( $product_id, 'tabs_title', __( 'Product Packages Details', 'packgens' ) );
 ?>
 <div id="product-<?php the_ID(); ?>" <?php wc_product_class( 'pg-product', $product ); ?>>
 

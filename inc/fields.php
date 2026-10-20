@@ -25,6 +25,187 @@ define( 'PACKGENS_CAT_DEFAULTS_PAGE', 'packgens-category-defaults' );
 define( 'PACKGENS_CAT_DEFAULTS_ID', 'packgens_cat_defaults' );
 
 /**
+ * The options screen holding the product details every product inherits.
+ */
+define( 'PACKGENS_PRODUCT_DEFAULTS_PAGE', 'packgens-product-defaults' );
+define( 'PACKGENS_PRODUCT_DEFAULTS_ID', 'packgens_product_defaults' );
+
+/**
+ * Blocks of shared product content a single product may switch off, mapped to
+ * the Product Details keys each one covers.
+ *
+ * @return array<string,string[]>
+ */
+function packgens_product_hide_map() {
+	return array(
+		'rating'   => array( 'rating_label', 'rating_value', 'rating_count', 'rating_platform', 'rating_platform_name' ),
+		'offer'    => array( 'coupon_title', 'coupon_note', 'coupon_code' ),
+		'delivery' => array( 'delivery_label' ),
+		'help'     => array( 'help_title', 'help_text', 'help_photo', 'help_chat', 'help_call' ),
+		'features' => array( 'features' ),
+		'tabs'     => array( 'tabs' ),
+	);
+}
+
+/**
+ * Labels for packgens_product_hide_map(), as checkbox choices.
+ *
+ * @return array<string,string>
+ */
+function packgens_product_hide_choices() {
+	return array(
+		'rating'   => __( 'Rating strip', 'packgens' ),
+		'offer'    => __( 'Offer strip', 'packgens' ),
+		'delivery' => __( 'Delivery button', 'packgens' ),
+		'help'     => __( 'Help card', 'packgens' ),
+		'features' => __( 'Feature list', 'packgens' ),
+		'tabs'     => __( 'Extra tabs', 'packgens' ),
+	);
+}
+
+/**
+ * The Product Details fields shared by every product.
+ *
+ * Built once and registered twice: on the Product Defaults screen, where the
+ * values live, and on each product, where a filled-in field overrides them.
+ * The product copy carries no default_value, because SCF would save that text
+ * into every new product and it would then shadow the shared value forever.
+ *
+ * @param string $prefix  Field key prefix, unique per registration.
+ * @param string $notice  Text shown at the top of each shared tab.
+ * @param bool   $is_base Whether this is the Product Defaults copy.
+ * @return array
+ */
+function packgens_product_shared_fields( $prefix, $notice, $is_base = false ) {
+	$defaults = $is_base
+		? array(
+			'price_label' => 'Starting From /',
+			'price_unit'  => '/ unit',
+			'tabs_title'  => 'Product Packages Details',
+		)
+		: array();
+
+	$tab = static function ( $slug, $label ) use ( $prefix, $notice ) {
+		return array(
+			array( 'key' => $prefix . '_tab_' . $slug, 'label' => $label, 'type' => 'tab' ),
+			array( 'key' => $prefix . '_note_' . $slug, 'label' => '', 'type' => 'message', 'message' => $notice, 'esc_html' => 0 ),
+		);
+	};
+
+	$text = static function ( $key, $name, $label, $extra = array() ) use ( $prefix, $defaults ) {
+		$field = array( 'key' => $prefix . '_' . $key, 'label' => $label, 'name' => $name, 'type' => 'text' );
+
+		if ( isset( $defaults[ $name ] ) ) {
+			$field['default_value'] = $defaults[ $name ];
+		}
+
+		return array_merge( $field, $extra );
+	};
+
+	return array_merge(
+		$tab( 'price', __( 'Price & delivery', 'packgens' ) ),
+		array(
+			$text( 'price_label', 'price_label', __( 'Price label', 'packgens' ) ),
+			$text( 'unit', 'price_unit', __( 'Price unit label', 'packgens' ) ),
+			$text( 'price_note', 'price_note', __( 'Price note', 'packgens' ) ),
+			$text( 'delivery', 'delivery_label', __( 'Delivery button label', 'packgens' ), array( 'instructions' => __( 'Second button beside Add to Basket.', 'packgens' ) ) ),
+			$text( 'tabs_title', 'tabs_title', __( 'Heading above the detail tabs', 'packgens' ) ),
+		),
+
+		$tab( 'rating', __( 'Rating strip', 'packgens' ) ),
+		array(
+			$text( 'rating_label', 'rating_label', __( 'Wording', 'packgens' ) ),
+			array( 'key' => $prefix . '_rating_value', 'label' => __( 'Score out of five', 'packgens' ), 'name' => 'rating_value', 'type' => 'number', 'min' => 0, 'max' => 5, 'step' => 0.1 ),
+			$text( 'rating_count', 'rating_count', __( 'Review count', 'packgens' ) ),
+			array( 'key' => $prefix . '_rating_platform', 'label' => __( 'Platform', 'packgens' ), 'name' => 'rating_platform', 'type' => 'select', 'choices' => packgens_icon_choices(), 'allow_null' => 1, 'ui' => 1 ),
+			$text( 'rating_name', 'rating_platform_name', __( 'Platform name', 'packgens' ) ),
+		),
+
+		$tab( 'coupon', __( 'Offer strip', 'packgens' ) ),
+		array(
+			$text( 'coupon_title', 'coupon_title', __( 'Offer', 'packgens' ) ),
+			$text( 'coupon_note', 'coupon_note', __( 'Small print', 'packgens' ) ),
+			$text( 'coupon_code', 'coupon_code', __( 'Code to copy', 'packgens' ) ),
+		),
+
+		$tab( 'support', __( 'Help card', 'packgens' ) ),
+		array(
+			$text( 'help_title', 'help_title', __( 'Title', 'packgens' ) ),
+			$text( 'help_text', 'help_text', __( 'Text', 'packgens' ) ),
+			array( 'key' => $prefix . '_help_photo', 'label' => __( 'Adviser photo', 'packgens' ), 'name' => 'help_photo', 'type' => 'image', 'return_format' => 'id' ),
+			packgens_link_field( $prefix . '_help_chat', 'help_chat' ),
+			packgens_link_field( $prefix . '_help_call', 'help_call' ),
+		),
+
+		$tab( 'features', __( 'Feature list', 'packgens' ) ),
+		array(
+			array(
+				'key'          => $prefix . '_features',
+				'label'        => __( 'Features', 'packgens' ),
+				'name'         => 'features',
+				'type'         => 'repeater',
+				'layout'       => 'table',
+				'button_label' => __( 'Add feature', 'packgens' ),
+				'instructions' => $is_base
+					? __( 'Two-column list below the gallery.', 'packgens' )
+					: __( 'Two-column list below the gallery. Any rows here replace the whole shared list.', 'packgens' ),
+				'sub_fields'   => array(
+					array( 'key' => $prefix . '_feature_icon', 'label' => __( 'Icon', 'packgens' ), 'name' => 'icon', 'type' => 'select', 'choices' => packgens_icon_choices(), 'allow_null' => 1, 'ui' => 1 ),
+					array( 'key' => $prefix . '_feature_title', 'label' => __( 'Title', 'packgens' ), 'name' => 'title', 'type' => 'text' ),
+				),
+			),
+		),
+
+		$tab( 'detail', __( 'Extra tabs', 'packgens' ) ),
+		array(
+			array(
+				'key'          => $prefix . '_tabs',
+				'label'        => __( 'Extra tabs', 'packgens' ),
+				'name'         => 'tabs',
+				'type'         => 'repeater',
+				'layout'       => 'block',
+				'button_label' => __( 'Add tab', 'packgens' ),
+				'instructions' => $is_base
+					? __( 'Shown after the specification and description tabs.', 'packgens' )
+					: __( 'Any tabs here replace the whole shared set.', 'packgens' ),
+				'sub_fields'   => array(
+					array( 'key' => $prefix . '_tab_title', 'label' => __( 'Tab title', 'packgens' ), 'name' => 'title', 'type' => 'text' ),
+					array( 'key' => $prefix . '_tab_icon', 'label' => __( 'Icon', 'packgens' ), 'name' => 'icon', 'type' => 'select', 'choices' => packgens_icon_choices(), 'allow_null' => 1 ),
+					array( 'key' => $prefix . '_tab_content', 'label' => __( 'Content', 'packgens' ), 'name' => 'content', 'type' => 'wysiwyg', 'media_upload' => 1 ),
+				),
+			),
+		),
+	);
+}
+
+/**
+ * Show the shared value as the placeholder of an empty product field, so an
+ * editor can see what the product will display without opening the defaults.
+ *
+ * @param array $field Field being rendered.
+ * @return array
+ */
+function packgens_product_shared_placeholder( $field ) {
+	if ( ! in_array( $field['type'] ?? '', array( 'text', 'number' ), true ) || '' !== (string) ( $field['value'] ?? '' ) ) {
+		return $field;
+	}
+
+	// Only the direct children of the product's own Product Details group.
+	if ( 'field_pg_product' !== ( $field['parent'] ?? '' ) ) {
+		return $field;
+	}
+
+	$shared = packgens_group_field( 'product_details', $field['_name'] ?? '', PACKGENS_PRODUCT_DEFAULTS_ID );
+
+	if ( is_scalar( $shared ) && '' !== (string) $shared ) {
+		$field['placeholder'] = (string) $shared;
+	}
+
+	return $field;
+}
+add_filter( 'acf/prepare_field', 'packgens_product_shared_placeholder' );
+
+/**
  * Locations where page-level sections may be edited.
  *
  * @return array
@@ -1499,7 +1680,18 @@ function packgens_register_fields() {
 
 	/* ------------------------------------------------------------------
 	 * Product extras
+	 *
+	 * Only the badge, subtitle, tiers and specs belong to one product. The
+	 * rest is the same across the catalogue, so it is edited once under
+	 * Packgens → Product Defaults and a product stores only what it wants to
+	 * differ. See packgens_product_details().
 	 * ---------------------------------------------------------------- */
+	$defaults_link = sprintf(
+		'<a href="%s">%s</a>',
+		esc_url( admin_url( 'admin.php?page=' . PACKGENS_PRODUCT_DEFAULTS_PAGE ) ),
+		esc_html__( 'Packgens → Product Defaults', 'packgens' )
+	);
+
 	packgens_add_group(
 		'group_pg_product',
 		__( 'Product Details', 'packgens' ),
@@ -1508,94 +1700,79 @@ function packgens_register_fields() {
 				'field_pg_product',
 				'product_details',
 				__( 'Product Details', 'packgens' ),
-				array(
-					array( 'key' => 'field_pg_product_badge', 'label' => __( 'Badge', 'packgens' ), 'name' => 'badge', 'type' => 'text', 'instructions' => __( 'Shown on the gallery and product cards, e.g. Best Seller.', 'packgens' ) ),
-					array( 'key' => 'field_pg_product_subtitle', 'label' => __( 'Subtitle above the title', 'packgens' ), 'name' => 'subtitle', 'type' => 'text' ),
-					array( 'key' => 'field_pg_product_price_label', 'label' => __( 'Price label', 'packgens' ), 'name' => 'price_label', 'type' => 'text', 'default_value' => 'Starting From /' ),
-					array( 'key' => 'field_pg_product_unit', 'label' => __( 'Price unit label', 'packgens' ), 'name' => 'price_unit', 'type' => 'text', 'default_value' => '/ unit' ),
-					array( 'key' => 'field_pg_product_price_note', 'label' => __( 'Price note', 'packgens' ), 'name' => 'price_note', 'type' => 'text' ),
-					array( 'key' => 'field_pg_product_delivery', 'label' => __( 'Delivery button label', 'packgens' ), 'name' => 'delivery_label', 'type' => 'text', 'instructions' => __( 'Second button beside Add to Basket.', 'packgens' ) ),
-
-					array( 'key' => 'field_pg_product_tab_rating', 'label' => __( 'Rating strip', 'packgens' ), 'type' => 'tab' ),
-					array( 'key' => 'field_pg_product_rating_label', 'label' => __( 'Wording', 'packgens' ), 'name' => 'rating_label', 'type' => 'text' ),
-					array( 'key' => 'field_pg_product_rating_value', 'label' => __( 'Score out of five', 'packgens' ), 'name' => 'rating_value', 'type' => 'number', 'min' => 0, 'max' => 5, 'step' => 0.1 ),
-					array( 'key' => 'field_pg_product_rating_count', 'label' => __( 'Review count', 'packgens' ), 'name' => 'rating_count', 'type' => 'text' ),
-					array( 'key' => 'field_pg_product_rating_platform', 'label' => __( 'Platform', 'packgens' ), 'name' => 'rating_platform', 'type' => 'select', 'choices' => packgens_icon_choices(), 'allow_null' => 1, 'ui' => 1 ),
-					array( 'key' => 'field_pg_product_rating_name', 'label' => __( 'Platform name', 'packgens' ), 'name' => 'rating_platform_name', 'type' => 'text' ),
-
-					array( 'key' => 'field_pg_product_tab_coupon', 'label' => __( 'Offer strip', 'packgens' ), 'type' => 'tab' ),
-					array( 'key' => 'field_pg_product_coupon_title', 'label' => __( 'Offer', 'packgens' ), 'name' => 'coupon_title', 'type' => 'text' ),
-					array( 'key' => 'field_pg_product_coupon_note', 'label' => __( 'Small print', 'packgens' ), 'name' => 'coupon_note', 'type' => 'text' ),
-					array( 'key' => 'field_pg_product_coupon_code', 'label' => __( 'Code to copy', 'packgens' ), 'name' => 'coupon_code', 'type' => 'text' ),
-
-					array( 'key' => 'field_pg_product_tab_support', 'label' => __( 'Help card', 'packgens' ), 'type' => 'tab' ),
-					array( 'key' => 'field_pg_product_help_title', 'label' => __( 'Title', 'packgens' ), 'name' => 'help_title', 'type' => 'text' ),
-					array( 'key' => 'field_pg_product_help_text', 'label' => __( 'Text', 'packgens' ), 'name' => 'help_text', 'type' => 'text' ),
-					array( 'key' => 'field_pg_product_help_photo', 'label' => __( 'Adviser photo', 'packgens' ), 'name' => 'help_photo', 'type' => 'image', 'return_format' => 'id' ),
-					packgens_link_field( 'field_pg_product_help_chat', 'help_chat' ),
-					packgens_link_field( 'field_pg_product_help_call', 'help_call' ),
-
-					array( 'key' => 'field_pg_product_tab_features', 'label' => __( 'Feature list', 'packgens' ), 'type' => 'tab' ),
+				array_merge(
 					array(
-						'key'          => 'field_pg_product_features',
-						'label'        => __( 'Features', 'packgens' ),
-						'name'         => 'features',
-						'type'         => 'repeater',
-						'layout'       => 'table',
-						'button_label' => __( 'Add feature', 'packgens' ),
-						'instructions' => __( 'Two-column list below the gallery.', 'packgens' ),
-						'sub_fields'   => array(
-							array( 'key' => 'field_pg_product_feature_icon', 'label' => __( 'Icon', 'packgens' ), 'name' => 'icon', 'type' => 'select', 'choices' => packgens_icon_choices(), 'allow_null' => 1, 'ui' => 1 ),
-							array( 'key' => 'field_pg_product_feature_title', 'label' => __( 'Title', 'packgens' ), 'name' => 'title', 'type' => 'text' ),
+						array( 'key' => 'field_pg_product_tab_own', 'label' => __( 'This product', 'packgens' ), 'type' => 'tab' ),
+						array( 'key' => 'field_pg_product_badge', 'label' => __( 'Badge', 'packgens' ), 'name' => 'badge', 'type' => 'text', 'instructions' => __( 'Shown on the gallery and product cards, e.g. Best Seller.', 'packgens' ) ),
+						array( 'key' => 'field_pg_product_subtitle', 'label' => __( 'Subtitle above the title', 'packgens' ), 'name' => 'subtitle', 'type' => 'text' ),
+						array(
+							'key'          => 'field_pg_product_tiers',
+							'label'        => __( 'Quantity tiers', 'packgens' ),
+							'name'         => 'tiers',
+							'type'         => 'repeater',
+							'layout'       => 'table',
+							'button_label' => __( 'Add tier', 'packgens' ),
+							'instructions' => __( 'Quantity options shown above Add to Basket.', 'packgens' ),
+							'sub_fields'   => array(
+								array( 'key' => 'field_pg_product_tier_qty', 'label' => __( 'Quantity', 'packgens' ), 'name' => 'quantity', 'type' => 'number', 'min' => 1 ),
+								array( 'key' => 'field_pg_product_tier_price', 'label' => __( 'Unit price', 'packgens' ), 'name' => 'price', 'type' => 'text' ),
+								array( 'key' => 'field_pg_product_tier_note', 'label' => __( 'Saving note', 'packgens' ), 'name' => 'note', 'type' => 'text' ),
+								array( 'key' => 'field_pg_product_tier_default', 'label' => __( 'Default', 'packgens' ), 'name' => 'is_default', 'type' => 'true_false', 'ui' => 1 ),
+							),
+						),
+						array(
+							'key'          => 'field_pg_product_specs',
+							'label'        => __( 'Specifications table', 'packgens' ),
+							'name'         => 'specs',
+							'type'         => 'repeater',
+							'layout'       => 'table',
+							'button_label' => __( 'Add row', 'packgens' ),
+							'sub_fields'   => array(
+								array( 'key' => 'field_pg_product_spec_label', 'label' => __( 'Label', 'packgens' ), 'name' => 'label', 'type' => 'text' ),
+								array( 'key' => 'field_pg_product_spec_value', 'label' => __( 'Value', 'packgens' ), 'name' => 'value', 'type' => 'text' ),
+							),
+						),
+						array(
+							'key'          => 'field_pg_product_hide_shared',
+							'label'        => __( 'Hide shared content on this product', 'packgens' ),
+							'name'         => 'hide_shared',
+							'type'         => 'checkbox',
+							'choices'      => packgens_product_hide_choices(),
+							'layout'       => 'horizontal',
+							'instructions' => __( 'Tick a block to leave it off this product only.', 'packgens' ),
 						),
 					),
-
-					array( 'key' => 'field_pg_product_tab_detail', 'label' => __( 'Details', 'packgens' ), 'type' => 'tab' ),
-					array( 'key' => 'field_pg_product_tabs_title', 'label' => __( 'Heading above the detail tabs', 'packgens' ), 'name' => 'tabs_title', 'type' => 'text', 'default_value' => 'Product Packages Details' ),
-					array(
-						'key'          => 'field_pg_product_tiers',
-						'label'        => __( 'Quantity tiers', 'packgens' ),
-						'name'         => 'tiers',
-						'type'         => 'repeater',
-						'layout'       => 'table',
-						'button_label' => __( 'Add tier', 'packgens' ),
-						'instructions' => __( 'Quantity options shown above Add to Basket.', 'packgens' ),
-						'sub_fields'   => array(
-							array( 'key' => 'field_pg_product_tier_qty', 'label' => __( 'Quantity', 'packgens' ), 'name' => 'quantity', 'type' => 'number', 'min' => 1 ),
-							array( 'key' => 'field_pg_product_tier_price', 'label' => __( 'Unit price', 'packgens' ), 'name' => 'price', 'type' => 'text' ),
-							array( 'key' => 'field_pg_product_tier_note', 'label' => __( 'Saving note', 'packgens' ), 'name' => 'note', 'type' => 'text' ),
-							array( 'key' => 'field_pg_product_tier_default', 'label' => __( 'Default', 'packgens' ), 'name' => 'is_default', 'type' => 'true_false', 'ui' => 1 ),
-						),
-					),
-					array(
-						'key'          => 'field_pg_product_specs',
-						'label'        => __( 'Specifications table', 'packgens' ),
-						'name'         => 'specs',
-						'type'         => 'repeater',
-						'layout'       => 'table',
-						'button_label' => __( 'Add row', 'packgens' ),
-						'sub_fields'   => array(
-							array( 'key' => 'field_pg_product_spec_label', 'label' => __( 'Label', 'packgens' ), 'name' => 'label', 'type' => 'text' ),
-							array( 'key' => 'field_pg_product_spec_value', 'label' => __( 'Value', 'packgens' ), 'name' => 'value', 'type' => 'text' ),
-						),
-					),
-					array(
-						'key'          => 'field_pg_product_tabs',
-						'label'        => __( 'Extra tabs', 'packgens' ),
-						'name'         => 'tabs',
-						'type'         => 'repeater',
-						'layout'       => 'block',
-						'button_label' => __( 'Add tab', 'packgens' ),
-						'sub_fields'   => array(
-							array( 'key' => 'field_pg_product_tab_title', 'label' => __( 'Tab title', 'packgens' ), 'name' => 'title', 'type' => 'text' ),
-							array( 'key' => 'field_pg_product_tab_icon', 'label' => __( 'Icon', 'packgens' ), 'name' => 'icon', 'type' => 'select', 'choices' => packgens_icon_choices(), 'allow_null' => 1 ),
-							array( 'key' => 'field_pg_product_tab_content', 'label' => __( 'Content', 'packgens' ), 'name' => 'content', 'type' => 'wysiwyg', 'media_upload' => 1 ),
-						),
-					),
+					packgens_product_shared_fields(
+						'field_pg_product',
+						sprintf(
+							/* translators: %s: link to the Product Defaults screen. */
+							__( 'Shared by every product and edited under %s. Leave a field blank to use the shared value; fill it in to replace it on this product only.', 'packgens' ),
+							$defaults_link
+						)
+					)
 				)
 			),
 		),
 		array( array( array( 'param' => 'post_type', 'operator' => '==', 'value' => 'product' ) ) ),
+		0
+	);
+
+	packgens_add_group(
+		'group_pg_product_defaults',
+		__( 'Shared Product Details', 'packgens' ),
+		array(
+			packgens_group_wrapper(
+				'field_pg_pdef',
+				'product_details',
+				__( 'Shared Product Details', 'packgens' ),
+				packgens_product_shared_fields(
+					'field_pg_pdef',
+					__( 'Shown on every product. A product can replace any of these from its own Product Details box.', 'packgens' ),
+					true
+				)
+			),
+		),
+		array( array( array( 'param' => 'options_page', 'operator' => '==', 'value' => PACKGENS_PRODUCT_DEFAULTS_PAGE ) ) ),
 		0
 	);
 
@@ -1691,6 +1868,20 @@ function packgens_register_options_fields() {
 			'parent_slug'   => 'packgens-settings',
 			'capability'    => 'edit_theme_options',
 			'post_id'       => PACKGENS_CAT_DEFAULTS_ID,
+			'redirect'      => false,
+			'update_button' => __( 'Save', 'packgens' ),
+		)
+	);
+
+	// The same idea for single products: the content every product shares.
+	acf_add_options_sub_page(
+		array(
+			'page_title'    => __( 'Product Defaults', 'packgens' ),
+			'menu_title'    => __( 'Product Defaults', 'packgens' ),
+			'menu_slug'     => PACKGENS_PRODUCT_DEFAULTS_PAGE,
+			'parent_slug'   => 'packgens-settings',
+			'capability'    => 'edit_theme_options',
+			'post_id'       => PACKGENS_PRODUCT_DEFAULTS_ID,
 			'redirect'      => false,
 			'update_button' => __( 'Save', 'packgens' ),
 		)

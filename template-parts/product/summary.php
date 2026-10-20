@@ -15,7 +15,7 @@ if ( ! $product instanceof WC_Product ) {
 }
 
 $product_id  = $product->get_id();
-$details     = (array) packgens_field( 'product_details', $product_id, array() );
+$details     = packgens_product_details( $product_id );
 $price_label = $details['price_label'] ?? '';
 $unit        = $details['price_unit'] ?? '';
 $delivery    = $details['delivery_label'] ?? '';
