@@ -510,6 +510,9 @@
    ------------------------------------------------------------------------- */
 
 .pg-product-reviews {
+	/* On top of the page's scroll-padding, so the heading clears the fixed
+	   header when the review count links here. */
+	scroll-margin-top: var(--pg-space-2xl);
 	display: grid;
 	gap: var(--pg-space-lg);
 	align-content: start;
@@ -929,7 +932,8 @@
 	line-height: 1.2;
 }
 
-/* Rating strip: wording, stars, count and the platform lockup on one line. */
+/* Review average under the title: stars, score and the count, which jumps to
+   the reviews block. */
 .pg-product__rating {
 	display: flex;
 	flex-wrap: wrap;
@@ -937,32 +941,26 @@
 	gap: var(--pg-space-xs);
 	margin: 0;
 	font-size: var(--pg-text-sm);
-	color: var(--pg-color-muted);
+	color: var(--pg-color-heading);
 }
 
-.pg-product__rating-label {
-	font-weight: var(--pg-weight-bold);
-	color: var(--pg-color-heading);
+.pg-product__rating .pg-stars__star svg {
+	width: 1.25rem;
+	height: 1.25rem;
 }
 
 .pg-product__rating-score {
-	font-weight: var(--pg-weight-semibold);
-	color: var(--pg-color-heading);
+	font-weight: var(--pg-weight-medium);
+}
+
+.pg-product__rating-count {
+	color: inherit;
 	text-decoration: underline;
+	text-underline-offset: 2px;
 }
 
-.pg-product__rating-platform {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.25rem;
-	font-weight: var(--pg-weight-semibold);
-	color: var(--pg-color-heading);
-}
-
-.pg-product__rating-platform svg {
-	width: 1rem;
-	height: 1rem;
-	color: var(--pg-green-dark);
+.pg-product__rating-count:hover {
+	color: var(--pg-color-link);
 }
 
 .pg-product__excerpt {

@@ -163,7 +163,7 @@ absent. See `packgens_stored_section_keys()` in `inc/sections.php`.
 
 Single products work the same way. **Packgens → Product Defaults**
 (`PACKGENS_PRODUCT_DEFAULTS_ID`) holds the shared Product Details: price
-captions, delivery button, rating strip, help card, feature list and
+captions, delivery button, help card, feature list and
 extra tabs. `packgens_product_shared_fields()` builds those fields once for both
 screens. The product copy has no `default_value`, so an untouched field stays
 blank and inherits.

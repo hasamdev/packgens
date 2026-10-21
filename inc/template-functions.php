@@ -96,6 +96,195 @@ function packgens_breadcrumbs() {
 }
 
 /**
+ * The category crumbs for a product, top-level parent first.
+ *
+ * The category is the SEO plugin's primary one when set, otherwise the deepest
+ * category the product is in, so "Boxes › Display Boxes" beats "Boxes". The
+ * store's default category (Uncategorized) never shows; a product with no other
+ * category gets an empty trail.
+ *
+ * @param int $product_id Product ID.
+ * @return array<int,array{label:string,url:string}>
+ */
+function packgens_product_category_trail( $product_id ) {
+	$terms = get_the_terms( $product_id, 'product_cat' );
+
+	if ( ! $terms || is_wp_error( $terms ) ) {
+		return array();
+	}
+
+	$default = (int) get_option( 'default_product_cat', 0 );
+	$terms   = array_values(
+		array_filter(
+			$terms,
+			static function ( $term ) use ( $default ) {
+				return (int) $term->term_id !== $default;
+			}
+		)
+	);
+
+	if ( ! $terms ) {
+		return array();
+	}
+
+	$primary = 0;
+
+	if ( function_exists( 'yoast_get_primary_term_id' ) ) {
+		$primary = (int) yoast_get_primary_term_id( 'product_cat', $product_id );
+	}
+
+	if ( ! $primary ) {
+		$primary = (int) get_post_meta( $product_id, 'rank_math_primary_product_cat', true );
+	}
+
+	$term = null;
+
+	foreach ( $terms as $candidate ) {
+		if ( (int) $candidate->term_id === $primary ) {
+			$term = $candidate;
+			break;
+		}
+	}
+
+	if ( ! $term ) {
+		usort(
+			$terms,
+			static function ( $a, $b ) {
+				return count( get_ancestors( $b->term_id, 'product_cat' ) ) - count( get_ancestors( $a->term_id, 'product_cat' ) );
+			}
+		);
+		$term = $terms[0];
+	}
+
+	$trail = array();
+
+	foreach ( array_reverse( get_ancestors( $term->term_id, 'product_cat' ) ) as $ancestor_id ) {
+		$ancestor = get_term( $ancestor_id, 'product_cat' );
+
+		if ( $ancestor && ! is_wp_error( $ancestor ) ) {
+			$trail[] = array( 'label' => $ancestor->name, 'url' => get_term_link( $ancestor ) );
+		}
+	}
+
+	$trail[] = array( 'label' => $term->name, 'url' => get_term_link( $term ) );
+
+	return $trail;
+}
+
+/**
+ * Whether a crumb URL is the shop page or a product category, i.e. one the
+ * category trail replaces.
+ *
+ * @param string $url Crumb URL.
+ * @return bool
+ */
+function packgens_is_replaceable_product_crumb( $url ) {
+	$url = untrailingslashit( (string) $url );
+
+	if ( '' === $url ) {
+		return false;
+	}
+
+	$shop = function_exists( 'wc_get_page_permalink' ) ? untrailingslashit( wc_get_page_permalink( 'shop' ) ) : '';
+
+	if ( $shop && $url === $shop ) {
+		return true;
+	}
+
+	$archive = get_post_type_archive_link( 'product' );
+
+	if ( $archive && untrailingslashit( $archive ) === $url ) {
+		return true;
+	}
+
+	$terms = get_the_terms( get_queried_object_id(), 'product_cat' );
+
+	foreach ( ( $terms && ! is_wp_error( $terms ) ) ? $terms : array() as $term ) {
+		foreach ( array_merge( array( $term->term_id ), get_ancestors( $term->term_id, 'product_cat' ) ) as $id ) {
+			$link = get_term_link( (int) $id, 'product_cat' );
+
+			if ( ! is_wp_error( $link ) && untrailingslashit( $link ) === $url ) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Yoast: on a product, put the category trail where "Shop" would be.
+ *
+ * Yoast shows the shop page unless a product taxonomy is picked under its
+ * breadcrumb settings; this makes the category show either way, without
+ * doubling it when the setting is on.
+ *
+ * @param array $links Breadcrumb links.
+ * @return array
+ */
+function packgens_yoast_product_crumbs( $links ) {
+	if ( ! is_singular( 'product' ) || count( $links ) < 2 ) {
+		return $links;
+	}
+
+	$trail = packgens_product_category_trail( get_queried_object_id() );
+
+	if ( ! $trail ) {
+		return $links;
+	}
+
+	$first = array_shift( $links );
+	$last  = array_pop( $links );
+	$links = array_filter(
+		$links,
+		static function ( $link ) {
+			return ! packgens_is_replaceable_product_crumb( $link['url'] ?? '' );
+		}
+	);
+
+	foreach ( $trail as $crumb ) {
+		$links[] = array( 'url' => $crumb['url'], 'text' => $crumb['label'] );
+	}
+
+	return array_merge( array( $first ), array_values( $links ), array( $last ) );
+}
+add_filter( 'wpseo_breadcrumb_links', 'packgens_yoast_product_crumbs' );
+
+/**
+ * Rank Math: the same swap. Its crumbs are array( text, url, ... ).
+ *
+ * @param array $crumbs Breadcrumb items.
+ * @return array
+ */
+function packgens_rank_math_product_crumbs( $crumbs ) {
+	if ( ! is_singular( 'product' ) || count( $crumbs ) < 2 ) {
+		return $crumbs;
+	}
+
+	$trail = packgens_product_category_trail( get_queried_object_id() );
+
+	if ( ! $trail ) {
+		return $crumbs;
+	}
+
+	$first  = array_shift( $crumbs );
+	$last   = array_pop( $crumbs );
+	$crumbs = array_filter(
+		$crumbs,
+		static function ( $crumb ) {
+			return ! packgens_is_replaceable_product_crumb( $crumb[1] ?? '' );
+		}
+	);
+
+	foreach ( $trail as $crumb ) {
+		$crumbs[] = array( $crumb['label'], $crumb['url'], 'hide_in_schema' => false );
+	}
+
+	return array_merge( array( $first ), array_values( $crumbs ), array( $last ) );
+}
+add_filter( 'rank_math/frontend/breadcrumb/items', 'packgens_rank_math_product_crumbs' );
+
+/**
  * Build the breadcrumb trail for the current view.
  *
  * @return array<int,array{label:string,url:string}>
@@ -106,22 +295,7 @@ function packgens_breadcrumb_items() {
 	);
 
 	if ( is_singular( 'product' ) ) {
-		$terms = get_the_terms( get_the_ID(), 'product_cat' );
-
-		if ( $terms && ! is_wp_error( $terms ) ) {
-			$term = array_shift( $terms );
-
-			foreach ( array_reverse( get_ancestors( $term->term_id, 'product_cat' ) ) as $ancestor_id ) {
-				$ancestor = get_term( $ancestor_id, 'product_cat' );
-
-				if ( $ancestor && ! is_wp_error( $ancestor ) ) {
-					$items[] = array( 'label' => $ancestor->name, 'url' => get_term_link( $ancestor ) );
-				}
-			}
-
-			$items[] = array( 'label' => $term->name, 'url' => get_term_link( $term ) );
-		}
-
+		$items   = array_merge( $items, packgens_product_category_trail( get_the_ID() ) );
 		$items[] = array( 'label' => get_the_title(), 'url' => '' );
 
 		return $items;

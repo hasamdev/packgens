@@ -141,7 +141,6 @@ Most of what sits around a product is the same on every product, so it is
 edited once under **Packgens → Product Defaults**:
 
 - Price caption ("Starting From /", "/ unit"), price note and delivery button
-- The rating strip
 - The help card and the feature list under the gallery
 - The extra tabs beneath the product (artwork guidelines, shipping, …) and
   the heading above them

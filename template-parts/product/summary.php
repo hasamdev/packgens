@@ -1,6 +1,6 @@
 <?php
 /**
- * Product summary column: title, rating strip, price, actions and the
+ * Product summary column: title, review average, price, actions and the
  * quote panel.
  *
  * @package Packgens
@@ -19,35 +19,20 @@ $details     = packgens_product_details( $product_id );
 $price_label = $details['price_label'] ?? '';
 $unit        = $details['price_unit'] ?? '';
 $delivery    = $details['delivery_label'] ?? '';
-$rating      = (float) ( $details['rating_value'] ?? 0 );
+// Worked out from the product's approved reviews, so it needs no editing.
+$review_count = wc_review_ratings_enabled() ? (int) $product->get_review_count() : 0;
+$average      = (float) $product->get_average_rating();
 ?>
 <div class="pg-product__summary">
 
 	<h1 class="pg-product__title"><?php the_title(); ?></h1>
 
-	<?php if ( $rating > 0 || ! empty( $details['rating_label'] ) ) : ?>
-		<p class="pg-product__rating"<?php echo ! empty( $details['rating_platform'] ) ? ' data-pg-platform="' . esc_attr( $details['rating_platform'] ) . '"' : ''; ?>>
-			<?php if ( ! empty( $details['rating_label'] ) ) : ?>
-				<span class="pg-product__rating-label"><?php echo esc_html( $details['rating_label'] ); ?></span>
-			<?php endif; ?>
-
-			<?php if ( $rating > 0 ) : ?>
-				<?php packgens_stars( $rating ); ?>
-				<span class="pg-product__rating-score"><?php echo esc_html( number_format_i18n( $rating, 1 ) ); ?></span>
-			<?php endif; ?>
-
-			<?php if ( ! empty( $details['rating_count'] ) ) : ?>
-				<span class="pg-product__rating-count"><?php echo esc_html( $details['rating_count'] ); ?></span>
-			<?php endif; ?>
-
-			<?php if ( ! empty( $details['rating_platform'] ) ) : ?>
-				<span class="pg-product__rating-platform">
-					<?php packgens_icon( $details['rating_platform'] ); ?>
-					<?php if ( ! empty( $details['rating_platform_name'] ) ) : ?>
-						<?php echo esc_html( $details['rating_platform_name'] ); ?>
-					<?php endif; ?>
-				</span>
-			<?php endif; ?>
+	<?php if ( $review_count ) : ?>
+		<p class="pg-product__rating">
+			<?php packgens_stars( round( $average * 2 ) / 2 ); // Nearest half, so 4.1 reads as four stars. ?>
+			<span class="pg-product__rating-score"><?php echo esc_html( number_format_i18n( $average, 1 ) ); ?></span>
+			<a class="pg-product__rating-count" href="#reviews"
+				aria-label="<?php echo esc_attr( sprintf( /* translators: %s: number of reviews. */ _n( 'Read %s review', 'Read all %s reviews', $review_count, 'packgens' ), number_format_i18n( $review_count ) ) ); ?>">(<?php echo esc_html( number_format_i18n( $review_count ) ); ?>)</a>
 		</p>
 	<?php endif; ?>
 
