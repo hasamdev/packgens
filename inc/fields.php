@@ -60,6 +60,60 @@ function packgens_product_hide_choices() {
 }
 
 /**
+ * The theme's own Product Details, used wherever both Product Defaults and the
+ * product leave a field blank.
+ *
+ * This is what makes a brand-new product -- or a site whose Product Defaults
+ * screen was never filled in -- still show the help card, feature list, price
+ * captions and the products grid heading. The help card's links come from
+ * Packgens -> Site Settings (live chat link, primary phone).
+ *
+ * @return array
+ */
+function packgens_product_builtin_details() {
+	static $details = null;
+
+	if ( null !== $details ) {
+		return $details;
+	}
+
+	$chat  = function_exists( 'packgens_get_option' ) ? (string) packgens_get_option( 'topbar_chat_url' ) : '';
+	$phone = function_exists( 'packgens_get_option' ) ? (string) packgens_get_option( 'phone' ) : '';
+
+	if ( '' === $chat ) {
+		$contact = get_pages(
+			array(
+				'meta_key'   => '_wp_page_template', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value' => 'templates/contact.php', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'number'     => 1,
+			)
+		);
+		$chat    = $contact ? get_permalink( $contact[0] ) : '';
+	}
+
+	$details = array(
+		'price_label'    => __( 'Starting From /', 'packgens' ),
+		'price_unit'     => __( '/ unit', 'packgens' ),
+		'tabs_title'     => __( 'Product Packages Details', 'packgens' ),
+		'products_title' => __( 'Take Control Of Your Custom Packaging', 'packgens' ),
+		'help_title'     => __( 'Need Help Customizing Packaging Box?', 'packgens' ),
+		'help_text'      => __( 'Contact us for expert advice', 'packgens' ),
+		'help_chat'      => $chat ? array( 'title' => __( 'Live Chat', 'packgens' ), 'url' => $chat, 'target' => '' ) : null,
+		'help_call'      => $phone ? array( 'title' => __( 'Call Expert', 'packgens' ), 'url' => packgens_tel_href( $phone ), 'target' => '' ) : null,
+		'features'       => array(
+			array( 'icon' => 'rocket', 'title' => __( 'Fast Turnaround', 'packgens' ) ),
+			array( 'icon' => 'truck', 'title' => __( 'Free Shipping', 'packgens' ) ),
+			array( 'icon' => 'umbrella', 'title' => __( 'Weatherproof', 'packgens' ) ),
+			array( 'icon' => 'leaf', 'title' => __( 'Eco-Friendly Inks', 'packgens' ) ),
+			array( 'icon' => 'shield-check', 'title' => __( 'Scratch Resistant', 'packgens' ) ),
+			array( 'icon' => 'diamond', 'title' => __( 'Premium Materials', 'packgens' ) ),
+		),
+	);
+
+	return $details;
+}
+
+/**
  * The Product Details fields shared by every product.
  *
  * Built once and registered twice: on the Product Defaults screen, where the
@@ -73,13 +127,10 @@ function packgens_product_hide_choices() {
  * @return array
  */
 function packgens_product_shared_fields( $prefix, $notice, $is_base = false ) {
-	$defaults = $is_base
-		? array(
-			'price_label' => 'Starting From /',
-			'price_unit'  => '/ unit',
-			'tabs_title'  => 'Product Packages Details',
-		)
-		: array();
+	// The defaults screen shows the theme's wording as grey placeholders; a
+	// product's placeholders are filled in at render time instead, from
+	// whatever the product would actually inherit.
+	$defaults = $is_base ? packgens_product_builtin_details() : array();
 
 	$tab = static function ( $slug, $label ) use ( $prefix, $notice ) {
 		return array(
@@ -91,8 +142,8 @@ function packgens_product_shared_fields( $prefix, $notice, $is_base = false ) {
 	$text = static function ( $key, $name, $label, $extra = array() ) use ( $prefix, $defaults ) {
 		$field = array( 'key' => $prefix . '_' . $key, 'label' => $label, 'name' => $name, 'type' => 'text' );
 
-		if ( isset( $defaults[ $name ] ) ) {
-			$field['default_value'] = $defaults[ $name ];
+		if ( isset( $defaults[ $name ] ) && is_string( $defaults[ $name ] ) ) {
+			$field['placeholder'] = $defaults[ $name ];
 		}
 
 		return array_merge( $field, $extra );
@@ -106,6 +157,11 @@ function packgens_product_shared_fields( $prefix, $notice, $is_base = false ) {
 			$text( 'price_note', 'price_note', __( 'Price note', 'packgens' ) ),
 			$text( 'delivery', 'delivery_label', __( 'Delivery button label', 'packgens' ), array( 'instructions' => __( 'Second button beside Add to Basket.', 'packgens' ) ) ),
 			$text( 'tabs_title', 'tabs_title', __( 'Heading above the detail tabs', 'packgens' ) ),
+		),
+
+		$tab( 'grid', __( 'Products grid', 'packgens' ) ),
+		array(
+			$text( 'products_title', 'products_title', __( 'Heading above the products grid', 'packgens' ), array( 'instructions' => __( 'Which products appear is chosen per product, on its This product tab.', 'packgens' ) ) ),
 		),
 
 		$tab( 'support', __( 'Help card', 'packgens' ) ),
@@ -127,7 +183,7 @@ function packgens_product_shared_fields( $prefix, $notice, $is_base = false ) {
 				'layout'       => 'table',
 				'button_label' => __( 'Add feature', 'packgens' ),
 				'instructions' => $is_base
-					? __( 'Two-column list below the gallery.', 'packgens' )
+					? __( 'Two-column list below the gallery. Leave empty to use the theme list: Fast Turnaround, Free Shipping, Weatherproof, Eco-Friendly Inks, Scratch Resistant, Premium Materials.', 'packgens' )
 					: __( 'Two-column list below the gallery. Any rows here replace the whole shared list.', 'packgens' ),
 				'sub_fields'   => array(
 					array( 'key' => $prefix . '_feature_icon', 'label' => __( 'Icon', 'packgens' ), 'name' => 'icon', 'type' => 'select', 'choices' => packgens_icon_choices(), 'allow_null' => 1, 'ui' => 1 ),
@@ -175,7 +231,12 @@ function packgens_product_shared_placeholder( $field ) {
 		return $field;
 	}
 
-	$shared = packgens_group_field( 'product_details', $field['_name'] ?? '', PACKGENS_PRODUCT_DEFAULTS_ID );
+	$name   = $field['_name'] ?? '';
+	$shared = packgens_group_field( 'product_details', $name, PACKGENS_PRODUCT_DEFAULTS_ID );
+
+	if ( ! is_scalar( $shared ) || '' === (string) $shared ) {
+		$shared = packgens_product_builtin_details()[ $name ] ?? '';
+	}
 
 	if ( is_scalar( $shared ) && '' !== (string) $shared ) {
 		$field['placeholder'] = (string) $shared;
@@ -908,7 +969,16 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		// Product pages build this grid themselves (template-parts/product/
+		// more-products.php), so it is not edited per product here.
+		array_values(
+			array_filter(
+				$page,
+				static function ( $rule ) {
+					return 'product' !== ( $rule[0]['value'] ?? '' ) || 'post_type' !== ( $rule[0]['param'] ?? '' );
+				}
+			)
+		),
 		4
 	);
 
@@ -1713,6 +1783,17 @@ function packgens_register_fields() {
 							),
 						),
 						array(
+							'key'           => 'field_pg_product_grid_products',
+							'label'         => __( 'Products to show in the grid', 'packgens' ),
+							'name'          => 'grid_products',
+							'type'          => 'relationship',
+							'post_type'     => array( 'product' ),
+							'filters'       => array( 'search', 'taxonomy' ),
+							'return_format' => 'id',
+							'max'           => 8,
+							'instructions'  => __( 'Shown under the products grid heading. Leave empty to show four products from the same category.', 'packgens' ),
+						),
+						array(
 							'key'          => 'field_pg_product_review_summary',
 							'label'        => __( 'Review summary', 'packgens' ),
 							'name'         => 'review_summary',
@@ -1755,7 +1836,7 @@ function packgens_register_fields() {
 				__( 'Shared Product Details', 'packgens' ),
 				packgens_product_shared_fields(
 					'field_pg_pdef',
-					__( 'Shown on every product. A product can replace any of these from its own Product Details box.', 'packgens' ),
+					__( 'Shown on every product. A product can replace any of these from its own Product Details box. A blank field uses the theme wording shown in grey.', 'packgens' ),
 					true
 				)
 			),

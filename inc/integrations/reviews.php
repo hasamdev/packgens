@@ -121,8 +121,8 @@ function packgens_review_form_args( $product, $has_reviews ) {
 		'location' => $field( 'pg-product-review-location', 'location', packgens_label( 'reviews', 'form_location', __( 'Location (optional)', 'packgens' ) ), $text( 'pg-product-review-location', 'pg_review_location', '', 'text', false, ' maxlength="60" autocomplete="country-name"' ) ),
 	);
 
-	// Logged-in reviewers never see the name and email fields, so the optional
-	// location has to travel with the comment field instead.
+	// WordPress prints extra entries in "fields" (here: location) for logged-in
+	// reviewers too, hiding only name, email and url, so location lives there.
 	$comment_field = '';
 
 	if ( wc_review_ratings_enabled() ) {
@@ -148,10 +148,6 @@ function packgens_review_form_args( $product, $has_reviews ) {
 		'<textarea class="pg-input" id="comment" name="comment" rows="6" required></textarea>',
 		true
 	);
-
-	if ( is_user_logged_in() ) {
-		$comment_field .= $fields['location'];
-	}
 
 	$title = $has_reviews
 		? packgens_label( 'reviews', 'form_heading', __( 'Write a review', 'packgens' ) )

@@ -177,7 +177,8 @@ add_filter( 'woocommerce_add_to_cart_fragments', 'packgens_wc_cart_fragment' );
  * A product's Product Details, with the shared values filled in.
  *
  * Product Defaults holds what every product shows; a product stores only what
- * it wants to differ. The merge is per key: a filled-in product field wins, a
+ * it wants to differ, and packgens_product_builtin_details() fills whatever
+ * both leave blank. The merge is per key: a filled-in product field wins, a
  * blank one falls back. A repeater counts as blank until it has a row, so a
  * product's own feature list or extra tabs replace the shared set whole. Blocks
  * ticked under "Hide shared content" are emptied for that product alone.
@@ -199,9 +200,14 @@ function packgens_product_details( $product_id ) {
 		? (array) packgens_field( 'product_details', PACKGENS_PRODUCT_DEFAULTS_ID, array() )
 		: array();
 
-	foreach ( $shared as $key => $value ) {
-		if ( packgens_product_detail_is_blank( $own[ $key ] ?? null ) ) {
-			$own[ $key ] = $value;
+	$builtin = function_exists( 'packgens_product_builtin_details' ) ? packgens_product_builtin_details() : array();
+
+	// Product first, then Product Defaults, then the theme's own wording.
+	foreach ( array( $shared, $builtin ) as $layer ) {
+		foreach ( $layer as $key => $value ) {
+			if ( packgens_product_detail_is_blank( $own[ $key ] ?? null ) ) {
+				$own[ $key ] = $value;
+			}
 		}
 	}
 
