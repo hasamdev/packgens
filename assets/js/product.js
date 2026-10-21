@@ -1,5 +1,5 @@
 /**
- * Single product interactions: gallery, lightbox and quantity tiers.
+ * Single product interactions: gallery, lightbox, quantity tiers and reviews.
  */
 (function (PG) {
 	'use strict';
@@ -11,11 +11,219 @@
 	PG.ready(function () {
 		gallery();
 		quantityTiers();
-		copyCodes();
 		quantitySteppers();
+		reviews();
 	});
 
 	/* ---------------------------------------------------------------- */
+
+	/**
+	 * Review list: search, rating filter, sort, numbered pages and the
+	 * write-a-review toggle. The server prints every review, so with scripts
+	 * off the whole list and the form simply stay visible.
+	 */
+	function reviews() {
+		var root = PG.$('[data-pg-product-reviews]');
+
+		if (!root) {
+			return;
+		}
+
+		var list = PG.$('[data-pg-product-reviews-list]', root);
+		var items = PG.$$('[data-pg-product-review]', root);
+		var toolbar = PG.$('[data-pg-product-reviews-toolbar]', root);
+		var search = PG.$('[data-pg-product-reviews-search]', root);
+		var filter = PG.$('[data-pg-product-reviews-filter]', root);
+		var sort = PG.$('[data-pg-product-reviews-sort]', root);
+		var none = PG.$('[data-pg-product-reviews-none]', root);
+		var foot = PG.$('[data-pg-product-reviews-foot]', root);
+		var range = PG.$('[data-pg-product-reviews-range]', root);
+		var pages = PG.$('[data-pg-product-reviews-pages]', root);
+		var perPage = parseInt(root.dataset.perPage, 10) || 5;
+		var page = 1;
+
+		reviewForm(root);
+
+		if (!list || !items.length) {
+			return;
+		}
+
+		if (toolbar) {
+			toolbar.hidden = false;
+		}
+
+		var format = function (template, values) {
+			var i = 0;
+
+			return template.replace(/%(\d+\$)?s/g, function (match, position) {
+				var index = position ? parseInt(position, 10) - 1 : i++;
+
+				return values[index];
+			});
+		};
+
+		var render = function () {
+			var query = search ? search.value.trim().toLowerCase() : '';
+			var stars = filter ? filter.value : '';
+			var order = sort ? sort.value : 'recent';
+
+			var matches = items.filter(function (item) {
+				return (!stars || item.dataset.rating === stars)
+					&& (!query || item.textContent.toLowerCase().indexOf(query) !== -1);
+			});
+
+			matches.sort(function (a, b) {
+				var byTime = b.dataset.time - a.dataset.time;
+
+				if ('high' === order) {
+					return (b.dataset.rating - a.dataset.rating) || byTime;
+				}
+
+				if ('low' === order) {
+					return (a.dataset.rating - b.dataset.rating) || byTime;
+				}
+
+				return byTime;
+			});
+
+			var total = matches.length;
+			var count = Math.max(1, Math.ceil(total / perPage));
+
+			page = Math.min(page, count);
+
+			var start = (page - 1) * perPage;
+			var shown = matches.slice(start, start + perPage);
+
+			items.forEach(function (item) {
+				item.hidden = true;
+			});
+
+			// Reorder in place so the visible page reads in the chosen order.
+			matches.forEach(function (item) {
+				list.appendChild(item);
+			});
+
+			shown.forEach(function (item) {
+				item.hidden = false;
+			});
+
+			if (none) {
+				none.hidden = total > 0;
+			}
+
+			if (foot) {
+				foot.hidden = total === 0;
+			}
+
+			if (range && total) {
+				range.textContent = format(root.dataset.range || '%1$s–%2$s of %3$s', [start + 1, start + shown.length, total]);
+			}
+
+			if (pages) {
+				pages.innerHTML = '';
+				pages.hidden = count < 2;
+
+				for (var n = 1; n <= count; n++) {
+					var button = document.createElement('button');
+
+					button.type = 'button';
+					button.className = 'pg-product-reviews__page';
+					button.textContent = n;
+					button.dataset.page = n;
+					button.setAttribute('aria-label', format(root.dataset.pageLabel || '%s', [n]));
+
+					if (n === page) {
+						button.setAttribute('aria-current', 'page');
+					}
+
+					pages.appendChild(button);
+				}
+			}
+		};
+
+		if (pages) {
+			pages.addEventListener('click', function (event) {
+				var button = event.target.closest('[data-page]');
+
+				if (!button) {
+					return;
+				}
+
+				page = parseInt(button.dataset.page, 10);
+				render();
+
+				var top = root.getBoundingClientRect().top;
+
+				if (top < 0) {
+					root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				}
+			});
+		}
+
+		var reset = function () {
+			page = 1;
+			render();
+		};
+
+		if (search) {
+			search.addEventListener('input', reset);
+		}
+
+		[filter, sort].forEach(function (control) {
+			if (control) {
+				control.addEventListener('change', reset);
+			}
+		});
+
+		// A link to one review (#comment-123) opens the page that holds it.
+		var target = window.location.hash.match(/^#comment-\d+$/) && PG.$(window.location.hash, root);
+
+		if (target && items.indexOf(target) !== -1) {
+			page = Math.floor(items.indexOf(target) / perPage) + 1;
+		}
+
+		render();
+	}
+
+	/**
+	 * Fold the review form behind its button once there are reviews to read,
+	 * unless the visitor came for the form or is replying to a review.
+	 */
+	function reviewForm(root) {
+		var toggle = PG.$('[data-pg-product-review-toggle]', root);
+		var form = PG.$('[data-pg-product-review-form]', root);
+
+		if (!toggle || !form) {
+			return;
+		}
+
+		var wanted = /^#(respond|review_form|reviews)/.test(window.location.hash)
+			|| PG.$('#comment_parent', form) && '0' !== PG.$('#comment_parent', form).value;
+
+		var set = function (open) {
+			form.hidden = !open;
+			toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+		};
+
+		toggle.hidden = false;
+		set(wanted);
+
+		toggle.addEventListener('click', function () {
+			var open = form.hidden;
+
+			set(open);
+
+			if (open) {
+				form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+				var first = PG.$('#rating, .stars a, #comment', form);
+
+				if (first) {
+					first.focus({ preventScroll: true });
+				}
+			}
+		});
+	}
 
 	function gallery() {
 		var root = PG.$('[data-pg-gallery]');
@@ -170,28 +378,6 @@
 				if (priceNode && button.dataset.price) {
 					priceNode.textContent = button.dataset.price;
 				}
-			});
-		});
-	}
-
-	/**
-	 * Copy a discount code to the clipboard, confirming in the button itself.
-	 */
-	function copyCodes() {
-		PG.$$('[data-pg-copy]').forEach(function (button) {
-			button.addEventListener('click', function () {
-				var code = button.dataset.pgCopy;
-
-				if (!code || !navigator.clipboard) {
-					return;
-				}
-
-				navigator.clipboard.writeText(code).then(function () {
-					button.classList.add('is-copied');
-					window.setTimeout(function () {
-						button.classList.remove('is-copied');
-					}, 1600);
-				});
 			});
 		});
 	}

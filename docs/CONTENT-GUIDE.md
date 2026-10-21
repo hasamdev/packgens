@@ -141,7 +141,7 @@ Most of what sits around a product is the same on every product, so it is
 edited once under **Packgens → Product Defaults**:
 
 - Price caption ("Starting From /", "/ unit"), price note and delivery button
-- The rating strip and offer/coupon strip
+- The rating strip
 - The help card and the feature list under the gallery
 - The extra tabs beneath the product (artwork guidelines, shipping, …) and
   the heading above them
@@ -152,7 +152,7 @@ different per product:
 
 - Badge ("Best Seller", "Best Price") shown on the card
 - Subtitle, quantity tiers and the specifications table
-- **Hide shared content on this product** — tick a block (e.g. Offer strip) to
+- **Hide shared content on this product** — tick a block (e.g. Help card) to
   leave it off this product only
 
 The other tabs repeat the shared fields. Leave them blank and the product uses
@@ -163,6 +163,15 @@ tab on a product replaces the whole shared list for that product.
 So: **change it once in Product Defaults; override only the exceptions.**
 
 Price, stock and images stay in WooCommerce's own panels.
+
+**Reviews** appear at the bottom of the product page with search, a star
+filter, sorting and pages of five. Customers can add an optional title and
+location to their review. Approve them under **Products → Reviews**; a reply
+there shows beneath the review as "Response from …". The optional **Review
+summary** on the product's *This product* tab shows above the list. All the
+wording is editable under **Packgens → Global Content → Text: product reviews**.
+Reviews only show the form when *Enable reviews* is ticked on the product's
+**Advanced** tab.
 
 ---
 

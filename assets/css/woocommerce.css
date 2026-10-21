@@ -315,28 +315,6 @@
    Product reviews
    ------------------------------------------------------------------------- */
 
-.woocommerce #reviews #comments ol.commentlist {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	display: grid;
-	gap: var(--pg-space-lg);
-}
-
-.woocommerce #reviews .comment_container {
-	display: flex;
-	gap: var(--pg-space-md);
-	padding: var(--pg-space-lg);
-	border-radius: var(--pg-radius-md);
-	background: var(--pg-white);
-}
-
-.woocommerce #reviews .comment_container img.avatar {
-	width: 48px;
-	height: 48px;
-	border-radius: var(--pg-radius-circle);
-}
-
 .woocommerce .star-rating span::before,
 .woocommerce .star-rating::before {
 	color: var(--pg-amber);

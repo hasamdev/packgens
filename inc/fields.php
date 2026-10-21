@@ -39,7 +39,6 @@ define( 'PACKGENS_PRODUCT_DEFAULTS_ID', 'packgens_product_defaults' );
 function packgens_product_hide_map() {
 	return array(
 		'rating'   => array( 'rating_label', 'rating_value', 'rating_count', 'rating_platform', 'rating_platform_name' ),
-		'offer'    => array( 'coupon_title', 'coupon_note', 'coupon_code' ),
 		'delivery' => array( 'delivery_label' ),
 		'help'     => array( 'help_title', 'help_text', 'help_photo', 'help_chat', 'help_call' ),
 		'features' => array( 'features' ),
@@ -55,7 +54,6 @@ function packgens_product_hide_map() {
 function packgens_product_hide_choices() {
 	return array(
 		'rating'   => __( 'Rating strip', 'packgens' ),
-		'offer'    => __( 'Offer strip', 'packgens' ),
 		'delivery' => __( 'Delivery button', 'packgens' ),
 		'help'     => __( 'Help card', 'packgens' ),
 		'features' => __( 'Feature list', 'packgens' ),
@@ -119,13 +117,6 @@ function packgens_product_shared_fields( $prefix, $notice, $is_base = false ) {
 			$text( 'rating_count', 'rating_count', __( 'Review count', 'packgens' ) ),
 			array( 'key' => $prefix . '_rating_platform', 'label' => __( 'Platform', 'packgens' ), 'name' => 'rating_platform', 'type' => 'select', 'choices' => packgens_icon_choices(), 'allow_null' => 1, 'ui' => 1 ),
 			$text( 'rating_name', 'rating_platform_name', __( 'Platform name', 'packgens' ) ),
-		),
-
-		$tab( 'coupon', __( 'Offer strip', 'packgens' ) ),
-		array(
-			$text( 'coupon_title', 'coupon_title', __( 'Offer', 'packgens' ) ),
-			$text( 'coupon_note', 'coupon_note', __( 'Small print', 'packgens' ) ),
-			$text( 'coupon_code', 'coupon_code', __( 'Code to copy', 'packgens' ) ),
 		),
 
 		$tab( 'support', __( 'Help card', 'packgens' ) ),
@@ -1733,6 +1724,14 @@ function packgens_register_fields() {
 							),
 						),
 						array(
+							'key'          => 'field_pg_product_review_summary',
+							'label'        => __( 'Review summary', 'packgens' ),
+							'name'         => 'review_summary',
+							'type'         => 'textarea',
+							'rows'         => 3,
+							'instructions' => __( 'A short paragraph shown under the review count, summing up what customers say. Leave blank to hide.', 'packgens' ),
+						),
+						array(
 							'key'          => 'field_pg_product_hide_shared',
 							'label'        => __( 'Hide shared content on this product', 'packgens' ),
 							'name'         => 'hide_shared',
@@ -2107,6 +2106,48 @@ function packgens_register_options_fields() {
 						array(
 							'empty_button' => array( __( 'Empty state button', 'packgens' ), 'Browse packaging' ),
 						)
+					)
+				)
+			),
+
+			array( 'key' => 'field_pg_opt_tab_lbl_reviews', 'label' => __( 'Text: product reviews', 'packgens' ), 'type' => 'tab' ),
+			packgens_group_wrapper(
+				'field_pg_lbl_reviews',
+				'labels_reviews',
+				__( 'Product reviews', 'packgens' ),
+				packgens_label_fields(
+					'reviews',
+					array(
+						'title_one'          => array( __( 'Heading, one review (%s = count)', 'packgens' ), 'Reviewed by %s customer' ),
+						'title_many'         => array( __( 'Heading, several reviews (%s = count)', 'packgens' ), 'Reviewed by %s customers' ),
+						'title_empty'        => array( __( 'Heading, no reviews yet', 'packgens' ), 'Customer reviews' ),
+						'average'            => array( __( 'Average (%s = score)', 'packgens' ), '%s out of 5' ),
+						'write'              => array( __( 'Write button', 'packgens' ), 'Write a review' ),
+						'summary'            => array( __( 'Summary heading', 'packgens' ), 'Summary' ),
+						'search'             => array( __( 'Search placeholder', 'packgens' ), 'Search reviews' ),
+						'filter'             => array( __( 'Filter label', 'packgens' ), 'Filter By' ),
+						'filter_all'         => array( __( 'Filter: all', 'packgens' ), 'All ratings' ),
+						'filter_star'        => array( __( 'Filter: one star', 'packgens' ), '%s Star' ),
+						'filter_stars'       => array( __( 'Filter: several stars', 'packgens' ), '%s Stars' ),
+						'sort'               => array( __( 'Sort label', 'packgens' ), 'Sort by' ),
+						'sort_recent'        => array( __( 'Sort: newest', 'packgens' ), 'Most Recent' ),
+						'sort_high'          => array( __( 'Sort: highest', 'packgens' ), 'Highest Rated' ),
+						'sort_low'           => array( __( 'Sort: lowest', 'packgens' ), 'Lowest Rated' ),
+						'verified'           => array( __( 'Verified badge', 'packgens' ), 'Verified Buyer' ),
+						'pending'            => array( __( 'Awaiting approval note', 'packgens' ), 'Your review is awaiting approval.' ),
+						'reply_by'           => array( __( 'Store reply (%s = name)', 'packgens' ), 'Response from %s' ),
+						'no_match'           => array( __( 'No search results', 'packgens' ), 'No reviews match your search.' ),
+						'empty'              => array( __( 'No reviews yet', 'packgens' ), 'There are no reviews yet.' ),
+						'range'              => array( __( 'Range (%1$s–%2$s of %3$s)', 'packgens' ), 'Displaying Reviews %1$s–%2$s of %3$s' ),
+						'form_heading'       => array( __( 'Form heading', 'packgens' ), 'Write a review' ),
+						'form_heading_first' => array( __( 'Form heading, first review (%s = product)', 'packgens' ), 'Be the first to review %s' ),
+						'form_rating'        => array( __( 'Form: rating', 'packgens' ), 'Your rating' ),
+						'form_title_field'   => array( __( 'Form: title', 'packgens' ), 'Review title (optional)' ),
+						'form_review'        => array( __( 'Form: review', 'packgens' ), 'Your review' ),
+						'form_name'          => array( __( 'Form: name', 'packgens' ), 'Name' ),
+						'form_email'         => array( __( 'Form: email', 'packgens' ), 'Email' ),
+						'form_location'      => array( __( 'Form: location', 'packgens' ), 'Location (optional)' ),
+						'form_submit'        => array( __( 'Form: submit', 'packgens' ), 'Submit review' ),
 					)
 				)
 			),

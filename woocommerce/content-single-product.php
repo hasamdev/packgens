@@ -79,7 +79,8 @@ $tabs_title = packgens_product_detail( $product_id, 'tabs_title', __( 'Product P
 	packgens_render_sections( 'product', $product_id, array(), array( 'products' ) );
 
 	if ( comments_open() || $product->get_review_count() ) {
-		echo '<section class="pg-section pg-section--gray-cool" id="reviews"><div class="pg-container pg-container--narrow">';
+		// The template prints its own #reviews anchor inside.
+		echo '<section class="pg-section pg-product__reviews"><div class="pg-container">';
 		comments_template();
 		echo '</div></section>';
 	}
