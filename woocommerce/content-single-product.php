@@ -57,7 +57,7 @@ $tabs_title = packgens_product_detail( $product_id, 'tabs_title', __( 'Product P
 		</div>
 	</section>
 
-	<?php packgens_render_sections( 'product', $product_id, array( 'products' ) ); ?>
+	<?php get_template_part( 'template-parts/product/more-products', null, array( 'product_id' => $product_id ) ); ?>
 
 	<?php if ( $tabs ) : ?>
 		<section class="pg-section pg-section--tight pg-product__tabs">

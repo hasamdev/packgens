@@ -142,6 +142,8 @@ edited once under **Packgens → Product Defaults**:
 
 - Price caption ("Starting From /", "/ unit"), price note and delivery button
 - The help card and the feature list under the gallery
+- The heading above the products grid ("Take Control Of Your Custom
+  Packaging")
 - The extra tabs beneath the product (artwork guidelines, shipping, …) and
   the heading above them
 
@@ -151,6 +153,8 @@ different per product:
 
 - Badge ("Best Seller", "Best Price") shown on the card
 - Subtitle, quantity tiers and the specifications table
+- **Products to show in the grid** — pick up to eight; leave it empty and the
+  grid shows four products from the same category
 - **Hide shared content on this product** — tick a block (e.g. Help card) to
   leave it off this product only
 
@@ -160,6 +164,13 @@ it replaces the shared value on this product only. Adding any feature or extra
 tab on a product replaces the whole shared list for that product.
 
 So: **change it once in Product Defaults; override only the exceptions.**
+
+Nothing here has to be filled in for a product to look complete. Any field left
+blank on both the product and Product Defaults falls back to the theme's own
+wording (shown in grey), so a brand-new product always has its help card,
+feature list and grid heading. The help card's Live Chat and Call Expert
+buttons use the live chat link and phone number from **Packgens → Site
+Settings**.
 
 Price, stock and images stay in WooCommerce's own panels.
 

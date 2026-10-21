@@ -1291,18 +1291,17 @@
 	overflow: hidden;
 }
 
-/* The strip spreads its tabs across the card's width. Once they no longer fit,
-   there is no free space left to spread and the list simply scrolls, so nothing
-   has to change at a breakpoint. */
 .pg-product-tabs .pg-tabs__list {
 	margin-inline: 8px;
-	justify-content: space-between;
 }
 
-/* Labels hold one line and the tab keeps its own padding, so a cramped strip
-   scrolls rather than crushing its items. */
+/* Each tab takes an equal share of the strip with its label centred, so two
+   tabs read as halves rather than being pushed to opposite edges. A tab never
+   shrinks below its label, so once they no longer fit the strip scrolls and
+   nothing has to change at a breakpoint. */
 .pg-product-tabs .pg-tabs__tab {
-	flex: 0 0 auto;
+	flex: 1 0 auto;
+	justify-content: center;
 	white-space: nowrap;
 }
 

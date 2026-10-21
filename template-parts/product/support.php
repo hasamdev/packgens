@@ -42,11 +42,13 @@ $columns = array_filter( $columns );
 <div class="pg-product-support">
 <?php if ( ! empty( $details['help_title'] ) ) : ?>
 	<div class="pg-product-help">
-		<?php if ( ! empty( $details['help_photo'] ) ) : ?>
-			<span class="pg-product-help__photo">
+		<span class="pg-product-help__photo">
+			<?php if ( ! empty( $details['help_photo'] ) ) : ?>
 				<?php packgens_image( $details['help_photo'], 'packgens-thumb', array(), '' ); ?>
-			</span>
-		<?php endif; ?>
+			<?php else : ?>
+				<img src="<?php echo esc_url( PACKGENS_URI . 'assets/images/help-adviser.png' ); ?>" width="80" height="80" alt="" loading="lazy" decoding="async" />
+			<?php endif; ?>
+		</span>
 
 		<span class="pg-product-help__copy">
 			<span class="pg-product-help__title"><?php echo esc_html( $details['help_title'] ); ?></span>
