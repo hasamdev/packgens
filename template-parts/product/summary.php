@@ -1,6 +1,6 @@
 <?php
 /**
- * Product summary column: title, rating strip, offer, price, actions and the
+ * Product summary column: title, rating strip, price, actions and the
  * quote panel.
  *
  * @package Packgens
@@ -19,7 +19,6 @@ $details     = packgens_product_details( $product_id );
 $price_label = $details['price_label'] ?? '';
 $unit        = $details['price_unit'] ?? '';
 $delivery    = $details['delivery_label'] ?? '';
-$coupon      = $details['coupon_title'] ?? '';
 $rating      = (float) ( $details['rating_value'] ?? 0 );
 ?>
 <div class="pg-product__summary">
@@ -50,35 +49,6 @@ $rating      = (float) ( $details['rating_value'] ?? 0 );
 				</span>
 			<?php endif; ?>
 		</p>
-	<?php endif; ?>
-
-	<?php if ( $coupon ) : ?>
-		<div class="pg-product__offer">
-			<?php packgens_icon( 'ticket-percent', 'pg-product__offer-mark' ); ?>
-
-			<span class="pg-product__offer-copy">
-				<span class="pg-product__offer-title"><?php echo esc_html( $coupon ); ?></span>
-				<?php if ( ! empty( $details['coupon_note'] ) ) : ?>
-					<span class="pg-product__offer-note"><?php echo esc_html( $details['coupon_note'] ); ?></span>
-				<?php endif; ?>
-			</span>
-
-			<?php if ( ! empty( $details['coupon_code'] ) ) : ?>
-				<button type="button" class="pg-product__offer-copy-btn"
-					data-pg-copy="<?php echo esc_attr( $details['coupon_code'] ); ?>">
-					<?php packgens_icon( 'copy' ); ?>
-					<span class="pg-sr-only">
-						<?php
-						printf(
-							/* translators: %s: discount code. */
-							esc_html__( 'Copy code %s', 'packgens' ),
-							esc_html( $details['coupon_code'] )
-						);
-						?>
-					</span>
-				</button>
-			<?php endif; ?>
-		</div>
 	<?php endif; ?>
 
 	<?php if ( $product->get_short_description() ) : ?>
