@@ -38,7 +38,6 @@ define( 'PACKGENS_PRODUCT_DEFAULTS_ID', 'packgens_product_defaults' );
  */
 function packgens_product_hide_map() {
 	return array(
-		'rating'   => array( 'rating_label', 'rating_value', 'rating_count', 'rating_platform', 'rating_platform_name' ),
 		'delivery' => array( 'delivery_label' ),
 		'help'     => array( 'help_title', 'help_text', 'help_photo', 'help_chat', 'help_call' ),
 		'features' => array( 'features' ),
@@ -53,7 +52,6 @@ function packgens_product_hide_map() {
  */
 function packgens_product_hide_choices() {
 	return array(
-		'rating'   => __( 'Rating strip', 'packgens' ),
 		'delivery' => __( 'Delivery button', 'packgens' ),
 		'help'     => __( 'Help card', 'packgens' ),
 		'features' => __( 'Feature list', 'packgens' ),
@@ -108,15 +106,6 @@ function packgens_product_shared_fields( $prefix, $notice, $is_base = false ) {
 			$text( 'price_note', 'price_note', __( 'Price note', 'packgens' ) ),
 			$text( 'delivery', 'delivery_label', __( 'Delivery button label', 'packgens' ), array( 'instructions' => __( 'Second button beside Add to Basket.', 'packgens' ) ) ),
 			$text( 'tabs_title', 'tabs_title', __( 'Heading above the detail tabs', 'packgens' ) ),
-		),
-
-		$tab( 'rating', __( 'Rating strip', 'packgens' ) ),
-		array(
-			$text( 'rating_label', 'rating_label', __( 'Wording', 'packgens' ) ),
-			array( 'key' => $prefix . '_rating_value', 'label' => __( 'Score out of five', 'packgens' ), 'name' => 'rating_value', 'type' => 'number', 'min' => 0, 'max' => 5, 'step' => 0.1 ),
-			$text( 'rating_count', 'rating_count', __( 'Review count', 'packgens' ) ),
-			array( 'key' => $prefix . '_rating_platform', 'label' => __( 'Platform', 'packgens' ), 'name' => 'rating_platform', 'type' => 'select', 'choices' => packgens_icon_choices(), 'allow_null' => 1, 'ui' => 1 ),
-			$text( 'rating_name', 'rating_platform_name', __( 'Platform name', 'packgens' ) ),
 		),
 
 		$tab( 'support', __( 'Help card', 'packgens' ) ),
