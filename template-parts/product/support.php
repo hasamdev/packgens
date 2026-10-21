@@ -13,7 +13,7 @@ if ( ! $product_id ) {
 	return;
 }
 
-$details  = (array) packgens_field( 'product_details', $product_id, array() );
+$details  = packgens_product_details( $product_id );
 $chat     = packgens_link( $details['help_chat'] ?? null );
 $call     = packgens_link( $details['help_call'] ?? null );
 $features = array_values(

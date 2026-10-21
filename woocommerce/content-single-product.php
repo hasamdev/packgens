@@ -18,7 +18,7 @@ if ( post_password_required() ) {
 $product_id = $product->get_id();
 $badge      = packgens_group_field( 'product_details', 'badge', $product_id );
 $tabs       = packgens_product_tabs( $product_id );
-$tabs_title = packgens_group_field( 'product_details', 'tabs_title', $product_id, __( 'Product Packages Details', 'packgens' ) );
+$tabs_title = packgens_product_detail( $product_id, 'tabs_title', __( 'Product Packages Details', 'packgens' ) );
 ?>
 <div id="product-<?php the_ID(); ?>" <?php wc_product_class( 'pg-product', $product ); ?>>
 
@@ -79,7 +79,8 @@ $tabs_title = packgens_group_field( 'product_details', 'tabs_title', $product_id
 	packgens_render_sections( 'product', $product_id, array(), array( 'products' ) );
 
 	if ( comments_open() || $product->get_review_count() ) {
-		echo '<section class="pg-section pg-section--gray-cool" id="reviews"><div class="pg-container pg-container--narrow">';
+		// The template prints its own #reviews anchor inside.
+		echo '<section class="pg-section pg-product__reviews"><div class="pg-container">';
 		comments_template();
 		echo '</div></section>';
 	}

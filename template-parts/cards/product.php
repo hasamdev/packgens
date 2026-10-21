@@ -32,7 +32,7 @@ if ( $show_price && function_exists( 'wc_get_product' ) ) {
 	$product = wc_get_product( $product_id );
 
 	if ( $product && '' !== $product->get_price() ) {
-		$unit       = packgens_group_field( 'product_details', 'price_unit', $product_id, __( '/ unit', 'packgens' ) );
+		$unit       = packgens_product_detail( $product_id, 'price_unit', __( '/ unit', 'packgens' ) );
 		$price_html = sprintf(
 			/* translators: 1: formatted price, 2: unit label. */
 			__( 'From %1$s %2$s', 'packgens' ),

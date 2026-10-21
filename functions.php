@@ -55,4 +55,5 @@ unset( $packgens_module );
 if ( class_exists( 'WooCommerce' ) ) {
 	packgens_load_module( 'integrations/woocommerce' );
 	packgens_load_module( 'integrations/wishlist' );
+	packgens_load_module( 'integrations/reviews' );
 }

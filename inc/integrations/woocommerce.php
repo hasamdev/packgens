@@ -143,7 +143,7 @@ function packgens_wc_price_unit( $price, $product ) {
 		return $price;
 	}
 
-	$unit = packgens_group_field( 'product_details', 'price_unit', $product->get_id() );
+	$unit = packgens_product_detail( $product->get_id(), 'price_unit' );
 
 	if ( ! $unit ) {
 		return $price;
@@ -172,6 +172,80 @@ function packgens_wc_cart_fragment( $fragments ) {
 	return $fragments;
 }
 add_filter( 'woocommerce_add_to_cart_fragments', 'packgens_wc_cart_fragment' );
+
+/**
+ * A product's Product Details, with the shared values filled in.
+ *
+ * Product Defaults holds what every product shows; a product stores only what
+ * it wants to differ. The merge is per key: a filled-in product field wins, a
+ * blank one falls back. A repeater counts as blank until it has a row, so a
+ * product's own feature list or extra tabs replace the shared set whole. Blocks
+ * ticked under "Hide shared content" are emptied for that product alone.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+function packgens_product_details( $product_id ) {
+	static $cache = array();
+
+	$product_id = absint( $product_id );
+
+	if ( isset( $cache[ $product_id ] ) ) {
+		return $cache[ $product_id ];
+	}
+
+	$own    = (array) packgens_field( 'product_details', $product_id, array() );
+	$shared = defined( 'PACKGENS_PRODUCT_DEFAULTS_ID' )
+		? (array) packgens_field( 'product_details', PACKGENS_PRODUCT_DEFAULTS_ID, array() )
+		: array();
+
+	foreach ( $shared as $key => $value ) {
+		if ( packgens_product_detail_is_blank( $own[ $key ] ?? null ) ) {
+			$own[ $key ] = $value;
+		}
+	}
+
+	$map = function_exists( 'packgens_product_hide_map' ) ? packgens_product_hide_map() : array();
+
+	foreach ( (array) ( $own['hide_shared'] ?? array() ) as $block ) {
+		foreach ( $map[ $block ] ?? array() as $key ) {
+			$own[ $key ] = null;
+		}
+	}
+
+	$cache[ $product_id ] = $own;
+
+	return $own;
+}
+
+/**
+ * Whether a Product Details value counts as not filled in.
+ *
+ * @param mixed $value Field value.
+ * @return bool
+ */
+function packgens_product_detail_is_blank( $value ) {
+	if ( null === $value || false === $value || '' === $value || array() === $value ) {
+		return true;
+	}
+
+	// An untouched link field comes back as an array with an empty url.
+	return is_array( $value ) && array_key_exists( 'url', $value ) && '' === (string) $value['url'];
+}
+
+/**
+ * One key of packgens_product_details().
+ *
+ * @param int    $product_id Product ID.
+ * @param string $key        Key inside Product Details.
+ * @param mixed  $default    Fallback when neither the product nor the defaults set it.
+ * @return mixed
+ */
+function packgens_product_detail( $product_id, $key, $default = null ) {
+	$details = packgens_product_details( $product_id );
+
+	return packgens_product_detail_is_blank( $details[ $key ] ?? null ) ? $default : $details[ $key ];
+}
 
 /**
  * Quantity tiers configured on the product.
@@ -250,7 +324,7 @@ function packgens_product_tabs( $product_id ) {
 		);
 	}
 
-	foreach ( (array) packgens_group_field( 'product_details', 'tabs', $product_id, array() ) as $index => $tab ) {
+	foreach ( (array) packgens_product_detail( $product_id, 'tabs', array() ) as $index => $tab ) {
 		if ( empty( $tab['title'] ) ) {
 			continue;
 		}
