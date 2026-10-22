@@ -154,7 +154,7 @@ different per product:
 - Badge ("Best Seller", "Best Price") shown on the card
 - Subtitle, quantity tiers and the specifications table
 - **Products to show in the grid** — pick up to eight; leave it empty and the
-  grid shows four products from the same category
+  grid shows up to six products from the same category
 - **Hide shared content on this product** — tick a block (e.g. Help card) to
   leave it off this product only
 

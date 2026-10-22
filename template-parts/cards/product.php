@@ -22,9 +22,10 @@ $cta_label  = $args['cta'] ?? __( 'Customize Now', 'packgens' );
 $permalink  = get_permalink( $product_id );
 $title      = get_the_title( $product_id );
 $badge      = packgens_group_field( 'product_details', 'badge', $product_id );
-$excerpt    = has_excerpt( $product_id )
-	? get_the_excerpt( $product_id )
-	: packgens_trim_words( get_post_field( 'post_content', $product_id ), 18 );
+$excerpt    = packgens_trim_words(
+	has_excerpt( $product_id ) ? get_the_excerpt( $product_id ) : get_post_field( 'post_content', $product_id ),
+	18
+);
 
 $price_html = '';
 
