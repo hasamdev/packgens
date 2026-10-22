@@ -1791,7 +1791,7 @@ function packgens_register_fields() {
 							'filters'       => array( 'search', 'taxonomy' ),
 							'return_format' => 'id',
 							'max'           => 8,
-							'instructions'  => __( 'Shown under the products grid heading. Leave empty to show four products from the same category.', 'packgens' ),
+							'instructions'  => __( 'Shown under the products grid heading. Leave empty to show up to six products from the same category.', 'packgens' ),
 						),
 						array(
 							'key'          => 'field_pg_product_review_summary',

@@ -1027,6 +1027,31 @@
 	grid-row: 2;
 }
 
+/* Save sits beside Add to Basket, or under it when the delivery note holds
+   that cell. Left to auto-placement it fell into whichever cell was free and
+   drifted a row down beside nothing. */
+.pg-product__buy .pg-wishlist-btn--inline {
+	grid-column: 2;
+	grid-row: 2;
+}
+
+.pg-product__buy:has(.pg-product__delivery) .pg-wishlist-btn--inline {
+	grid-column: 1;
+	grid-row: 3;
+}
+
+/* Anything else printed into the summary hook (payment buttons, notices from
+   plugins) takes a full row below the actions instead of claiming a cell. */
+.pg-product__buy .pg-product__actions > :not(form.cart, .pg-product__delivery, .pg-wishlist-btn),
+.pg-product__buy form.cart > :not(.quantity, .single_add_to_cart_button) {
+	grid-column: 1 / -1;
+}
+
+.pg-product__buy .pg-product__actions > :empty:not(button, input),
+.pg-product__buy form.cart > :empty:not(button, input) {
+	display: none;
+}
+
 /* On phones the two actions cannot share a row without squeezing the delivery
    note into a circle and pushing the quantity stepper off-screen, so price and
    quantity share the first row and each action takes the full width below. */
@@ -1048,8 +1073,11 @@
 	}
 
 	.pg-product__buy .single_add_to_cart_button,
-	.pg-product__buy .pg-product__delivery {
+	.pg-product__buy .pg-product__delivery,
+	.pg-product__buy .pg-wishlist-btn--inline,
+	.pg-product__buy:has(.pg-product__delivery) .pg-wishlist-btn--inline {
 		grid-column: 1 / -1;
+		grid-row: auto;
 	}
 
 	.pg-product__buy .pg-product__delivery {
@@ -1331,4 +1359,18 @@
 .single-product .pg-product > .pg-section--products,
 .single-product .pg-product > .pg-product__tabs {
 	padding-top: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Products grid under the summary
+   ------------------------------------------------------------------------- */
+
+/* The shared grid lets cards grow to fill a short last row; here a lone card
+   would span the page, so each keeps its column width and the row centres. */
+.single-product .pg-products__grid {
+	justify-content: center;
+}
+
+.single-product .pg-products__grid > * {
+	flex-grow: 0;
 }

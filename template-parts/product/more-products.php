@@ -1,7 +1,7 @@
 <?php
 /**
  * The products grid under a product's summary: a shared heading and either the
- * products picked on this product or, failing that, four from its category.
+ * products picked on this product or, failing that, six from its category.
  *
  * Renders through the Products section template so it keeps that section's
  * look; only where the data comes from differs.
@@ -19,7 +19,7 @@ if ( ! $product_id ) {
 
 $picked   = array_filter( array_map( 'absint', (array) packgens_group_field( 'product_details', 'grid_products', $product_id, array() ) ) );
 $picked   = array_values( array_diff( $picked, array( $product_id ) ) );
-$products = $picked ? $picked : packgens_get_related_products( $product_id, 4 );
+$products = $picked ? $picked : packgens_get_related_products( $product_id, 6 );
 
 if ( empty( $products ) ) {
 	return;
