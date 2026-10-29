@@ -255,10 +255,9 @@ function packgens_section_locations() {
 	return array(
 		array( array( 'param' => 'page_type', 'operator' => '==', 'value' => 'front_page' ) ),
 		array( array( 'param' => 'post_type', 'operator' => '==', 'value' => 'page' ) ),
-		array( array( 'param' => 'taxonomy', 'operator' => '==', 'value' => 'product_cat' ) ),
 		array( array( 'param' => 'post_type', 'operator' => '==', 'value' => 'product' ) ),
-		// Every section is editable once for all product categories here; a term
-		// only stores what it wants to differ. See packgens_section_defaults().
+		// Every category section is edited once, here, for all categories. A
+		// category's own screen has only its hero copy (group_pg_category_hero).
 		array( array( 'param' => 'options_page', 'operator' => '==', 'value' => PACKGENS_CAT_DEFAULTS_PAGE ) ),
 	);
 }
@@ -1643,8 +1642,66 @@ function packgens_register_fields() {
 		array(
 			array( array( 'param' => 'page_type', 'operator' => '==', 'value' => 'front_page' ) ),
 			array( array( 'param' => 'post_type', 'operator' => '==', 'value' => 'page' ) ),
-			array( array( 'param' => 'taxonomy', 'operator' => '==', 'value' => 'product_cat' ) ),
+			array( array( 'param' => 'options_page', 'operator' => '==', 'value' => PACKGENS_CAT_DEFAULTS_PAGE ) ),
 		),
+		0
+	);
+
+	/* ------------------------------------------------------------------
+	 * Category hero: the only content set per product category
+	 *
+	 * Saved under the same hero_section_* names the full hero group uses, so
+	 * headings categories already had carry straight over. Read by
+	 * packgens_category_hero(), never through get_field().
+	 * ---------------------------------------------------------------- */
+	packgens_add_group(
+		'group_pg_category_hero',
+		__( 'Category Page', 'packgens' ),
+		array(
+			array(
+				'key'     => 'field_pg_cathero_note',
+				'label'   => '',
+				'type'    => 'message',
+				'message' => sprintf(
+					/* translators: %s: link to the Category Defaults screen. */
+					__( 'Only the top banner is set per category. Everything else on the page is shared by all categories and edited under %s.', 'packgens' ),
+					'<a href="' . esc_url( admin_url( 'admin.php?page=' . PACKGENS_CAT_DEFAULTS_PAGE ) ) . '">' . esc_html__( 'Packgens → Category Defaults', 'packgens' ) . '</a>'
+				),
+				'esc_html' => 0,
+			),
+			packgens_group_wrapper(
+				'field_pg_cathero',
+				'hero_section',
+				__( 'Top banner', 'packgens' ),
+				array(
+					array(
+						'key'          => 'field_pg_cathero_title',
+						'label'        => __( 'Heading', 'packgens' ),
+						'name'         => 'title',
+						'type'         => 'text',
+						'placeholder'  => __( 'Leave blank to use the category name', 'packgens' ),
+					),
+					array(
+						'key'          => 'field_pg_cathero_desc',
+						'label'        => __( 'Text', 'packgens' ),
+						'name'         => 'description',
+						'type'         => 'textarea',
+						'rows'         => 3,
+						'placeholder'  => __( 'Leave blank to use the category description', 'packgens' ),
+					),
+					array(
+						'key'           => 'field_pg_cathero_image',
+						'label'         => __( 'Background image', 'packgens' ),
+						'name'          => 'image',
+						'type'          => 'image',
+						'return_format' => 'id',
+						'preview_size'  => 'medium',
+						'instructions'  => __( 'Leave empty to use the shared banner image.', 'packgens' ),
+					),
+				)
+			),
+		),
+		array( array( array( 'param' => 'taxonomy', 'operator' => '==', 'value' => 'product_cat' ) ) ),
 		0
 	);
 

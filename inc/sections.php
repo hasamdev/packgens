@@ -39,12 +39,22 @@ function packgens_field_context() {
 }
 
 /**
+ * The section view for the current request: product categories and tags share
+ * the category layout, everything else is a page.
+ *
+ * @return string
+ */
+function packgens_current_section_view() {
+	return ( function_exists( 'is_product_taxonomy' ) && ( is_product_category() || is_product_tag() ) ) ? 'product_cat' : 'page';
+}
+
+/**
  * The context product categories inherit from.
  *
- * Every category renders the same template and the same section library; what
- * differs is only the content. Rather than making each term carry a full copy of
- * that content, a term stores what it wants to differ and everything else is
- * read from one options screen, so an edit there reaches every category.
+ * Every category renders the same template and the same section library, and
+ * all of it is shared: it is edited once under Packgens -> Category Defaults.
+ * A category supplies only its hero heading, text and image; see
+ * packgens_category_hero().
  *
  * @param string $view View key.
  * @return string|false Options context id, or false when the view has none.
@@ -61,6 +71,51 @@ function packgens_section_defaults_context( $view ) {
 	 * @param string       $view    View key.
 	 */
 	return apply_filters( 'packgens_section_defaults_context', $context, $view );
+}
+
+/**
+ * The shared hero with one category's own heading, text and image laid over it.
+ *
+ * Each falls back on its own: the heading to the category name, the text to the
+ * category description, the image to the shared hero image. The values are read
+ * from the term's hero_section_* meta, which is where the category screen saves
+ * them and where earlier per-category heroes already stored theirs. The shared
+ * hero's slides are dropped, since a slider would hide the category's heading.
+ *
+ * @param array      $data    Shared hero data.
+ * @param int|string $context Field context id ("term_{id}").
+ * @return array
+ */
+function packgens_category_hero( $data, $context ) {
+	$term_id = ( is_string( $context ) && 0 === strpos( $context, 'term_' ) ) ? (int) substr( $context, 5 ) : 0;
+	$term    = $term_id ? get_term( $term_id ) : null;
+
+	if ( ! $term instanceof WP_Term ) {
+		return $data;
+	}
+
+	$own = static function ( $key ) use ( $term_id ) {
+		return trim( (string) get_term_meta( $term_id, 'hero_section_' . $key, true ) );
+	};
+
+	// The hero always shows on a category, even before the shared one is set up.
+	if ( empty( $data ) ) {
+		$data = array(
+			'enable' => 1,
+			'layout' => 'form',
+		);
+	}
+
+	$data['title']       = '' !== $own( 'title' ) ? $own( 'title' ) : $term->name;
+	$data['description'] = '' !== $own( 'description' ) ? $own( 'description' ) : wp_strip_all_tags( $term->description );
+	$data['eyebrow']     = '';
+	$data['slides']      = array();
+
+	if ( (int) $own( 'image' ) ) {
+		$data['image'] = (int) $own( 'image' );
+	}
+
+	return $data;
 }
 
 /**
@@ -136,11 +191,20 @@ function packgens_merge_section_defaults( $data, $defaults, $group = '', $contex
  * @return array
  */
 function packgens_section_data( $section, $context, $view = 'page' ) {
-	$group = packgens_section_group_name( $section );
-	$data  = packgens_field( $group, $context, array() );
-	$data  = is_array( $data ) ? $data : array();
-
+	$group    = packgens_section_group_name( $section );
 	$fallback = packgens_section_defaults_context( $view );
+
+	// Categories take every section from the shared screen. Copies a term may
+	// still hold from before are ignored, so a shared edit always reaches it.
+	if ( 'product_cat' === $view && $fallback ) {
+		$data = packgens_field( $group, $fallback, array() );
+		$data = is_array( $data ) ? $data : array();
+
+		return 'hero' === $section ? packgens_category_hero( $data, $context ) : $data;
+	}
+
+	$data = packgens_field( $group, $context, array() );
+	$data = is_array( $data ) ? $data : array();
 
 	if ( $fallback ) {
 		$defaults = packgens_field( $group, $fallback, array() );
@@ -200,8 +264,10 @@ function packgens_section_order( $view = 'page', $context = null ) {
 	}
 
 	$default  = packgens_default_section_order( $view );
-	$saved    = packgens_field( 'section_order', $context, null );
 	$fallback = packgens_section_defaults_context( $view );
+
+	// Categories follow the order set on Category Defaults only.
+	$saved = ( 'product_cat' === $view && $fallback ) ? null : packgens_field( 'section_order', $context, null );
 
 	if ( ( ! is_array( $saved ) || empty( $saved ) ) && $fallback ) {
 		$saved = packgens_field( 'section_order', $fallback, null );

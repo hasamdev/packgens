@@ -133,7 +133,7 @@ function packgens_organization_schema() {
  */
 function packgens_faq_schema() {
 	$context = packgens_field_context();
-	$data    = packgens_field( 'faqs_section', $context, array() );
+	$data    = packgens_section_data( 'faqs', $context, packgens_current_section_view() );
 
 	if ( ! is_array( $data ) || empty( $data['groups'] ) ) {
 		return null;
