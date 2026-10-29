@@ -34,7 +34,7 @@ add_filter( 'body_class', 'packgens_body_class' );
  */
 function packgens_view_has_hero() {
 	$context = packgens_field_context();
-	$data    = packgens_field( 'hero_section', $context, array() );
+	$data    = packgens_section_data( 'hero', $context, packgens_current_section_view() );
 
 	if ( is_array( $data ) && ! empty( $data ) && ( ! array_key_exists( 'enable', $data ) || $data['enable'] ) ) {
 		return true;

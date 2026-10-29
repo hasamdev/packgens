@@ -2,8 +2,8 @@
 /**
  * Product catalogue: shop, product categories and product tags.
  *
- * The category hero, SEO content and supporting sections are all driven by the
- * term's own fields, so every category page is editable without code.
+ * Every section comes from Packgens -> Category Defaults; a category adds only
+ * its hero heading, text and image. See packgens_section_data().
  *
  * @package Packgens
  */
@@ -15,15 +15,16 @@ get_header();
 $context   = packgens_field_context();
 $is_term   = is_product_category() || is_product_tag();
 $view      = $is_term ? 'product_cat' : 'page';
-$has_hero  = packgens_field( 'hero_section', $context );
+$hero      = packgens_section_data( 'hero', $context, $view );
+$has_hero  = ! empty( $hero ) && ( ! array_key_exists( 'enable', $hero ) || $hero['enable'] );
 $term_name = $is_term ? single_term_title( '', false ) : woocommerce_page_title( false );
 
 /*
- * The grid is the view's own product section: its heading, blurb and footer
- * button are edited on the term rather than hard-coded here.
+ * The grid is the view's own product section. On a category its heading is
+ * the category name; the blurb and footer button are shared.
  */
 $catalog       = packgens_section_data( 'products', $context, $view );
-$catalog_title = ! empty( $catalog['title'] ) ? $catalog['title'] : $term_name;
+$catalog_title = ( $is_term || empty( $catalog['title'] ) ) ? $term_name : $catalog['title'];
 $catalog_desc  = $catalog['description'] ?? '';
 $catalog_btn   = $catalog['button'] ?? null;
 

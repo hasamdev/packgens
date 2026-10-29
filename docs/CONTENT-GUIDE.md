@@ -122,16 +122,23 @@ to remove, and use **Add** for a new one.
 This is the one that saves the most time.
 
 There are 21 product categories, and they all share one set of content:
-**Packgens → Category Defaults**. Edit the black call-to-action band there and
-it changes on every category page at once.
+**Packgens → Category Defaults**. Every section on a category page (the
+call-to-action band, SEO content, materials, why choose us, process, reviews,
+FAQs) and their order are edited there once and show on every category.
 
-When a category needs something of its own — usually its hero headline and the
-heading above its product grid — edit that category directly
-(**Products → Categories → edit**). Anything you type there overrides the
-default *for that category only*. Anything you leave alone keeps following the
-default.
+A category has just one thing of its own, the **top banner**. Edit the
+category (**Products → Categories → edit**) and fill in the *Category Page*
+box:
 
-So: **change it once in Category Defaults; override only the exceptions.**
+- **Heading**: blank uses the category name
+- **Text**: blank uses the category description
+- **Background image**: blank uses the shared banner image
+
+The rating line, buttons and feature ticks in the banner are shared. The
+heading above the product grid is always the category name.
+
+So: **set the shared content once in Category Defaults; each new category
+only needs its name (and optionally a banner heading, text and image).**
 
 ---
 

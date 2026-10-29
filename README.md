@@ -146,18 +146,17 @@ overridden per page with the **Section Order** field group.
 Every product category renders one template (`woocommerce/archive-product.php`)
 and one section library, so there is nothing to keep in step between them. The
 content is shared the same way: **Packgens → Category Defaults** (SCF options
-page, `PACKGENS_CAT_DEFAULTS_ID`) carries a full set of sections, and each
-category falls back to it.
+page, `PACKGENS_CAT_DEFAULTS_ID`) carries every section and the section order,
+and `packgens_section_data()` reads categories from there only. Section copies
+a term may still hold from earlier versions are ignored.
 
-The merge is per sub-field, not per section, so a category stores only what it
-wants to differ — typically its hero headline and the heading above the grid —
-and inherits the rest. Edit the black CTA band on the defaults screen and every
-category changes at once; override it on one term and only that term changes.
-
-Whether a term "has" a value is read from its stored meta rows rather than
-through `get_field()`, because SCF fills anything unsaved with the field's own
-`default_value`: an untouched **Layout** select reads as `center`, not as
-absent. See `packgens_stored_section_keys()` in `inc/sections.php`.
+A category supplies only its hero heading, text and image
+(`group_pg_category_hero`, saved as `hero_section_title` / `_description` /
+`_image` term meta). `packgens_category_hero()` lays them over the shared hero,
+falling back to the term name, the term description and the shared image. The
+grid heading is the term name. Code that reads category section data must go
+through `packgens_section_data()` with the `product_cat` view
+(`packgens_current_section_view()`), not `get_field()` on the term.
 
 ### Product defaults
 
