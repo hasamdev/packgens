@@ -1187,6 +1187,16 @@ function packgens_register_fields() {
 					packgens_section_base_fields( 'field_pg_materials' ),
 					array(
 						array(
+							'key'           => 'field_pg_materials_posts',
+							'label'         => __( 'Materials', 'packgens' ),
+							'name'          => 'materials',
+							'type'          => 'relationship',
+							'post_type'     => array( 'material' ),
+							'filters'       => array( 'search', 'taxonomy' ),
+							'return_format' => 'id',
+							'instructions'  => __( 'Pick the materials to show. They are grouped into tabs by material group, in the order picked. Leave empty to show every material in the groups chosen below.', 'packgens' ),
+						),
+						array(
 							'key'           => 'field_pg_materials_terms',
 							'label'         => __( 'Material groups (tabs)', 'packgens' ),
 							'name'          => 'items',
@@ -1195,6 +1205,7 @@ function packgens_register_fields() {
 							'field_type'    => 'multi_select',
 							'return_format' => 'id',
 							'add_term'      => 0,
+							'instructions'  => __( 'Used when no materials are picked above: each group becomes a tab showing all its materials. With materials picked, this only sets the tab order. Leave empty for every group.', 'packgens' ),
 						),
 						packgens_link_field( 'field_pg_materials_btn', 'button' ),
 					)

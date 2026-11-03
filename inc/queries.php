@@ -180,6 +180,11 @@ function packgens_get_section_materials( $data ) {
 	}
 
 	$term_ids = array_filter( array_map( 'absint', (array) ( $data['items'] ?? array() ) ) );
+	$picked   = array_filter( array_map( 'absint', (array) ( $data['materials'] ?? array() ) ) );
+
+	if ( $picked ) {
+		return packgens_group_picked_materials( $picked, $term_ids );
+	}
 
 	$terms = get_terms(
 		array(
@@ -222,6 +227,69 @@ function packgens_get_section_materials( $data ) {
 				'posts' => array_map( 'absint', $query->posts ),
 			);
 		}
+	}
+
+	return $groups;
+}
+
+/**
+ * Hand-picked materials, split into one tab per material group.
+ *
+ * Materials keep the order they were picked in within each tab. Tabs follow the
+ * section's chosen groups when set, otherwise the order their first material
+ * was picked in. A material in no group lands on a final "Materials" tab, and
+ * one in several groups shows under each.
+ *
+ * @param int[] $picked   Material post IDs, in picked order.
+ * @param int[] $term_ids Material group term IDs setting the tab order.
+ * @return array<int,array{term:object,posts:int[]}>
+ */
+function packgens_group_picked_materials( $picked, $term_ids = array() ) {
+	$tabs    = array();
+	$loose   = array();
+	$by_term = array();
+
+	foreach ( $picked as $material_id ) {
+		if ( 'publish' !== get_post_status( $material_id ) || 'material' !== get_post_type( $material_id ) ) {
+			continue;
+		}
+
+		$terms = get_the_terms( $material_id, 'category_materials' );
+
+		if ( ! $terms || is_wp_error( $terms ) ) {
+			$loose[] = $material_id;
+			continue;
+		}
+
+		foreach ( $terms as $term ) {
+			if ( ! isset( $tabs[ $term->term_id ] ) ) {
+				$tabs[ $term->term_id ]    = $term;
+				$by_term[ $term->term_id ] = array();
+			}
+
+			$by_term[ $term->term_id ][] = $material_id;
+		}
+	}
+
+	// Chosen groups first, in their chosen order; the rest as first picked.
+	$order = array_merge( array_intersect( $term_ids, array_keys( $tabs ) ), array_diff( array_keys( $tabs ), $term_ids ) );
+	$groups = array();
+
+	foreach ( $order as $term_id ) {
+		$groups[] = array(
+			'term'  => $tabs[ $term_id ],
+			'posts' => $by_term[ $term_id ],
+		);
+	}
+
+	if ( $loose ) {
+		$groups[] = array(
+			'term'  => (object) array(
+				'term_id' => 0,
+				'name'    => __( 'Materials', 'packgens' ),
+			),
+			'posts' => $loose,
+		);
 	}
 
 	return $groups;
