@@ -2,8 +2,9 @@
 /**
  * Product catalogue: shop, product categories and product tags.
  *
- * The category hero, SEO content and supporting sections are all driven by the
- * term's own fields, so every category page is editable without code.
+ * Every section comes from Packgens -> Category Defaults; a category stores
+ * only what it changes. The hero heading and text default to the category's
+ * name and description.
  *
  * @package Packgens
  */
@@ -15,7 +16,10 @@ get_header();
 $context   = packgens_field_context();
 $is_term   = is_product_category() || is_product_tag();
 $view      = $is_term ? 'product_cat' : 'page';
-$has_hero  = packgens_field( 'hero_section', $context );
+// Merged with Category Defaults: a category that inherits its hero has no
+// row of its own, which used to read as "no hero" and print a second band.
+$hero      = packgens_section_data( 'hero', $context, $view );
+$has_hero  = $hero && ( ! array_key_exists( 'enable', $hero ) || $hero['enable'] );
 $term_name = $is_term ? single_term_title( '', false ) : woocommerce_page_title( false );
 
 /*

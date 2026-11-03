@@ -147,6 +147,24 @@ function packgens_section_data( $section, $context, $view = 'page' ) {
 		$data     = packgens_merge_section_defaults( $data, is_array( $defaults ) ? $defaults : array(), $group, $context );
 	}
 
+	// Category Defaults leaves the hero heading and text blank on purpose: each
+	// category's banner is about that category. Fill them from the term itself
+	// unless the category typed its own.
+	if ( 'hero' === $section && 'product_cat' === $view && $data ) {
+		$term_id = function_exists( 'packgens_category_context_term' ) ? packgens_category_context_term( $context ) : 0;
+		$term    = $term_id ? get_term( $term_id ) : null;
+
+		if ( $term instanceof WP_Term ) {
+			if ( empty( $data['title'] ) ) {
+				$data['title'] = $term->name;
+			}
+
+			if ( empty( $data['description'] ) ) {
+				$data['description'] = wp_strip_all_tags( term_description( $term ) );
+			}
+		}
+	}
+
 	return $data;
 }
 

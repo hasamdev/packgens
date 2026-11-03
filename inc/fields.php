@@ -264,6 +264,43 @@ function packgens_section_locations() {
 }
 
 /**
+ * Locations for one section's field group.
+ *
+ * Every section is editable on pages and the front page. Product categories
+ * and products only get the boxes for sections they actually render, so the
+ * edit screen holds nothing that changes nothing:
+ *
+ * - Categories (and the Category Defaults screen): the sections in
+ *   packgens_default_section_order( 'product_cat' ).
+ * - Products: the sections in packgens_default_section_order( 'product' ),
+ *   plus FAQs, which packgens_product_tabs() shows as a detail tab.
+ *
+ * @param string $section Section slug, e.g. "about".
+ * @return array
+ */
+function packgens_section_locations_for( $section ) {
+	$drop = array();
+
+	if ( ! in_array( $section, packgens_default_section_order( 'product_cat' ), true ) ) {
+		$drop[] = 'taxonomy=product_cat';
+		$drop[] = 'options_page=' . PACKGENS_CAT_DEFAULTS_PAGE;
+	}
+
+	if ( ! in_array( $section, array_merge( packgens_default_section_order( 'product' ), array( 'faqs' ) ), true ) ) {
+		$drop[] = 'post_type=product';
+	}
+
+	return array_values(
+		array_filter(
+			packgens_section_locations(),
+			static function ( $rule ) use ( $drop ) {
+				return ! in_array( ( $rule[0]['param'] ?? '' ) . '=' . ( $rule[0]['value'] ?? '' ), $drop, true );
+			}
+		)
+	);
+}
+
+/**
  * Build the standard opening fields of a section group.
  *
  * @param string $prefix   Unique key prefix.
@@ -603,7 +640,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'hero' ),
 		1
 	);
 
@@ -705,7 +742,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'about' ),
 		2
 	);
 
@@ -806,7 +843,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'values' ),
 		3
 	);
 
@@ -845,7 +882,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'quote_band' ),
 		4
 	);
 
@@ -901,7 +938,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'categories' ),
 		3
 	);
 
@@ -973,7 +1010,7 @@ function packgens_register_fields() {
 		// more-products.php), so it is not edited per product here.
 		array_values(
 			array_filter(
-				$page,
+				packgens_section_locations_for( 'products' ),
 				static function ( $rule ) {
 					return 'product' !== ( $rule[0]['value'] ?? '' ) || 'post_type' !== ( $rule[0]['param'] ?? '' );
 				}
@@ -1026,7 +1063,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'process' ),
 		5
 	);
 
@@ -1070,7 +1107,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'why' ),
 		6
 	);
 
@@ -1131,7 +1168,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'comparison' ),
 		7
 	);
 
@@ -1164,7 +1201,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'materials' ),
 		8
 	);
 
@@ -1201,7 +1238,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'industries' ),
 		9
 	);
 
@@ -1250,7 +1287,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'faqs' ),
 		10
 	);
 
@@ -1297,7 +1334,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'reviews' ),
 		11
 	);
 
@@ -1329,7 +1366,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'blogs' ),
 		12
 	);
 
@@ -1358,7 +1395,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'brands' ),
 		13
 	);
 
@@ -1402,7 +1439,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'stats' ),
 		14
 	);
 
@@ -1454,7 +1491,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'content' ),
 		15
 	);
 
@@ -1493,7 +1530,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'cta' ),
 		16
 	);
 
@@ -1531,7 +1568,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'cta_alt' ),
 		17
 	);
 
@@ -1567,7 +1604,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'showcase' ),
 		9
 	);
 
@@ -1591,7 +1628,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'chat' ),
 		24
 	);
 
@@ -1617,7 +1654,7 @@ function packgens_register_fields() {
 				)
 			),
 		),
-		$page,
+		packgens_section_locations_for( 'promo' ),
 		17
 	);
 
