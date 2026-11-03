@@ -31,6 +31,39 @@ $catalog_title = ! empty( $catalog['title'] ) ? $catalog['title'] : $term_name;
 $catalog_desc  = $catalog['description'] ?? '';
 $catalog_btn   = $catalog['button'] ?? null;
 
+// On a category the heading is "{Category} Styles" unless the category typed
+// its own. A heading set on Category Defaults would read the same on every
+// category, so only the category's own value replaces it.
+if ( is_product_category() ) {
+	$own_title     = packgens_stored_section_keys( 'products_section', $context, array( 'title' ) )
+		? packgens_group_field( 'products_section', 'title', $context )
+		: '';
+	$catalog_title = $own_title ? $own_title : sprintf(
+		/* translators: %s: product category name. */
+		__( '%s Styles', 'packgens' ),
+		$term_name
+	);
+}
+
+/*
+ * An empty category shows the four newest products rather than a dead end;
+ * only a shop with no products at all gets the empty state.
+ */
+$fallback_ids = array();
+
+if ( $is_term && ! woocommerce_product_loop() ) {
+	$fallback_ids = wc_get_products(
+		array(
+			'status'     => 'publish',
+			'visibility' => 'catalog',
+			'limit'      => 4,
+			'orderby'    => 'date',
+			'order'      => 'DESC',
+			'return'     => 'ids',
+		)
+	);
+}
+
 packgens_render_section( 'hero', $context, $view );
 
 if ( ! $has_hero ) {
@@ -86,6 +119,14 @@ do_action( 'woocommerce_before_main_content' );
 					<?php packgens_button( $catalog_btn, 'dark' ); ?>
 				</div>
 			<?php endif; ?>
+
+		<?php elseif ( $fallback_ids ) : ?>
+
+			<div class="pg-grid pg-product-grid" style="--pg-cols:1;--pg-cols-sm:2;--pg-cols-lg:3;--pg-cols-xl:4">
+				<?php foreach ( $fallback_ids as $fallback_id ) : ?>
+					<?php get_template_part( 'template-parts/cards/product', null, array( 'id' => $fallback_id ) ); ?>
+				<?php endforeach; ?>
+			</div>
 
 		<?php else : ?>
 			<?php
