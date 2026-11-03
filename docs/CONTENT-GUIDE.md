@@ -105,7 +105,6 @@ Every section works the same way:
 
 Two more panels are worth knowing:
 
-- **Section Order** lets you drag the bands into a different order on that page.
 - Some sections appear twice (there are two call-to-action bands) so a page can
   end with a different message than it opened with.
 
@@ -125,11 +124,16 @@ There are 21 product categories, and they all share one set of content:
 **Packgens → Category Defaults**. Edit the black call-to-action band there and
 it changes on every category page at once.
 
+Every category shows all of that shared content automatically — a new
+category needs nothing filled in.
+
 When a category needs something of its own — usually its hero headline and the
-heading above its product grid — edit that category directly
-(**Products → Categories → edit**). Anything you type there overrides the
-default *for that category only*. Anything you leave alone keeps following the
-default.
+heading above its product grid — edit that category
+(**Products → Categories → edit**). Its section boxes already show the shared
+content; change only what should differ and save. That change applies to that
+category only, and everything you left alone keeps following Category Defaults,
+including any later edit you make there. Clearing a field puts it back to the
+shared content.
 
 So: **change it once in Category Defaults; override only the exceptions.**
 

@@ -1622,33 +1622,6 @@ function packgens_register_fields() {
 	);
 
 	/* ------------------------------------------------------------------
-	 * Section order (front page and landing pages)
-	 * ---------------------------------------------------------------- */
-	packgens_add_group(
-		'group_pg_layout',
-		__( 'Section Order', 'packgens' ),
-		array(
-			array(
-				'key'           => 'field_pg_layout_order',
-				'label'         => __( 'Sections', 'packgens' ),
-				'name'          => 'section_order',
-				'type'          => 'checkbox',
-				'instructions'  => __( 'Tick the sections to show and drag to reorder. Leave untouched to use the default order.', 'packgens' ),
-				'choices'       => packgens_section_choices(),
-				'allow_custom'  => 0,
-				'layout'        => 'vertical',
-				'return_format' => 'value',
-			),
-		),
-		array(
-			array( array( 'param' => 'page_type', 'operator' => '==', 'value' => 'front_page' ) ),
-			array( array( 'param' => 'post_type', 'operator' => '==', 'value' => 'page' ) ),
-			array( array( 'param' => 'taxonomy', 'operator' => '==', 'value' => 'product_cat' ) ),
-		),
-		0
-	);
-
-	/* ------------------------------------------------------------------
 	 * Material group (taxonomy term) fields
 	 * ---------------------------------------------------------------- */
 	packgens_add_group(
