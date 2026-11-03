@@ -195,25 +195,12 @@ function packgens_default_section_order( $view = 'page' ) {
  * @return string[]
  */
 function packgens_section_order( $view = 'page', $context = null ) {
-	if ( null === $context ) {
-		$context = packgens_field_context();
-	}
+	unset( $context ); // Kept for callers; the order no longer varies per page.
 
-	$default  = packgens_default_section_order( $view );
-	$saved    = packgens_field( 'section_order', $context, null );
-	$fallback = packgens_section_defaults_context( $view );
-
-	if ( ( ! is_array( $saved ) || empty( $saved ) ) && $fallback ) {
-		$saved = packgens_field( 'section_order', $fallback, null );
-	}
-
-	if ( ! is_array( $saved ) || empty( $saved ) ) {
-		return $default;
-	}
-
-	$known = array_keys( packgens_section_choices() );
-
-	return array_values( array_intersect( $saved, $known ) );
+	// The order is fixed per view. Editors used to be able to reorder (and
+	// drop) sections per page; that option is gone, and any order still stored
+	// from it is ignored. A section is hidden with its own Show toggle.
+	return packgens_default_section_order( $view );
 }
 
 /**
@@ -659,3 +646,269 @@ function packgens_comparison_mark( $yes ) {
 		esc_html( $yes ? __( 'Included', 'packgens' ) : __( 'Not included', 'packgens' ) )
 	);
 }
+
+
+/* -------------------------------------------------------------------------
+ * Category sections: shared by default, overridden only where changed
+ *
+ * Every product category shows the sections from Packgens -> Category Defaults.
+ * A category keeps only the sub-fields an editor actually changed; everything
+ * else keeps following the defaults, later edits there included.
+ *
+ * Two things used to break that. SCF writes a row for every field on the
+ * screen when a category is saved, blank or untouched alike, and a stored row
+ * counts as "this category's own value" -- so one save froze a category on a
+ * copy (or on blanks). And an unsaved field showed the editor an empty box or
+ * the field's default_value rather than the shared content.
+ *
+ * So: the category screen loads the shared value wherever the category has no
+ * row of its own, and saving drops every top-level sub-field that is blank or
+ * still equal to the shared value.
+ * ---------------------------------------------------------------------- */
+
+/**
+ * The term id behind an SCF "term_{id}" context, when it is a product category.
+ *
+ * @param mixed $post_id SCF object id.
+ * @return int Term id, or 0.
+ */
+function packgens_category_context_term( $post_id ) {
+	if ( ! is_string( $post_id ) || 0 !== strpos( $post_id, 'term_' ) ) {
+		return 0;
+	}
+
+	$term_id = (int) substr( $post_id, 5 );
+	$term    = $term_id ? get_term( $term_id ) : null;
+
+	return ( $term instanceof WP_Term && 'product_cat' === $term->taxonomy ) ? $term_id : 0;
+}
+
+/**
+ * The section group fields shown on a product category, keyed by name.
+ *
+ * @return array<string,array> Group field arrays, with their sub_fields.
+ */
+function packgens_category_section_groups() {
+	static $groups = null;
+
+	if ( null !== $groups ) {
+		return $groups;
+	}
+
+	$groups = array();
+
+	if ( ! function_exists( 'acf_get_field_groups' ) ) {
+		return $groups;
+	}
+
+	foreach ( acf_get_field_groups( array( 'taxonomy' => 'product_cat' ) ) as $field_group ) {
+		foreach ( (array) acf_get_fields( $field_group ) as $field ) {
+			if ( 'group' === ( $field['type'] ?? '' ) && '_section' === substr( $field['name'], -8 ) ) {
+				$groups[ $field['name'] ] = $field;
+			}
+		}
+	}
+
+	return $groups;
+}
+
+/**
+ * Whether a stored field name belongs to one of the category section groups.
+ *
+ * @param string $name Full meta name, e.g. "cta_section_title".
+ * @return bool
+ */
+function packgens_is_category_section_name( $name ) {
+	foreach ( array_keys( packgens_category_section_groups() ) as $group ) {
+		if ( 0 === strpos( (string) $name, $group . '_' ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Load the shared value wherever a category has no row of its own.
+ *
+ * Runs per leaf field (SCF rebuilds groups from their sub-fields, and repeater
+ * rows from theirs), so a category that changed only a headline still loads
+ * every other field, and every repeater row, from Category Defaults. This is
+ * what the edit screen shows and what the front end reads.
+ *
+ * @param mixed      $value   Value SCF loaded (or the field's default_value).
+ * @param int|string $post_id SCF object id.
+ * @param array      $field   Field, with its full meta name.
+ * @return mixed
+ */
+function packgens_category_load_shared_value( $value, $post_id, $field ) {
+	if ( 'group' === ( $field['type'] ?? '' ) || ! defined( 'PACKGENS_CAT_DEFAULTS_ID' ) ) {
+		return $value;
+	}
+
+	$term_id = packgens_category_context_term( $post_id );
+
+	if ( ! $term_id || ! packgens_is_category_section_name( $field['name'] ?? '' ) ) {
+		return $value;
+	}
+
+	if ( metadata_exists( 'term', $term_id, $field['name'] ) ) {
+		return $value;
+	}
+
+	return acf_get_value( PACKGENS_CAT_DEFAULTS_ID, $field );
+}
+add_filter( 'acf/load_value', 'packgens_category_load_shared_value', 5, 3 );
+
+/**
+ * A value reduced to strings, so a stored "1" equals a default 1 and an
+ * unsaved false equals an empty string.
+ *
+ * @param mixed $value Field value.
+ * @return mixed
+ */
+function packgens_normalise_field_value( $value ) {
+	if ( is_array( $value ) ) {
+		return array_map( 'packgens_normalise_field_value', $value );
+	}
+
+	return ( null === $value || false === $value ) ? '' : (string) $value;
+}
+
+/**
+ * Whether a normalised value is blank: empty text, no choice, no rows.
+ *
+ * @param mixed $value Normalised value.
+ * @return bool
+ */
+function packgens_is_blank_field_value( $value ) {
+	if ( is_array( $value ) ) {
+		foreach ( $value as $item ) {
+			if ( ! packgens_is_blank_field_value( $item ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	return '' === $value;
+}
+
+/**
+ * Drop a category's section sub-fields that are blank or match the defaults.
+ *
+ * Compares each top-level sub-field of each section group, raw (unformatted)
+ * on both sides. Whatever is dropped is read from Category Defaults again.
+ * A true/false switched off is "0", not blank, so turning a section off on one
+ * category survives.
+ *
+ * @param int $term_id Product category id.
+ * @return int Number of sub-fields dropped.
+ */
+function packgens_prune_category_sections( $term_id ) {
+	global $wpdb;
+
+	if ( ! defined( 'PACKGENS_CAT_DEFAULTS_ID' ) || ! function_exists( 'acf_get_value' ) ) {
+		return 0;
+	}
+
+	$context = 'term_' . $term_id;
+	$dropped = 0;
+
+	foreach ( packgens_category_section_groups() as $group => $field ) {
+		foreach ( (array) ( $field['sub_fields'] ?? array() ) as $sub ) {
+			if ( empty( $sub['name'] ) ) {
+				continue; // Tabs and messages store nothing.
+			}
+
+			$sub['name'] = $group . '_' . $sub['name'];
+
+			if ( ! metadata_exists( 'term', $term_id, $sub['name'] ) ) {
+				continue;
+			}
+
+			$own    = packgens_normalise_field_value( acf_get_value( $context, $sub ) );
+			$shared = packgens_normalise_field_value( acf_get_value( PACKGENS_CAT_DEFAULTS_ID, $sub ) );
+
+			if ( ! packgens_is_blank_field_value( $own ) && $own !== $shared ) {
+				continue;
+			}
+
+			// The value row, its "_name" key reference and, for repeaters and
+			// nested groups, every row stored beneath it.
+			$name    = preg_quote( $sub['name'], '/' );
+			$pattern = in_array( $sub['type'], array( 'repeater', 'flexible_content' ), true )
+				? '^_?' . $name . '(_[0-9]+_.+)?$'
+				: ( 'group' === $sub['type'] ? '^_?' . $name . '(_.+)?$' : '^_?' . $name . '$' );
+
+			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+				$wpdb->prepare( "DELETE FROM {$wpdb->termmeta} WHERE term_id = %d AND meta_key REGEXP %s", $term_id, $pattern )
+			);
+			++$dropped;
+		}
+
+		// The group's own (empty) marker row is harmless; it tells SCF the
+		// group exists and holds no value of its own.
+	}
+
+	if ( $dropped ) {
+		wp_cache_delete( $term_id, 'term_meta' );
+
+		if ( function_exists( 'acf_flush_value_cache' ) ) {
+			acf_flush_value_cache( $context );
+		}
+	}
+
+	return $dropped;
+}
+
+/**
+ * After a category is saved, keep only what the editor changed.
+ *
+ * @param int|string $post_id SCF object id.
+ * @return void
+ */
+function packgens_prune_category_on_save( $post_id ) {
+	$term_id = packgens_category_context_term( $post_id );
+
+	if ( $term_id ) {
+		packgens_prune_category_sections( $term_id );
+	}
+}
+add_action( 'acf/save_post', 'packgens_prune_category_on_save', 20 );
+
+/**
+ * Once per site: prune every category saved under the old behaviour, so
+ * categories carrying full copies of the defaults start inheriting again.
+ *
+ * Bump the version to run it again after changing what counts as inherited.
+ *
+ * @return void
+ */
+function packgens_prune_all_categories_once() {
+	$version = '1';
+
+	if ( get_option( 'packgens_category_prune' ) === $version || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => false,
+			'fields'     => 'ids',
+		)
+	);
+
+	if ( is_wp_error( $terms ) ) {
+		return;
+	}
+
+	foreach ( $terms as $term_id ) {
+		packgens_prune_category_sections( (int) $term_id );
+	}
+
+	update_option( 'packgens_category_prune', $version, false );
+}
+add_action( 'admin_init', 'packgens_prune_all_categories_once' );

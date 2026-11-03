@@ -138,8 +138,8 @@ Available sections: `hero`, `categories`, `about`, `showcase`, `cta`,
 `cta_alt` is the same component as `cta` with its own content, so a page can
 carry two call-to-action bands.
 
-Order comes from `packgens_default_section_order()` per view type and can be
-overridden per page with the **Section Order** field group.
+Order comes from `packgens_default_section_order()` per view type and is the
+same on every page of that type; there is no per-page reordering.
 
 ### Product category defaults
 
@@ -158,6 +158,17 @@ Whether a term "has" a value is read from its stored meta rows rather than
 through `get_field()`, because SCF fills anything unsaved with the field's own
 `default_value`: an untouched **Layout** select reads as `center`, not as
 absent. See `packgens_stored_section_keys()` in `inc/sections.php`.
+
+SCF writes a row for every field when a term is saved, so two hooks keep those
+rows honest (end of `inc/sections.php`):
+
+- `packgens_category_load_shared_value()` (`acf/load_value`) loads the
+  Category Defaults value for any section field a category has no row for, so
+  the category screen shows the shared content instead of empty boxes.
+- `packgens_prune_category_sections()` runs after a category is saved and
+  deletes every top-level section sub-field that is blank or equal to the
+  default. What remains is exactly what the editor changed. A one-time pass
+  (`packgens_category_prune` option) prunes categories saved before this.
 
 ### Product defaults
 
