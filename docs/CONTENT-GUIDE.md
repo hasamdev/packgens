@@ -125,7 +125,9 @@ There are 21 product categories, and they all share one set of content:
 it changes on every category page at once.
 
 Every category shows all of that shared content automatically — a new
-category needs nothing filled in.
+category needs nothing filled in. The **Add New Category** form only asks for WordPress's
+usual name, slug, parent, description and thumbnail; the section boxes appear
+once the category exists and you edit it.
 
 When a category needs something of its own — usually its hero headline and the
 heading above its product grid — edit that category
