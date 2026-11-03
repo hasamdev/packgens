@@ -1180,6 +1180,10 @@ fieldset.pg-field > .pg-field__label {
 	margin-bottom: var(--pg-space-xs);
 }
 
+.pg-empty > .pg-btn {
+	margin-top: 20px;
+}
+
 .pg-spinner {
 	display: inline-block;
 	width: 1.125rem;
