@@ -152,9 +152,16 @@ edited once under **Packgens → Product Defaults**:
   Packaging")
 - The extra tabs beneath the product (artwork guidelines, shipping, …) and
   the heading above them
+- The process steps, showcase and FAQs sections
+
+**Adding a product** (**Products → Add New**) asks only for what differs per
+product: WooCommerce's own name, description, price, images and categories,
+plus the badge, subtitle, quantity tiers and specifications. Everything else is
+filled in from Product Defaults automatically.
 
 Edit a product (**Products → All Products**) and, below the usual WooCommerce
-boxes, you will find **Product Details**. Its **This product** tab holds what is
+boxes, you will find **Product Details** and the section boxes, already showing
+the shared content. Its **This product** tab holds what is
 different per product:
 
 - Badge ("Best Seller", "Best Price") shown on the card

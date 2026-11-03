@@ -50,9 +50,13 @@ function packgens_field_context() {
  * @return string|false Options context id, or false when the view has none.
  */
 function packgens_section_defaults_context( $view ) {
-	$context = ( 'product_cat' === $view && defined( 'PACKGENS_CAT_DEFAULTS_ID' ) )
-		? PACKGENS_CAT_DEFAULTS_ID
-		: false;
+	$context = false;
+
+	if ( 'product_cat' === $view && defined( 'PACKGENS_CAT_DEFAULTS_ID' ) ) {
+		$context = PACKGENS_CAT_DEFAULTS_ID;
+	} elseif ( 'product' === $view && defined( 'PACKGENS_PRODUCT_DEFAULTS_ID' ) ) {
+		$context = PACKGENS_PRODUCT_DEFAULTS_ID;
+	}
 
 	/**
 	 * Filter the fallback context for a view.
@@ -77,15 +81,20 @@ function packgens_section_defaults_context( $view ) {
  * @return string[] Names present in the database.
  */
 function packgens_stored_section_keys( $group, $context, $keys ) {
-	if ( ! is_string( $context ) || 0 !== strpos( $context, 'term_' ) ) {
+	if ( is_string( $context ) && 0 === strpos( $context, 'term_' ) ) {
+		$type = 'term';
+		$id   = (int) substr( $context, 5 );
+	} elseif ( is_numeric( $context ) && (int) $context > 0 ) {
+		$type = 'post';
+		$id   = (int) $context;
+	} else {
 		return $keys;
 	}
 
-	$term_id = (int) substr( $context, 5 );
-	$stored  = array();
+	$stored = array();
 
 	foreach ( $keys as $key ) {
-		if ( metadata_exists( 'term', $term_id, $group . '_' . $key ) ) {
+		if ( metadata_exists( $type, $id, $group . '_' . $key ) ) {
 			$stored[] = $key;
 		}
 	}
@@ -667,21 +676,22 @@ function packgens_comparison_mark( $yes ) {
 
 
 /* -------------------------------------------------------------------------
- * Category sections: shared by default, overridden only where changed
+ * Shared sections: categories and products inherit, overriding only changes
  *
- * Every product category shows the sections from Packgens -> Category Defaults.
- * A category keeps only the sub-fields an editor actually changed; everything
+ * Every product category shows the sections from Packgens -> Category Defaults,
+ * and every product the sections from Packgens -> Product Defaults. A category
+ * or product keeps only the sub-fields an editor actually changed; everything
  * else keeps following the defaults, later edits there included.
  *
  * Two things used to break that. SCF writes a row for every field on the
- * screen when a category is saved, blank or untouched alike, and a stored row
- * counts as "this category's own value" -- so one save froze a category on a
- * copy (or on blanks). And an unsaved field showed the editor an empty box or
- * the field's default_value rather than the shared content.
+ * screen when an object is saved, blank or untouched alike, and a stored row
+ * counts as "this object's own value" -- so one save froze it on a copy (or on
+ * blanks). And an unsaved field showed the editor an empty box or the field's
+ * default_value rather than the shared content.
  *
- * So: the category screen loads the shared value wherever the category has no
- * row of its own, and saving drops every top-level sub-field that is blank or
- * still equal to the shared value.
+ * So: the edit screen loads the shared value wherever the object has no row of
+ * its own, and saving drops every top-level sub-field that is blank or still
+ * equal to the shared value.
  * ---------------------------------------------------------------------- */
 
 /**
@@ -702,42 +712,85 @@ function packgens_category_context_term( $post_id ) {
 }
 
 /**
- * The section group fields shown on a product category, keyed by name.
+ * The section group fields an object type edits, keyed by name.
  *
+ * @param string $kind "product_cat" or "product".
  * @return array<string,array> Group field arrays, with their sub_fields.
  */
-function packgens_category_section_groups() {
-	static $groups = null;
+function packgens_inherited_section_groups( $kind ) {
+	static $groups = array();
 
-	if ( null !== $groups ) {
-		return $groups;
+	if ( isset( $groups[ $kind ] ) ) {
+		return $groups[ $kind ];
 	}
 
-	$groups = array();
+	$groups[ $kind ] = array();
 
 	if ( ! function_exists( 'acf_get_field_groups' ) ) {
-		return $groups;
+		return $groups[ $kind ];
 	}
 
-	foreach ( acf_get_field_groups( array( 'taxonomy' => 'product_cat' ) ) as $field_group ) {
+	$screen = 'product_cat' === $kind ? array( 'taxonomy' => 'product_cat' ) : array( 'post_type' => 'product' );
+
+	foreach ( acf_get_field_groups( $screen ) as $field_group ) {
 		foreach ( (array) acf_get_fields( $field_group ) as $field ) {
 			if ( 'group' === ( $field['type'] ?? '' ) && '_section' === substr( $field['name'], -8 ) ) {
-				$groups[ $field['name'] ] = $field;
+				$groups[ $kind ][ $field['name'] ] = $field;
 			}
 		}
 	}
 
-	return $groups;
+	return $groups[ $kind ];
 }
 
 /**
- * Whether a stored field name belongs to one of the category section groups.
+ * Where an SCF object inherits its sections from, if anywhere.
+ *
+ * @param mixed $post_id SCF object id.
+ * @return array{meta:string,id:int,defaults:string,kind:string}|null
+ */
+function packgens_inherit_context( $post_id ) {
+	static $cache = array();
+
+	$key = (string) $post_id;
+
+	if ( array_key_exists( $key, $cache ) ) {
+		return $cache[ $key ];
+	}
+
+	$context = null;
+	$term_id = packgens_category_context_term( $post_id );
+
+	if ( $term_id && defined( 'PACKGENS_CAT_DEFAULTS_ID' ) ) {
+		$context = array(
+			'meta'     => 'term',
+			'id'       => $term_id,
+			'defaults' => PACKGENS_CAT_DEFAULTS_ID,
+			'kind'     => 'product_cat',
+		);
+	} elseif ( is_numeric( $post_id ) && (int) $post_id > 0 && defined( 'PACKGENS_PRODUCT_DEFAULTS_ID' ) && 'product' === get_post_type( (int) $post_id ) ) {
+		$context = array(
+			'meta'     => 'post',
+			'id'       => (int) $post_id,
+			'defaults' => PACKGENS_PRODUCT_DEFAULTS_ID,
+			'kind'     => 'product',
+		);
+	}
+
+	$cache[ $key ] = $context;
+
+	return $context;
+}
+
+/**
+ * Whether a stored field name belongs to one of the given section groups.
  *
  * @param string $name Full meta name, e.g. "cta_section_title".
+ * @param string $kind "product_cat" or "product".
  * @return bool
  */
-function packgens_is_category_section_name( $name ) {
-	foreach ( array_keys( packgens_category_section_groups() ) as $group ) {
+function packgens_is_inherited_section_name( $name, $kind ) {
+	foreach ( array_keys( packgens_inherited_section_groups( $kind ) ) as $group ) {
 		if ( 0 === strpos( (string) $name, $group . '_' ) ) {
 			return true;
 		}
@@ -747,11 +800,11 @@ function packgens_is_category_section_name( $name ) {
 }
 
 /**
- * Load the shared value wherever a category has no row of its own.
+ * Load the shared value wherever a category or product has no row of its own.
  *
  * Runs per leaf field (SCF rebuilds groups from their sub-fields, and repeater
- * rows from theirs), so a category that changed only a headline still loads
- * every other field, and every repeater row, from Category Defaults. This is
+ * rows from theirs), so an object that changed only a headline still loads
+ * every other field, and every repeater row, from its defaults screen. This is
  * what the edit screen shows and what the front end reads.
  *
  * @param mixed      $value   Value SCF loaded (or the field's default_value).
@@ -759,24 +812,24 @@ function packgens_is_category_section_name( $name ) {
  * @param array      $field   Field, with its full meta name.
  * @return mixed
  */
-function packgens_category_load_shared_value( $value, $post_id, $field ) {
-	if ( 'group' === ( $field['type'] ?? '' ) || ! defined( 'PACKGENS_CAT_DEFAULTS_ID' ) ) {
+function packgens_load_shared_section_value( $value, $post_id, $field ) {
+	if ( 'group' === ( $field['type'] ?? '' ) ) {
 		return $value;
 	}
 
-	$term_id = packgens_category_context_term( $post_id );
+	$context = packgens_inherit_context( $post_id );
 
-	if ( ! $term_id || ! packgens_is_category_section_name( $field['name'] ?? '' ) ) {
+	if ( ! $context || ! packgens_is_inherited_section_name( $field['name'] ?? '', $context['kind'] ) ) {
 		return $value;
 	}
 
-	if ( metadata_exists( 'term', $term_id, $field['name'] ) ) {
+	if ( metadata_exists( $context['meta'], $context['id'], $field['name'] ) ) {
 		return $value;
 	}
 
-	return acf_get_value( PACKGENS_CAT_DEFAULTS_ID, $field );
+	return acf_get_value( $context['defaults'], $field );
 }
-add_filter( 'acf/load_value', 'packgens_category_load_shared_value', 5, 3 );
+add_filter( 'acf/load_value', 'packgens_load_shared_section_value', 5, 3 );
 
 /**
  * A value reduced to strings, so a stored "1" equals a default 1 and an
@@ -814,27 +867,31 @@ function packgens_is_blank_field_value( $value ) {
 }
 
 /**
- * Drop a category's section sub-fields that are blank or match the defaults.
+ * Drop an object's section sub-fields that are blank or match the defaults.
  *
  * Compares each top-level sub-field of each section group, raw (unformatted)
- * on both sides. Whatever is dropped is read from Category Defaults again.
+ * on both sides. Whatever is dropped is read from the defaults screen again.
  * A true/false switched off is "0", not blank, so turning a section off on one
- * category survives.
+ * category or product survives.
  *
- * @param int $term_id Product category id.
+ * @param int|string $post_id SCF object id ("term_12" or a product id).
  * @return int Number of sub-fields dropped.
  */
-function packgens_prune_category_sections( $term_id ) {
+function packgens_prune_inherited_sections( $post_id ) {
 	global $wpdb;
 
-	if ( ! defined( 'PACKGENS_CAT_DEFAULTS_ID' ) || ! function_exists( 'acf_get_value' ) ) {
+	$context = packgens_inherit_context( $post_id );
+
+	if ( ! $context || ! function_exists( 'acf_get_value' ) ) {
 		return 0;
 	}
 
-	$context = 'term_' . $term_id;
+	$is_term = 'term' === $context['meta'];
+	$table   = $is_term ? $wpdb->termmeta : $wpdb->postmeta;
+	$column  = $is_term ? 'term_id' : 'post_id';
 	$dropped = 0;
 
-	foreach ( packgens_category_section_groups() as $group => $field ) {
+	foreach ( packgens_inherited_section_groups( $context['kind'] ) as $group => $field ) {
 		foreach ( (array) ( $field['sub_fields'] ?? array() ) as $sub ) {
 			if ( empty( $sub['name'] ) ) {
 				continue; // Tabs and messages store nothing.
@@ -842,12 +899,12 @@ function packgens_prune_category_sections( $term_id ) {
 
 			$sub['name'] = $group . '_' . $sub['name'];
 
-			if ( ! metadata_exists( 'term', $term_id, $sub['name'] ) ) {
+			if ( ! metadata_exists( $context['meta'], $context['id'], $sub['name'] ) ) {
 				continue;
 			}
 
-			$own    = packgens_normalise_field_value( acf_get_value( $context, $sub ) );
-			$shared = packgens_normalise_field_value( acf_get_value( PACKGENS_CAT_DEFAULTS_ID, $sub ) );
+			$own    = packgens_normalise_field_value( acf_get_value( $post_id, $sub ) );
+			$shared = packgens_normalise_field_value( acf_get_value( $context['defaults'], $sub ) );
 
 			if ( ! packgens_is_blank_field_value( $own ) && $own !== $shared ) {
 				continue;
@@ -861,7 +918,7 @@ function packgens_prune_category_sections( $term_id ) {
 				: ( 'group' === $sub['type'] ? '^_?' . $name . '(_.+)?$' : '^_?' . $name . '$' );
 
 			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-				$wpdb->prepare( "DELETE FROM {$wpdb->termmeta} WHERE term_id = %d AND meta_key REGEXP %s", $term_id, $pattern )
+				$wpdb->prepare( "DELETE FROM {$table} WHERE {$column} = %d AND meta_key REGEXP %s", $context['id'], $pattern ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			);
 			++$dropped;
 		}
@@ -871,10 +928,10 @@ function packgens_prune_category_sections( $term_id ) {
 	}
 
 	if ( $dropped ) {
-		wp_cache_delete( $term_id, 'term_meta' );
+		wp_cache_delete( $context['id'], $is_term ? 'term_meta' : 'post_meta' );
 
 		if ( function_exists( 'acf_flush_value_cache' ) ) {
-			acf_flush_value_cache( $context );
+			acf_flush_value_cache( $post_id );
 		}
 	}
 
@@ -882,19 +939,25 @@ function packgens_prune_category_sections( $term_id ) {
 }
 
 /**
- * After a category is saved, keep only what the editor changed.
+ * Category wrapper kept for callers that pass a term id.
+ *
+ * @param int $term_id Product category id.
+ * @return int Number of sub-fields dropped.
+ */
+function packgens_prune_category_sections( $term_id ) {
+	return packgens_prune_inherited_sections( 'term_' . (int) $term_id );
+}
+
+/**
+ * After a category or product is saved, keep only what the editor changed.
  *
  * @param int|string $post_id SCF object id.
  * @return void
  */
-function packgens_prune_category_on_save( $post_id ) {
-	$term_id = packgens_category_context_term( $post_id );
-
-	if ( $term_id ) {
-		packgens_prune_category_sections( $term_id );
-	}
+function packgens_prune_inherited_on_save( $post_id ) {
+	packgens_prune_inherited_sections( $post_id );
 }
-add_action( 'acf/save_post', 'packgens_prune_category_on_save', 20 );
+add_action( 'acf/save_post', 'packgens_prune_inherited_on_save', 20 );
 
 /**
  * Once per site: prune every category saved under the old behaviour, so
@@ -930,6 +993,130 @@ function packgens_prune_all_categories_once() {
 	update_option( 'packgens_category_prune', $version, false );
 }
 add_action( 'admin_init', 'packgens_prune_all_categories_once' );
+
+/**
+ * Once per site: give Product Defaults the sections products already carry,
+ * then prune every product's identical copies so they start inheriting.
+ *
+ * A section the defaults screen has no content for is filled from the first
+ * product (oldest first) that has content in it. Products whose copy differs
+ * keep it as their own; nothing that differs is deleted.
+ *
+ * @return void
+ */
+function packgens_prune_all_products_once() {
+	$version = '1';
+
+	if ( get_option( 'packgens_product_prune' ) === $version || ! current_user_can( 'manage_options' ) || ! defined( 'PACKGENS_PRODUCT_DEFAULTS_ID' ) ) {
+		return;
+	}
+
+	$ids = get_posts(
+		array(
+			'post_type'   => 'product',
+			'post_status' => 'any',
+			'numberposts' => -1,
+			'fields'      => 'ids',
+			'orderby'     => 'ID',
+			'order'       => 'ASC',
+		)
+	);
+
+	foreach ( packgens_inherited_section_groups( 'product' ) as $group => $field ) {
+		if ( ! packgens_is_blank_field_value( packgens_normalise_field_value( acf_get_value( PACKGENS_PRODUCT_DEFAULTS_ID, $field ) ) ) ) {
+			continue;
+		}
+
+		foreach ( $ids as $product_id ) {
+			$raw = acf_get_value( $product_id, $field );
+
+			if ( ! packgens_is_blank_field_value( packgens_normalise_field_value( $raw ) ) ) {
+				acf_update_value( $raw, PACKGENS_PRODUCT_DEFAULTS_ID, $field );
+				acf_flush_value_cache( PACKGENS_PRODUCT_DEFAULTS_ID );
+				break;
+			}
+		}
+	}
+
+	foreach ( $ids as $product_id ) {
+		packgens_prune_inherited_sections( (int) $product_id );
+	}
+
+	update_option( 'packgens_product_prune', $version, false );
+}
+add_action( 'admin_init', 'packgens_prune_all_products_once' );
+
+/* -------------------------------------------------------------------------
+ * Add New Product: per-product values only
+ *
+ * A new product only needs what differs per product: WooCommerce's own fields
+ * plus the badge, subtitle, quantity tiers and specifications. Everything else
+ * comes from Product Defaults, so the shared Product Details tabs, the optional
+ * extras and the section boxes are left off this screen and appear on the edit
+ * screen once the product exists. Fields carry "pg_edit_only" / "pg_add_only"
+ * flags in inc/fields.php.
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Whether the current admin screen is Products -> Add New.
+ *
+ * @return bool
+ */
+function packgens_is_new_product_screen() {
+	global $pagenow, $typenow;
+
+	return is_admin() && 'post-new.php' === $pagenow && 'product' === $typenow;
+}
+
+/**
+ * Drop the section boxes from Add New Product.
+ *
+ * @param array $field_groups Field groups.
+ * @return array
+ */
+function packgens_new_product_field_groups( $field_groups ) {
+	// The one-time passes on admin_init need the full list to see sections.
+	if ( ! packgens_is_new_product_screen() || doing_action( 'admin_init' ) ) {
+		return $field_groups;
+	}
+
+	return array_values(
+		array_filter(
+			$field_groups,
+			static function ( $field_group ) {
+				foreach ( (array) acf_get_fields( $field_group ) as $field ) {
+					if ( 'group' === ( $field['type'] ?? '' ) && '_section' === substr( $field['name'], -8 ) ) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+		)
+	);
+}
+add_filter( 'acf/load_field_groups', 'packgens_new_product_field_groups', 99 );
+
+/**
+ * Hide edit-only fields when adding a product, and add-only notes otherwise.
+ *
+ * @param array|false $field Field being rendered.
+ * @return array|false
+ */
+function packgens_new_product_field_visibility( $field ) {
+	if ( ! is_array( $field ) ) {
+		return $field;
+	}
+
+	$is_new = packgens_is_new_product_screen();
+
+	if ( ( $is_new && ! empty( $field['pg_edit_only'] ) ) || ( ! $is_new && ! empty( $field['pg_add_only'] ) ) ) {
+		return false;
+	}
+
+	return $field;
+}
+add_filter( 'acf/prepare_field', 'packgens_new_product_field_visibility', 20 );
 
 /**
  * Keep the "Add new category" form to WordPress's own fields.
