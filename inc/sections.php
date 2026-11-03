@@ -912,3 +912,50 @@ function packgens_prune_all_categories_once() {
 	update_option( 'packgens_category_prune', $version, false );
 }
 add_action( 'admin_init', 'packgens_prune_all_categories_once' );
+
+/**
+ * Keep the "Add new category" form to WordPress's own fields.
+ *
+ * SCF draws every section box onto the add form too, which buried the Add
+ * button under a long scroll for content most new categories never set: they
+ * inherit everything from Category Defaults anyway. The boxes stay on the edit
+ * screen, where a category changes what it needs after it exists.
+ *
+ * SCF keeps no handle on the object that hooks the add form, so instead the
+ * field group list is emptied just while that form is printed (priorities 9
+ * and 11 bracket SCF's own at 10). WooCommerce's thumbnail and display fields
+ * on the same hook are untouched.
+ *
+ * @return void
+ */
+function packgens_category_add_form_start() {
+	add_filter( 'acf/load_field_groups', '__return_empty_array', 99 );
+}
+add_action( 'product_cat_add_form_fields', 'packgens_category_add_form_start', 9 );
+
+/**
+ * Restore the field group list after the add form, with a pointer to where
+ * the shared section content lives.
+ *
+ * @return void
+ */
+function packgens_category_add_form_end() {
+	remove_filter( 'acf/load_field_groups', '__return_empty_array', 99 );
+
+	if ( ! defined( 'PACKGENS_CAT_DEFAULTS_PAGE' ) ) {
+		return;
+	}
+
+	printf(
+		'<div class="form-field"><p class="description">%s</p></div>',
+		wp_kses(
+			sprintf(
+				/* translators: %s: link to the Category Defaults screen. */
+				__( 'The new category shows the shared sections from %s straight away. To change any of them for this category only, edit it after adding.', 'packgens' ),
+				'<a href="' . esc_url( admin_url( 'admin.php?page=' . PACKGENS_CAT_DEFAULTS_PAGE ) ) . '">' . esc_html__( 'Packgens → Category Defaults', 'packgens' ) . '</a>'
+			),
+			array( 'a' => array( 'href' => array() ) )
+		)
+	);
+}
+add_action( 'product_cat_add_form_fields', 'packgens_category_add_form_end', 11 );
