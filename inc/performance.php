@@ -63,8 +63,7 @@ function packgens_uses_blocks() {
  */
 function packgens_preload_hero() {
 	$context = packgens_field_context();
-	$hero    = function_exists( 'packgens_section_data' ) ? packgens_section_data( 'hero', $context, packgens_current_section_view() ) : array();
-	$image   = $hero['image'] ?? 0;
+	$image   = packgens_group_field( 'hero_section', 'image', $context );
 
 	if ( ! $image ) {
 		return;
