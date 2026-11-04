@@ -343,10 +343,12 @@ function packgens_product_tabs( $product_id ) {
 		);
 	}
 
-	// FAQs configured on the product join the tab strip.
-	$faqs = packgens_field( 'faqs_section', $product_id, array() );
+	// FAQs join the tab strip: the product's own, else Product Defaults'. Read
+	// through the section merge, since get_field() finds nothing on a product
+	// that never saved the section.
+	$faqs = packgens_section_data( 'faqs', $product_id, 'product' );
 
-	if ( is_array( $faqs ) && ! empty( $faqs['groups'] ) ) {
+	if ( is_array( $faqs ) && ! empty( $faqs['groups'] ) && ( ! array_key_exists( 'enable', $faqs ) || $faqs['enable'] ) ) {
 		ob_start();
 		echo '<div class="pg-accordion" data-pg-accordion>';
 

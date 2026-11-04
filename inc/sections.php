@@ -171,6 +171,21 @@ function packgens_section_data( $section, $context, $view = 'page' ) {
 		}
 	}
 
+	// A product page always carries its process steps and showcase row. When
+	// neither the product nor Product Defaults has written any content for
+	// one, fall back to the homepage's, so a new product needs no data entry
+	// before it looks complete.
+	if ( 'product' === $view && in_array( $section, array( 'process', 'showcase' ), true ) && ! packgens_section_has_content( $data, $group ) ) {
+		$front = (int) get_option( 'page_on_front' );
+		$home  = $front ? packgens_field( $group, $front, array() ) : array();
+
+		if ( is_array( $home ) && packgens_section_has_content( $home, $group ) ) {
+			// The content is borrowed; the on/off switch stays the product's.
+			$home['enable'] = array_key_exists( 'enable', $data ) ? $data['enable'] : 1;
+			$data           = $home;
+		}
+	}
+
 	// Category Defaults leaves the hero heading and text blank on purpose: each
 	// category's banner is about that category. Fill them from the term itself
 	// unless the category typed its own.
@@ -190,6 +205,50 @@ function packgens_section_data( $section, $context, $view = 'page' ) {
 	}
 
 	return $data;
+}
+
+/**
+ * Whether section data holds content an editor wrote, beyond switches and
+ * layout choices.
+ *
+ * SCF hands back a never-saved section as its default values -- "Show this
+ * section" on, the default layout -- which is not empty but has nothing to
+ * show. Only text, media, links and rows count here.
+ *
+ * @param array  $data  Section values keyed by sub-field name.
+ * @param string $group Section group name, e.g. "process_section".
+ * @return bool
+ */
+function packgens_section_has_content( $data, $group ) {
+	if ( empty( $data ) || ! is_array( $data ) ) {
+		return false;
+	}
+
+	$settings = array( 'true_false', 'select', 'radio', 'button_group', 'checkbox', 'tab', 'message', 'number', 'color_picker' );
+	$types    = array();
+
+	foreach ( array( 'product', 'product_cat' ) as $kind ) {
+		$field = packgens_inherited_section_groups( $kind )[ $group ] ?? null;
+
+		if ( $field ) {
+			foreach ( (array) $field['sub_fields'] as $sub ) {
+				$types[ $sub['name'] ] = $sub['type'];
+			}
+			break;
+		}
+	}
+
+	foreach ( $data as $key => $value ) {
+		if ( 'enable' === $key || in_array( $types[ $key ] ?? '', $settings, true ) ) {
+			continue;
+		}
+
+		if ( ! packgens_is_blank_field_value( packgens_normalise_field_value( $value ) ) ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**
