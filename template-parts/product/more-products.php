@@ -3,6 +3,8 @@
  * The products grid under a product's summary: a shared heading and either the
  * products picked on this product or, failing that, six from its category.
  *
+ * Off unless the product's "Show products grid" switch is on.
+ *
  * Renders through the Products section template so it keeps that section's
  * look; only where the data comes from differs.
  *
@@ -13,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 $product_id = absint( $args['product_id'] ?? 0 );
 
-if ( ! $product_id ) {
+if ( ! $product_id || empty( packgens_group_field( 'product_details', 'show_grid', $product_id ) ) ) {
 	return;
 }
 

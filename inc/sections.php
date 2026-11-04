@@ -156,6 +156,21 @@ function packgens_section_data( $section, $context, $view = 'page' ) {
 		$data     = packgens_merge_section_defaults( $data, is_array( $defaults ) ? $defaults : array(), $group, $context );
 	}
 
+	// Own-only fields (e.g. the category's SEO content switch) are never taken
+	// from the defaults, so the merge above must not have supplied them.
+	$inherit = $fallback ? packgens_inherit_context( $context ) : null;
+
+	if ( $inherit && $data ) {
+		foreach ( packgens_own_only_section_fields( $inherit['kind'] ) as $name ) {
+			if ( 0 === strpos( $name, $group . '_' ) ) {
+				$key          = substr( $name, strlen( $group ) + 1 );
+				$data[ $key ] = metadata_exists( $inherit['meta'], $inherit['id'], $name )
+					? get_metadata( $inherit['meta'], $inherit['id'], $name, true )
+					: 0;
+			}
+		}
+	}
+
 	// Category Defaults leaves the hero heading and text blank on purpose: each
 	// category's banner is about that category. Fill them from the term itself
 	// unless the category typed its own.
@@ -783,6 +798,25 @@ function packgens_inherit_context( $post_id ) {
 }
 
 /**
+ * Section fields a category or product always sets for itself.
+ *
+ * These never inherit from the defaults screen and are never pruned on save:
+ * unsaved, they read as off. The SEO content block starts hidden on every
+ * category and shows only where an editor switches it on for that category.
+ *
+ * @param string $kind "product_cat" or "product".
+ * @return string[] Full meta names.
+ */
+function packgens_own_only_section_fields( $kind ) {
+	$fields = array(
+		'product_cat' => array( 'content_section_enable' ),
+		'product'     => array(),
+	);
+
+	return $fields[ $kind ] ?? array();
+}
+
+/**
  * Whether a stored field name belongs to one of the given section groups.
  *
  * @param string $name Full meta name, e.g. "cta_section_title".
@@ -825,6 +859,10 @@ function packgens_load_shared_section_value( $value, $post_id, $field ) {
 
 	if ( metadata_exists( $context['meta'], $context['id'], $field['name'] ) ) {
 		return $value;
+	}
+
+	if ( in_array( $field['name'], packgens_own_only_section_fields( $context['kind'] ), true ) ) {
+		return 0;
 	}
 
 	return acf_get_value( $context['defaults'], $field );
@@ -898,6 +936,10 @@ function packgens_prune_inherited_sections( $post_id ) {
 			}
 
 			$sub['name'] = $group . '_' . $sub['name'];
+
+			if ( in_array( $sub['name'], packgens_own_only_section_fields( $context['kind'] ), true ) ) {
+				continue;
+			}
 
 			if ( ! metadata_exists( $context['meta'], $context['id'], $sub['name'] ) ) {
 				continue;

@@ -271,6 +271,30 @@ function packgens_product_shared_placeholder( $field ) {
 add_filter( 'acf/prepare_field', 'packgens_product_shared_placeholder' );
 
 /**
+ * Explain the SEO content switch on the category and Category Defaults screens,
+ * where it works differently from everywhere else: each category starts with
+ * the section hidden and switches it on for itself.
+ *
+ * @param array $field Field being rendered.
+ * @return array
+ */
+function packgens_content_switch_instructions( $field ) {
+	global $pagenow;
+
+	$on_defaults = isset( $_GET['page'] ) && PACKGENS_CAT_DEFAULTS_PAGE === $_GET['page']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$on_category = 'term.php' === $pagenow && isset( $_GET['taxonomy'] ) && 'product_cat' === $_GET['taxonomy']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+	if ( $on_defaults ) {
+		$field['instructions'] = __( 'Has no effect on categories: each category starts with this section hidden and switches it on from its own edit screen. The content below is what they show.', 'packgens' );
+	} elseif ( $on_category ) {
+		$field['instructions'] = __( 'Off by default. Turn on to show the SEO content on this category.', 'packgens' );
+	}
+
+	return $field;
+}
+add_filter( 'acf/prepare_field/key=field_pg_content_enable', 'packgens_content_switch_instructions' );
+
+/**
  * Locations where page-level sections may be edited.
  *
  * @return array
@@ -1846,8 +1870,21 @@ function packgens_register_fields() {
 							),
 						),
 						array(
+							'key'           => 'field_pg_product_show_grid',
+							'pg_edit_only'  => 1,
+							'label'         => __( 'Show products grid', 'packgens' ),
+							'name'          => 'show_grid',
+							'type'          => 'true_false',
+							'ui'            => 1,
+							'default_value' => 0,
+							'instructions'  => __( 'Off by default. Turn on to show the products grid (the heading from Product Defaults with the products below) on this product.', 'packgens' ),
+						),
+						array(
 							'key'           => 'field_pg_product_grid_products',
 							'pg_edit_only'  => 1,
+							'conditional_logic' => array(
+								array( array( 'field' => 'field_pg_product_show_grid', 'operator' => '==', 'value' => '1' ) ),
+							),
 							'label'         => __( 'Products to show in the grid', 'packgens' ),
 							'name'          => 'grid_products',
 							'type'          => 'relationship',
