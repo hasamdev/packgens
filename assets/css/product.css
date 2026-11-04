@@ -1323,12 +1323,10 @@
 	margin-inline: 8px;
 }
 
-/* Each tab takes an equal share of the strip with its label centred, so two
-   tabs read as halves rather than being pushed to opposite edges. A tab never
-   shrinks below its label, so once they no longer fit the strip scrolls and
-   nothing has to change at a breakpoint. */
+/* Tabs keep their natural width and sit side by side from the left; the strip
+   does not stretch them to fill its width. A label never wraps, so once the
+   tabs no longer fit the strip scrolls and nothing changes at a breakpoint. */
 .pg-product-tabs .pg-tabs__tab {
-	flex: 1 0 auto;
 	justify-content: center;
 	white-space: nowrap;
 }

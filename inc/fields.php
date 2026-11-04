@@ -127,6 +127,30 @@ function packgens_product_builtin_details() {
  * @return array
  */
 function packgens_product_shared_fields( $prefix, $notice, $is_base = false ) {
+	$fields = packgens_product_shared_field_list( $prefix, $notice, $is_base );
+
+	// On a product these are overrides of shared content, so Add New Product
+	// leaves them off; they appear on the edit screen. See
+	// packgens_new_product_field_visibility().
+	if ( ! $is_base ) {
+		foreach ( $fields as &$field ) {
+			$field['pg_edit_only'] = 1;
+		}
+		unset( $field );
+	}
+
+	return $fields;
+}
+
+/**
+ * The shared Product Details fields, before any per-screen flags.
+ *
+ * @param string $prefix  Field key prefix, unique per registration.
+ * @param string $notice  Text shown at the top of each shared tab.
+ * @param bool   $is_base Whether this is the Product Defaults copy.
+ * @return array
+ */
+function packgens_product_shared_field_list( $prefix, $notice, $is_base = false ) {
 	// The defaults screen shows the theme's wording as grey placeholders; a
 	// product's placeholders are filled in at render time instead, from
 	// whatever the product would actually inherit.
@@ -272,8 +296,9 @@ function packgens_section_locations() {
  *
  * - Categories (and the Category Defaults screen): the sections in
  *   packgens_default_section_order( 'product_cat' ).
- * - Products: the sections in packgens_default_section_order( 'product' ),
- *   plus FAQs, which packgens_product_tabs() shows as a detail tab.
+ * - Products (and the Product Defaults screen): the sections in
+ *   packgens_default_section_order( 'product' ), plus FAQs, which
+ *   packgens_product_tabs() shows as a detail tab.
  *
  * @param string $section Section slug, e.g. "about".
  * @return array
@@ -286,13 +311,18 @@ function packgens_section_locations_for( $section ) {
 		$drop[] = 'options_page=' . PACKGENS_CAT_DEFAULTS_PAGE;
 	}
 
+	$rules = packgens_section_locations();
+
 	if ( ! in_array( $section, array_merge( packgens_default_section_order( 'product' ), array( 'faqs' ) ), true ) ) {
 		$drop[] = 'post_type=product';
+	} elseif ( defined( 'PACKGENS_PRODUCT_DEFAULTS_PAGE' ) ) {
+		// Edited once here for every product; a product stores only changes.
+		$rules[] = array( array( 'param' => 'options_page', 'operator' => '==', 'value' => PACKGENS_PRODUCT_DEFAULTS_PAGE ) );
 	}
 
 	return array_values(
 		array_filter(
-			packgens_section_locations(),
+			$rules,
 			static function ( $rule ) use ( $drop ) {
 				return ! in_array( ( $rule[0]['param'] ?? '' ) . '=' . ( $rule[0]['value'] ?? '' ), $drop, true );
 			}
@@ -1774,6 +1804,18 @@ function packgens_register_fields() {
 				array_merge(
 					array(
 						array( 'key' => 'field_pg_product_tab_own', 'label' => __( 'This product', 'packgens' ), 'type' => 'tab' ),
+						array(
+							'key'         => 'field_pg_product_add_note',
+							'label'       => '',
+							'type'        => 'message',
+							'esc_html'    => 0,
+							'pg_add_only' => 1,
+							'message'     => sprintf(
+								/* translators: %s: link to the Product Defaults screen. */
+								__( 'Only what differs per product is asked for here. The help card, features, sections and other shared content come from %s automatically. To change any of it for this product only, edit the product after publishing.', 'packgens' ),
+								$defaults_link
+							),
+						),
 						array( 'key' => 'field_pg_product_badge', 'label' => __( 'Badge', 'packgens' ), 'name' => 'badge', 'type' => 'text', 'instructions' => __( 'Shown on the gallery and product cards, e.g. Best Seller.', 'packgens' ) ),
 						array( 'key' => 'field_pg_product_subtitle', 'label' => __( 'Subtitle above the title', 'packgens' ), 'name' => 'subtitle', 'type' => 'text' ),
 						array(
@@ -1805,6 +1847,7 @@ function packgens_register_fields() {
 						),
 						array(
 							'key'           => 'field_pg_product_grid_products',
+							'pg_edit_only'  => 1,
 							'label'         => __( 'Products to show in the grid', 'packgens' ),
 							'name'          => 'grid_products',
 							'type'          => 'relationship',
@@ -1816,6 +1859,7 @@ function packgens_register_fields() {
 						),
 						array(
 							'key'          => 'field_pg_product_review_summary',
+							'pg_edit_only' => 1,
 							'label'        => __( 'Review summary', 'packgens' ),
 							'name'         => 'review_summary',
 							'type'         => 'textarea',
@@ -1824,6 +1868,7 @@ function packgens_register_fields() {
 						),
 						array(
 							'key'          => 'field_pg_product_hide_shared',
+							'pg_edit_only' => 1,
 							'label'        => __( 'Hide shared content on this product', 'packgens' ),
 							'name'         => 'hide_shared',
 							'type'         => 'checkbox',
