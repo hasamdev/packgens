@@ -137,6 +137,11 @@ category only, and everything you left alone keeps following Category Defaults,
 including any later edit you make there. Clearing a field puts it back to the
 shared content.
 
+The **SEO Content** section is the exception: it starts hidden on every
+category. Switch on *Show this section* in that category's SEO Content box to
+show it there; the text still comes from Category Defaults unless you change
+it.
+
 So: **change it once in Category Defaults; override only the exceptions.**
 
 ---
@@ -166,6 +171,8 @@ different per product:
 
 - Badge ("Best Seller", "Best Price") shown on the card
 - Subtitle, quantity tiers and the specifications table
+- **Show products grid** — off for new products; turn it on to show the
+  "Take Control Of Your Custom Packaging" grid on that product
 - **Products to show in the grid** — pick up to eight; leave it empty and the
   grid shows up to six products from the same category
 - **Hide shared content on this product** — tick a block (e.g. Help card) to
